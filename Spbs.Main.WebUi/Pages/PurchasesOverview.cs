@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Spbs.Main.Core.Models;
 using Spbs.Main.Core.Services;
 using Spbs.Main.WebUi.Contracts;
+using Syncfusion.Blazor.Calendars;
 
 namespace Spbs.Main.WebUi.Pages;
 
@@ -15,25 +16,52 @@ namespace Spbs.Main.WebUi.Pages;
 public partial class PurchasesOverview
 {
     [Inject]
-    public ILoggedInUserService _userService { get; set; }
+    public ILoggedInUserService UserService { get; set; }
     [Inject]
     public IMediator Mediator { get; set; }
 
-    private List<Purchase>? _purchases;
+    public DateTime StartDate { get; set; }
+
+    public DateTime EndDate { get; set; }
+    
+    private List<Purchase> _purchases;
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
+        
+        StartDate = GetStartOfMonth();
+        EndDate = GetEndOfMonth();
         await InitListOfPurchases();
     }
 
     private async Task InitListOfPurchases()
     {
-        Guid userId = await _userService.GetLoggedInUserId();
+        Guid userId = await UserService.GetLoggedInUserId();
         GetPurchaseByUserService.Response response = await Mediator.Send(new GetPurchaseByUserService.Request(UserId: userId.ToString()));
         if (response.Success)
         {
             _purchases = response.Purchases;
         }
+    }
+    
+    private void ValueChangeHandler(RangePickerEventArgs<DateTime?> args)
+    {
+        if (args.StartDate.HasValue && args.EndDate.HasValue)
+        {
+            StartDate = args.StartDate.Value;
+            EndDate = args.EndDate.Value;
+        }
+
+    }
+
+    private DateTime GetStartOfMonth()
+    {
+        return new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+    }
+
+    private DateTime GetEndOfMonth()
+    {
+        return new DateTime(DateTime.Now.Year, DateTime.Now.Month + 1, 1).Subtract(TimeSpan.FromDays(1));
     }
 }
