@@ -3,8 +3,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Spbs.Main.Core.Models;
 using Spbs.Main.Core.Services;
 using Spbs.Main.WebUi.Contracts;
@@ -20,9 +18,9 @@ public partial class PurchasesOverview
     [Inject]
     public IMediator Mediator { get; set; }
 
-    public DateTime StartDate { get; set; }
-
-    public DateTime EndDate { get; set; }
+    private AddPurchaseDialog _addPurchaseComponent;
+    private DateTime StartDate { get; set; }
+    private DateTime EndDate { get; set; }
     
     private List<Purchase> _purchases;
 
@@ -63,5 +61,10 @@ public partial class PurchasesOverview
     private DateTime GetEndOfMonth()
     {
         return new DateTime(DateTime.Now.Year, DateTime.Now.Month + 1, 1).Subtract(TimeSpan.FromDays(1));
+    }
+
+    public void ToggleAddPurchaseComponent()
+    {
+        _addPurchaseComponent.ShowModal();
     }
 }

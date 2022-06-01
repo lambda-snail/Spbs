@@ -27,4 +27,12 @@
       <ProjectReference Include="..\Spbs.Main.InfraStructure\Spbs.Main.InfraStructure.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Widgets" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Components\AddPurchaseDialog.razor" />
+    </ItemGroup>
+
 </Project>
