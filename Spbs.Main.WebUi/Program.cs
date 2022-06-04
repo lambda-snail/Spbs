@@ -16,7 +16,6 @@ using Spbs.Main.WebUi.Areas.Identity;
 using Spbs.Main.WebUi.Contracts;
 using Spbs.Main.WebUi.Data;
 using Spbs.Main.WebUi.Services;
-using Syncfusion.Blazor;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -45,10 +44,6 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
     .AddEntityFrameworkStores<UserIdentityDbContext>();
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-
-var syncFusionLicense = config.GetSection("SyncFusionSettings").GetValue<string>("LicenseKey");
-Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(syncFusionLicense);
-builder.Services.AddSyncfusionBlazor();
 
 builder.Services
     .AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
