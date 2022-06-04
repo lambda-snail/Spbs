@@ -1,7 +1,5 @@
 @page "/purchases"
 @using Spbs.Main.Core.Models
-@using Syncfusion.Blazor.Grids
-@using Syncfusion.Blazor.Calendars
 
 <h1>Purchases</h1>
 
@@ -14,21 +12,37 @@
             </div>
         </div>
         <div class="col col-md-4">
-            <SfDateRangePicker TValue="DateTime?" StartDate="@StartDate" EndDate="@EndDate" Placeholder="Choose a range" ShowClearButton="true">
+            <!--SfDateRangePicker TValue="DateTime?" StartDate="@StartDate" EndDate="@EndDate" Placeholder="Choose a range" ShowClearButton="true">
                 <DateRangePickerEvents TValue="DateTime?" ValueChange="ValueChangeHandler"></DateRangePickerEvents>
-            </SfDateRangePicker>
+            </!--SfDateRangePicker-->
         </div>
     </div>
     <div class="row">
         <div class="control-section">
             <div class="content-wrapper">
-                <SfGrid DataSource="@_purchases">
-                    <GridColumns>
-                        <GridColumn Field=@nameof(Purchase.Description) HeaderText="Description" TextAlign="TextAlign.Right" Width="120"></GridColumn>
-                        <GridColumn Field=@nameof(Purchase.Location) HeaderText="Location" Width="150"></GridColumn>
-                        <GridColumn Field=@nameof(Purchase.PurchaseDateTime) HeaderText="Date" Format="d" Type="ColumnType.Date" TextAlign="TextAlign.Right" Width="130"></GridColumn>
-                    </GridColumns>
-                </SfGrid>
+                
+                <table>
+                    <tr>
+                        <th>
+                            Description
+                        </th>
+                        <th>
+                            Location
+                        </th>
+                        <th>
+                            Date
+                        </th>
+                    </tr>
+                    @foreach (var purchase in _purchases)
+                    {
+                        <tr>
+                            <td>@purchase.Description</td>
+                            <td>@purchase.Location</td>
+                            <td>@purchase.PurchaseDateTime.ToString()</td>
+                        </tr>
+                    }
+                    
+                </table>
             </div>
         </div>
     </div>

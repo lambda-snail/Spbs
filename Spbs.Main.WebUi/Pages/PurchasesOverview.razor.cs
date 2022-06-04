@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Components;
 using Spbs.Main.Core.Models;
 using Spbs.Main.Core.Services;
 using Spbs.Main.WebUi.Contracts;
-using Syncfusion.Blazor.Calendars;
 
 namespace Spbs.Main.WebUi.Pages;
 
@@ -22,7 +21,7 @@ public partial class PurchasesOverview
     private DateTime StartDate { get; set; }
     private DateTime EndDate { get; set; }
     
-    private List<Purchase> _purchases;
+    private List<Purchase> _purchases = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -43,15 +42,15 @@ public partial class PurchasesOverview
         }
     }
     
-    private void ValueChangeHandler(RangePickerEventArgs<DateTime?> args)
-    {
-        if (args.StartDate.HasValue && args.EndDate.HasValue)
-        {
-            StartDate = args.StartDate.Value;
-            EndDate = args.EndDate.Value;
-        }
-
-    }
+    // private void ValueChangeHandler(RangePickerEventArgs<DateTime?> args)
+    // {
+    //     if (args.StartDate.HasValue && args.EndDate.HasValue)
+    //     {
+    //         StartDate = args.StartDate.Value;
+    //         EndDate = args.EndDate.Value;
+    //     }
+    //
+    // }
 
     private DateTime GetStartOfMonth()
     {
