@@ -9,7 +9,7 @@ public class PurchaseDto
 {
     [BsonId]
     [BsonElement("_id")]
-    [BsonRepresentation(BsonType.String)]
+    [BsonRepresentation(BsonType.Int64)]
     public int Id { get; set; }
     [BsonElement("ownerId")]
     public string OwnerId { get; set; }
