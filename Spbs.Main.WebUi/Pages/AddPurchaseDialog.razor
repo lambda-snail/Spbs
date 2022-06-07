@@ -1,26 +1,68 @@
+@using Spbs.Main.WebUi.ViewModels
 @if (IsVisible)
 {
     <div class="modal fade show d-block" id="new-purchase-modal" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="titleLabel">New Post</h5>
-                        <button type="button" class="close" @onclick="@CloseDialog" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-    
-                    <div class="modal-body">
-                        
-                        Modal body !!
-    
-                    </div>
-    
-    
-                    <div class="modal-footer">
-                        Footer !!!!
-                    </div>
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="titleLabel">New Purchase</h5>
+                    <button type="button" class="close" @onclick="@CloseDialog" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
+
+                <div class="modal-body">
+
+
+                    <EditForm Model="@NewPurchase"
+                              OnValidSubmit="@HandleValidSubmit"
+                              OnInvalidSubmit="@HandleInvalidSubmit">
+
+                        <DataAnnotationsValidator/>
+                        <ValidationSummary></ValidationSummary>
+
+                        <div class="form-group col-md-10">
+                            <label for="date">Date</label>
+                            <InputDate id="date"
+                                       class="form-control"
+                                       @bind-Value="@NewPurchase.PurchaseDateTime">
+                            </InputDate>
+                            <small id="post-content-small" class="form-text text-muted">When did you make the purchase?</small>
+                            <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => NewPurchase.PurchaseDateTime)"/>
+                        </div>
+
+                        <div class="form-group col-md-10">
+                            <label for="location">Location</label>
+                            <InputText id="location"
+                                           class="form-control"
+                                           @bind-Value="@NewPurchase.Location">
+                            </InputText>
+                            <small id="post-content-small" class="form-text text-muted">Where did you buy your stuf?</small>
+                            <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => NewPurchase.Location)"/>
+                        </div>
+
+                        <div class="form-group col-md-10">
+                            <label for="description">Description</label>
+                            <InputTextArea id="description"
+                                           class="form-control"
+                                           @bind-Value="@NewPurchase.Description">
+                            </InputTextArea>
+                            <small id="post-content-small" class="form-text text-muted">Optionally describe or add a comment to the purchase.</small>
+                            <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => NewPurchase.Description)"/>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary edit-btn">Submit</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" @onclick="@CloseDialog">Close</button>
+                    </EditForm>
+
+
+                </div>
+
+
+                @* <div class="modal-footer"> *@
+                @*     Footer !!!! *@
+                @* </div> *@
             </div>
         </div>
+    </div>
 }
