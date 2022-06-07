@@ -11,40 +11,28 @@
                 <button type="button" class="btn btn-primary">Edit</button>
             </div>
         </div>
-        <div class="col col-md-4">
-            <!--SfDateRangePicker TValue="DateTime?" StartDate="@StartDate" EndDate="@EndDate" Placeholder="Choose a range" ShowClearButton="true">
-                <DateRangePickerEvents TValue="DateTime?" ValueChange="ValueChangeHandler"></DateRangePickerEvents>
-            </!--SfDateRangePicker-->
+        <div class="col col-md-2">
+            <RadzenDatePicker @bind-Value=@StartDate DateFormat="d" Class="w-100" />
+        </div>
+        <div class="col col-md-2">
+            <RadzenDatePicker @bind-Value=@EndDate DateFormat="d" Class="w-100" />
         </div>
     </div>
     <div class="row">
-        <div class="control-section">
-            <div class="content-wrapper">
-                
-                <table>
-                    <tr>
-                        <th>
-                            Description
-                        </th>
-                        <th>
-                            Location
-                        </th>
-                        <th>
-                            Date
-                        </th>
-                    </tr>
-                    @foreach (var purchase in _purchases)
-                    {
-                        <tr>
-                            <td>@purchase.Description</td>
-                            <td>@purchase.Location</td>
-                            <td>@purchase.PurchaseDateTime.ToString()</td>
-                        </tr>
-                    }
-                    
-                </table>
-            </div>
-        </div>
+        
+        <RadzenDataGrid AllowFiltering="true" AllowPaging="true" PageSize="10" AllowSorting="true" 
+                    Data="@_purchases" TItem="Purchase">
+            <Columns>
+                <RadzenDataGridColumn Width="200px" TItem="Purchase" Property="Description" Title="Description" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" />
+                <RadzenDataGridColumn TItem="Purchase" Property="Location" Title="Location" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" />
+                <RadzenDataGridColumn TItem="Purchase" Property="PurchaseDateTime" Title="Date">
+                    <Template Context="purchase">
+                        @purchase.PurchaseDateTime.ToString()
+                    </Template>
+                </RadzenDataGridColumn>
+            </Columns>
+        </RadzenDataGrid>
+        
     </div>
 </div>
 

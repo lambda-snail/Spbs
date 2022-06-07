@@ -1,5 +1,7 @@
 using AutoMapper;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using MongoDB.Bson.Serialization;
 using Spbs.Main.Core.Contracts;
 
 using MongoDB.Driver;
@@ -13,13 +15,15 @@ namespace Spbs.Main.InfraStructure.Persistence;
 public class PurchaseRepository : IPurchaseRepository
 {
     private readonly IMapper _mapper;
+    private readonly ILogger<IPurchaseRepository> _logger;
     private readonly IMongoCollection<PurchaseDto> _purchaseDb;
 
-    public PurchaseRepository(IMongoClient mongoCLient, IMapper mapper, IOptions<SpbsDatabaseSettings> options)
+    public PurchaseRepository(IMongoClient mongoCLient, IMapper mapper, IOptions<SpbsDatabaseSettings> options, ILogger<IPurchaseRepository> logger)
     {
         var client = mongoCLient.GetDatabase(options.Value.DatabaseName);
         _purchaseDb = client.GetCollection<PurchaseDto>(options.Value.PurchasesCollection);
         _mapper = mapper;
+        _logger = logger;
     }
 
     public async Task UpsertPurchase(Purchase purchaseModel)
