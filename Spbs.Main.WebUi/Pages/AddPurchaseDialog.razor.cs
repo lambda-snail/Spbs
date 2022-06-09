@@ -1,11 +1,23 @@
+using AutoMapper;
+using MediatR;
+using Microsoft.AspNetCore.Components;
+using Spbs.Main.Core.Models;
+using Spbs.Main.Core.Services;
+using Spbs.Main.WebUi.Contracts;
 using Spbs.Main.WebUi.ViewModels;
 
 namespace Spbs.Main.WebUi.Pages;
 
 public partial class AddPurchaseDialog
 {
+    [Inject] public IMapper _mapper { get; set; }
+    [Inject] public IMediator _mediator { get; set; }
+    [Inject] public ILoggedInUserService _userService { get; set; } 
+    
+    [Parameter] public Func<Task> NewPurchaseCallback { get; set; }
+    
     public bool IsVisible { get; set; }
-    public NewPurchaseViewModel NewPurchase { get; set; } = new NewPurchaseViewModel();
+    public NewPurchaseViewModel NewPurchase { get; set; } = new();
     
     protected override void OnInitialized()
     {
@@ -13,9 +25,17 @@ public partial class AddPurchaseDialog
         IsVisible = false;
     }
 
-    public void HandleValidSubmit()
+    public async void HandleValidSubmit()
     {
+        Purchase purchase = _mapper.Map<Purchase>(NewPurchase);
+        Guid userId = await _userService.GetLoggedInUserId();
+        purchase.OwnerId = userId.ToString();
         
+        var response = await _mediator.Send(new InsertPurchase.Request(purchase));
+        if (response.Success)
+        {
+            await NewPurchaseCallback.Invoke();
+        }
     }
 
     public void HandleInvalidSubmit()
@@ -23,7 +43,7 @@ public partial class AddPurchaseDialog
         
     }
 
-    public void ShowModal()
+    public void ShowDialog()
     {
         IsVisible = true;
         StateHasChanged();
