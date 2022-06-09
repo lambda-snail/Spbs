@@ -1,6 +1,7 @@
 using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using Spbs.Main.Core.Contracts;
 
@@ -26,19 +27,10 @@ public class PurchaseRepository : IPurchaseRepository
         _logger = logger;
     }
 
-    public async Task UpsertPurchase(Purchase purchaseModel)
+    public async Task InsertPurchase(Purchase purchaseModel)
     {
         PurchaseDto purchaseDto = _mapper.Map<PurchaseDto>(purchaseModel);
-        if (purchaseDto is null)
-        {
-            return;
-        }
-        
-        await _purchaseDb.ReplaceOneAsync(
-            purchase => purchase.OwnerId == purchaseDto.OwnerId,
-            purchaseDto,
-            new ReplaceOptions { IsUpsert = true }
-        );
+        await _purchaseDb.InsertOneAsync(purchaseDto);
     }
     
     public async Task<List<Purchase>> GetPurchasesOfUser(string userId, DateTime? since = null)
@@ -56,7 +48,7 @@ public class PurchaseRepository : IPurchaseRepository
         return _mapper.Map<List<Purchase>>(items);
     }
 
-    public async Task DeletePurchase(int purchaseId)
+    public async Task DeletePurchase(Guid purchaseId)
     {
         var filter = Builders<PurchaseDto>.Filter.Where(purchase => purchase.Id == purchaseId);
         await _purchaseDb.DeleteOneAsync(filter);
