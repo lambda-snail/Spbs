@@ -1,4 +1,5 @@
 using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.IdGenerators;
 using Spbs.Main.InfraStructure.DtoModels;
 
 namespace Spbs.Main.InfraStructure.Utilities;
@@ -13,6 +14,8 @@ public static class BsonClassMapRegistrator
             {
                 cm.AutoMap();
                 cm.MapIdProperty(purchase => purchase.Id);
+                cm.IdMemberMap.SetIgnoreIfDefault(true);
+                cm.IdMemberMap.SetIdGenerator(AscendingGuidGenerator.Instance);
             });
         }
         

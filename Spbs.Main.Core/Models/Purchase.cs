@@ -4,7 +4,7 @@ namespace Spbs.Main.Core.Models;
 
 public class Purchase
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
     public string OwnerId { get; set; }
     public DateTime PurchaseDateTime { get; set; }
     public string Location { get; set; }
