@@ -16,6 +16,7 @@ using Spbs.Main.WebUi.Areas.Identity;
 using Spbs.Main.WebUi.Contracts;
 using Spbs.Main.WebUi.Data;
 using Spbs.Main.WebUi.Services;
+using Spbs.Main.WebUi.Utilities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -62,12 +63,13 @@ builder.Services.AddSingleton<IPurchaseRepository, PurchaseRepository>();
 var mapperConfig = new MapperConfiguration(mapperconfig =>
 {
     mapperconfig.AddProfile(new AutoMapperProfiles());
+    mapperconfig.AddProfile(new ViewModelMapperProfiles());
 });
 
 builder.Services.AddSingleton(mapperConfig.CreateMapper());
 
 // MediatR
-builder.Services.AddMediatR(typeof(AddPurchaseService).Assembly);
+builder.Services.AddMediatR(typeof(InsertPurchase).Assembly);
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
