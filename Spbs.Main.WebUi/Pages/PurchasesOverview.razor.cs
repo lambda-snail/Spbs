@@ -17,7 +17,7 @@ public partial class PurchasesOverview
     [Inject]
     public IMediator Mediator { get; set; }
 
-    private AddPurchaseDialog _addPurchaseComponent;
+    private AddPurchaseDialog _addPurchaseDialog;
     private DateTime StartDate { get; set; }
     private DateTime EndDate { get; set; }
     
@@ -34,12 +34,24 @@ public partial class PurchasesOverview
 
     private async Task InitListOfPurchases()
     {
+        await LoadPurchases();
+    }
+
+    private async Task LoadPurchases()
+    {
         Guid userId = await UserService.GetLoggedInUserId();
-        GetPurchaseByUserService.Response response = await Mediator.Send(new GetPurchaseByUserService.Request(UserId: userId.ToString()));
+        GetPurchaseByUserCommand.Response response = await Mediator.Send(new GetPurchaseByUserCommand.Request(UserId: userId.ToString()));
         if (response.Success)
         {
             _purchases = response.Purchases;
         }
+    }
+
+    private async Task AddNewPurchase()
+    {
+        _addPurchaseDialog.CloseDialog();
+        await LoadPurchases();
+        StateHasChanged();
     }
     
     // private void ValueChangeHandler(RangePickerEventArgs<DateTime?> args)
@@ -64,6 +76,6 @@ public partial class PurchasesOverview
 
     public void ToggleAddPurchaseComponent()
     {
-        _addPurchaseComponent.ShowModal();
+        _addPurchaseDialog.ShowDialog();
     }
 }
