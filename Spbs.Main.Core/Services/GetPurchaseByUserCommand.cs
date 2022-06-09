@@ -6,7 +6,7 @@ using Spbs.Main.Core.Models;
 
 namespace Spbs.Main.Core.Services;
 
-public class GetPurchaseByUserService
+public class GetPurchaseByUserCommand
 {
     public record Request(string UserId, DateTime? Since = null, DateTime? Until = null) : IRequest<Response>;
     public record Response(bool Success, List<Purchase>? Purchases);
@@ -14,14 +14,12 @@ public class GetPurchaseByUserService
     public class GetPurchaseByUserRequestHandler : IRequestHandler<Request, Response>
     {
         private readonly ILogger<GetPurchaseByUserRequestHandler> _logger;
-        private readonly IMapper _mapper;
         private readonly IPurchaseRepository _repository;
 
-        public GetPurchaseByUserRequestHandler(ILogger<GetPurchaseByUserRequestHandler> logger, IMapper mapper, IPurchaseRepository repository)
+        public GetPurchaseByUserRequestHandler(IPurchaseRepository repository, ILogger<GetPurchaseByUserRequestHandler> logger)
         {
-            _logger = logger;
-            _mapper = mapper;
             _repository = repository;
+            _logger = logger;
         }
         
         public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
