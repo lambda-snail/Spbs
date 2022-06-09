@@ -2,11 +2,11 @@ version: '3.8'
 
 services: 
   database:
-    image: mcr.microsoft.com/mssql/server:2019-latest
+    image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: spbs_identity_db
     restart: always
     environment:
-      SA_PASSWORD: p@ssw0rd
+      MSSQL_SA_PASSWORD: pAssw0rd
       MSSQL_PID: Express
       ACCEPT_EULA: Y
     ports:
