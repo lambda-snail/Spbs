@@ -19,6 +19,5 @@ public class PurchaseDto
     [BsonElement("modelVersion")]
     public string ModelVersion { get; set; }
     [BsonElement("items")]
-
     public List<PurchaseItemDto> Items;
 }
