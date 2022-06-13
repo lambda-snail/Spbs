@@ -2,7 +2,7 @@ using AutoMapper;
 using Spbs.Main.InfraStructure.Utilities;
 using Xunit;
 
-namespace Sbps.Main.UnitTests;
+namespace Sbps.Main.InfraStructure.Tests;
 
 public class AutoMapperTests
 {
