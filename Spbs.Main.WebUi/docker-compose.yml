@@ -5,6 +5,7 @@ services:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: spbs_identity_db
     restart: always
+    user: root
     environment:
       MSSQL_SA_PASSWORD: pAssw0rd
       MSSQL_PID: Express
@@ -12,7 +13,7 @@ services:
     ports:
       - "1433:1433"
     volumes: 
-      - ~/apps/mssql/data:/var/lib/mssql/data
+      - ~/apps/mssql/data:/var/opt/mssql/data
   mongo:
     image: mongo
     restart: always
