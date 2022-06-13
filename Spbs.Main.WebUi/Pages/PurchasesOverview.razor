@@ -7,24 +7,24 @@
     <div class="row">
         <div class="col col-8">
             <div class="btn-group" role="group" aria-label="Basic example">
-                <button type="button" class="btn btn-primary" @onclick="ToggleAddPurchaseComponent" >Add</button>
-                <button type="button" class="btn btn-primary">Edit</button>
+                <button type="button" class="btn btn-primary" @onclick="ToggleAddPurchaseComponent">Add</button>
+                <button disabled=@(_selectedPurchase is null || _selectedPurchase.Count == 0) type="button" @onclick="EditPurchase" class="btn btn-primary">Edit</button>
             </div>
         </div>
         <div class="col col-md-2">
-            <RadzenDatePicker @bind-Value=@StartDate DateFormat="d" Class="w-100" />
+            <RadzenDatePicker @bind-Value=@StartDate DateFormat="d" Class="w-100"/>
         </div>
         <div class="col col-md-2">
-            <RadzenDatePicker @bind-Value=@EndDate DateFormat="d" Class="w-100" />
+            <RadzenDatePicker @bind-Value=@EndDate DateFormat="d" Class="w-100"/>
         </div>
     </div>
     <div class="row">
-        
-        <RadzenDataGrid AllowFiltering="true" AllowPaging="true" PageSize="10" AllowSorting="true" 
-                    Data="@_purchases" TItem="Purchase">
+
+        <RadzenDataGrid AllowFiltering="true" AllowPaging="true" PageSize="10" AllowSorting="true"
+                        Data="@_purchases" TItem="Purchase" SelectionMode="DataGridSelectionMode.Single" @bind-Value=@_selectedPurchase>
             <Columns>
-                <RadzenDataGridColumn Width="200px" TItem="Purchase" Property="Description" Title="Description" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" />
-                <RadzenDataGridColumn TItem="Purchase" Property="Location" Title="Location" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" />
+                <RadzenDataGridColumn Width="200px" TItem="Purchase" Property="Description" Title="Description" Filterable="false" Sortable="false" TextAlign="TextAlign.Center"/>
+                <RadzenDataGridColumn TItem="Purchase" Property="Location" Title="Location" Filterable="false" Sortable="false" TextAlign="TextAlign.Center"/>
                 <RadzenDataGridColumn TItem="Purchase" Property="PurchaseDateTime" Title="Date">
                     <Template Context="purchase">
                         @purchase.PurchaseDateTime.ToString()
@@ -32,8 +32,8 @@
                 </RadzenDataGridColumn>
             </Columns>
         </RadzenDataGrid>
-        
+
     </div>
 </div>
 
-<AddPurchaseDialog NewPurchaseCallback="AddNewPurchase" @ref="_addPurchaseDialog" />
+<AddPurchaseDialog NewPurchaseCallback="AddNewPurchase" @ref="_addPurchaseDialog"/>

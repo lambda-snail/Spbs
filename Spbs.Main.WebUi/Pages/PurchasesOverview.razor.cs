@@ -12,16 +12,17 @@ namespace Spbs.Main.WebUi.Pages;
 [Authorize]
 public partial class PurchasesOverview
 {
-    [Inject]
-    public ILoggedInUserService UserService { get; set; }
-    [Inject]
-    public IMediator Mediator { get; set; }
+    [Inject] public ILoggedInUserService UserService { get; set; }
+    [Inject] public IMediator Mediator { get; set; }
+    [Inject] public NavigationManager NavigationManager { get; set; }
 
     private AddPurchaseDialog _addPurchaseDialog;
     private DateTime StartDate { get; set; }
     private DateTime EndDate { get; set; }
     
     private List<Purchase> _purchases = new();
+
+    private IList<Purchase> _selectedPurchase; // One item
 
     protected override async Task OnInitializedAsync()
     {
@@ -64,6 +65,14 @@ public partial class PurchasesOverview
     //
     // }
 
+    private void EditPurchase()
+    {
+        if (_selectedPurchase is not null && _selectedPurchase.Count > 0)
+        {
+            NavigationManager.NavigateTo($"/purchases/{_selectedPurchase[0].Id}");            
+        }
+    }
+    
     private DateTime GetStartOfMonth()
     {
         return new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
