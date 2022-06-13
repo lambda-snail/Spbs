@@ -12,5 +12,6 @@ public class ViewModelMapperProfiles : Profile
             .ForMember(p => p.Id, a => a.Ignore())
             .ForMember(p => p.OwnerId, a => a.Ignore())
             .ForMember(p => p.Items, a => a.Ignore());
+        CreateMap<NewPurchaseItemViewModel, PurchaseItem>();
     }
 }
