@@ -33,7 +33,7 @@ public class PurchaseRepository : IPurchaseRepository
         await _purchaseDb.InsertOneAsync(purchaseDto);
     }
     
-    public async Task<List<Purchase>> GetPurchasesOfUser(string userId, DateTime? since = null)
+    public async Task<List<Purchase>> GetPurchasesOfUser(string userId, DateTime? since = null) // TODO: Add until parameter as well
     {
         var filter = Builders<PurchaseDto>.Filter.Where(purchase => purchase.OwnerId == userId);
 
@@ -46,6 +46,14 @@ public class PurchaseRepository : IPurchaseRepository
         var result = await _purchaseDb.FindAsync(filter);
         List<PurchaseDto> items = await result.ToListAsync();
         return _mapper.Map<List<Purchase>>(items);
+    }
+
+    public async Task<Purchase> GetPurchaseById(Guid purchaseId)
+    {
+        var filter = Builders<PurchaseDto>.Filter.Where(purchase => purchase.Id == purchaseId);
+        var result = await _purchaseDb.FindAsync(filter);
+        PurchaseDto purchaseDto = await result.FirstAsync();
+        return _mapper.Map<Purchase>(purchaseDto);
     }
 
     public async Task DeletePurchase(Guid purchaseId)

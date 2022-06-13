@@ -6,7 +6,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spbs.Main.Core", "Spbs.Main
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spbs.Main.InfraStructure", "Spbs.Main.InfraStructure\Spbs.Main.InfraStructure.csproj", "{F4C74AF4-58B9-4E5D-8412-5626D559D88D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sbps.Main.UnitTests", "Sbps.Main.UnitTests\Sbps.Main.UnitTests.csproj", "{F04EC57D-63DF-4127-807F-E49C8E6515A3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sbps.Main.InfraStructure.Tests", "Sbps.Main.InfraStructure.Tests\Sbps.Main.InfraStructure.Tests.csproj", "{F04EC57D-63DF-4127-807F-E49C8E6515A3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spbs.Main.WebUi.Tests", "Spbs.Main.WebUi.Tests\Spbs.Main.WebUi.Tests.csproj", "{3B51C450-9ADD-438B-865E-4AC12F92CD55}"
 EndProject
