@@ -10,5 +10,5 @@ public class NewPurchaseViewModel
     public string Location { get; set; }
     public string Description { get; set; }
 
-    //public List<PurchaseItemDto> Items;
+    public List<NewPurchaseItemViewModel> Items;
 }
