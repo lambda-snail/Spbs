@@ -69,7 +69,7 @@ var mapperConfig = new MapperConfiguration(mapperconfig =>
 builder.Services.AddSingleton(mapperConfig.CreateMapper());
 
 // MediatR
-builder.Services.AddMediatR(typeof(InsertPurchase).Assembly);
+builder.Services.AddMediatR(typeof(UpsertPurchase).Assembly);
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
