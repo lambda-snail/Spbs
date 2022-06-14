@@ -3,6 +3,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
+using Radzen.Blazor;
 using Spbs.Main.Core.Models;
 using Spbs.Main.Core.Services;
 using Spbs.Main.WebUi.Contracts;
@@ -24,7 +25,11 @@ public partial class PurchasesOverview
 
     private IList<Purchase> _selectedPurchase; // One item
 
-    protected override async Task OnInitializedAsync()
+    private RadzenDataGrid<Purchase> _purchasesGrid;
+
+    private bool _emptySelection => _selectedPurchase is null || _selectedPurchase.Count == 0;
+
+        protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
         
@@ -67,9 +72,20 @@ public partial class PurchasesOverview
 
     private void EditPurchase()
     {
-        if (_selectedPurchase is not null && _selectedPurchase.Count > 0)
+        if (!_emptySelection)
         {
             NavigationManager.NavigateTo($"/purchases/{_selectedPurchase[0].Id}");            
+        }
+    }
+
+    private void DeleteSelectedPurchase()
+    {
+        if (!_emptySelection)
+        {
+            Purchase purchase = _selectedPurchase[0];
+            _purchases.Remove(purchase);
+            Mediator.Send(new DeletePurchase.Request(purchase));
+            _purchasesGrid.Reload();
         }
     }
     

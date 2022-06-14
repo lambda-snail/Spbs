@@ -8,7 +8,8 @@
         <div class="col col-8">
             <div class="btn-group" role="group" aria-label="Basic example">
                 <button type="button" class="btn btn-primary" @onclick="ToggleAddPurchaseComponent">Add</button>
-                <button disabled=@(_selectedPurchase is null || _selectedPurchase.Count == 0) type="button" @onclick="EditPurchase" class="btn btn-primary">Edit</button>
+                <button disabled=@_emptySelection type="button" @onclick="EditPurchase" class="btn btn-primary">Edit</button>
+                <button disabled=@_emptySelection type="button" class="btn btn-primary" @onclick="DeleteSelectedPurchase">Remove</button>
             </div>
         </div>
         <div class="col col-md-2">
@@ -21,9 +22,11 @@
     <div class="row">
 
         <RadzenDataGrid AllowFiltering="true" AllowPaging="true" PageSize="10" AllowSorting="true"
-                        Data="@_purchases" TItem="Purchase" SelectionMode="DataGridSelectionMode.Single" @bind-Value=@_selectedPurchase>
+                        Data="@_purchases" TItem="Purchase" SelectionMode="DataGridSelectionMode.Single" 
+                        @bind-Value=@_selectedPurchase @ref="_purchasesGrid">
             <Columns>
                 <RadzenDataGridColumn Width="200px" TItem="Purchase" Property="Description" Title="Description" Filterable="false" Sortable="false" TextAlign="TextAlign.Center"/>
+                <RadzenDataGridColumn Width="100px" TItem="Purchase" Property="Total" Title="Total" Filterable="false" Sortable="true" TextAlign="TextAlign.Left"/>
                 <RadzenDataGridColumn TItem="Purchase" Property="Location" Title="Location" Filterable="false" Sortable="false" TextAlign="TextAlign.Center"/>
                 <RadzenDataGridColumn TItem="Purchase" Property="PurchaseDateTime" Title="Date">
                     <Template Context="purchase">
