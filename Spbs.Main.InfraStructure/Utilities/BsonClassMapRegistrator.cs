@@ -19,7 +19,7 @@ public static class BsonClassMapRegistrator
             });
         }
         
-        if (!BsonClassMap.IsClassMapRegistered(typeof(PurchaseDto)))
+        if (!BsonClassMap.IsClassMapRegistered(typeof(PurchaseItemDto)))
         {
             BsonClassMap.RegisterClassMap<PurchaseItemDto>(cm =>
             {
