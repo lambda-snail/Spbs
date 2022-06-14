@@ -13,7 +13,8 @@ public class AutoMapperProfiles : Profile
 
         CreateMap<Purchase, PurchaseDto>()
             .ForMember(pdto => pdto.ModelVersion, action => action.Ignore());
-        
-        CreateMap<PurchaseDto, Purchase>();
+
+        CreateMap<PurchaseDto, Purchase>()
+            .ForMember(purchase => purchase.Total, action => action.Ignore());
     }
 }
