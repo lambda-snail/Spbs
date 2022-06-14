@@ -27,12 +27,19 @@ public class PurchaseRepository : IPurchaseRepository
         _logger = logger;
     }
 
-    public async Task InsertPurchase(Purchase purchaseModel)
+    public async Task InsertPurchase(Purchase purchase)
     {
-        PurchaseDto purchaseDto = _mapper.Map<PurchaseDto>(purchaseModel);
+        PurchaseDto purchaseDto = _mapper.Map<PurchaseDto>(purchase);
         await _purchaseDb.InsertOneAsync(purchaseDto);
     }
-    
+
+    public async Task UpdatePurchase(Purchase purchase)
+    {
+        PurchaseDto purchaseDto = _mapper.Map<PurchaseDto>(purchase);
+        var filter = Builders<PurchaseDto>.Filter.Where(p => p.Id == purchase.Id);
+        await _purchaseDb.FindOneAndReplaceAsync(filter, purchaseDto);
+    }
+
     public async Task<List<Purchase>> GetPurchasesOfUser(string userId, DateTime? since = null) // TODO: Add until parameter as well
     {
         var filter = Builders<PurchaseDto>.Filter.Where(purchase => purchase.OwnerId == userId);
