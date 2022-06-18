@@ -1,40 +1,40 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">Spbs.Main.WebUi</a>
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-    </div>
-</div>
+﻿<nav class="navbar navbar-dark ps-3 bg-dark">
+    @* <div class="container-fluid"> *@
+    <a class="navbar-brand" href="">Spbs</a>
+    <button title="Menu" class="navbar-toggler btn-outline-success" @onclick="ToggleNavMenu">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    @* </div> *@
+</nav>
 
-<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
+<div id="nav-menu-left" class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+    <ul class="nav nav-fill nav-dark bg-dark flex-column">
+        <li class="nav-item">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
                 <span class="oi oi-home" aria-hidden="true"></span>Home
             </NavLink>
-        </div>
-        <div class="nav-item px-3">
+        </li>
+        <li class="nav-item">
             <NavLink class="nav-link" href="purchases">
                 <span class="oi oi-dollar" aria-hidden="true"></span>Purchases
             </NavLink>
-        </div>
-        <div class="nav-item px-3">
+        </li>
+        <li class="nav-item">
             <NavLink class="nav-link" href="">
                 <span class="oi oi-globe" aria-hidden="true"></span>Locations
             </NavLink>
-        </div>
-        <div class="nav-item px-3">
+        </li>
+        <li class="nav-item">
             <NavLink class="nav-link" href="">
                 <span class="oi oi-calculator" aria-hidden="true"></span>Statistics
             </NavLink>
-        </div>
-        <div class="nav-item px-3">
+        </li>
+        <li class="nav-item">
             <NavLink class="nav-link" href="">
                 <span class="oi oi-cog" aria-hidden="true"></span>Settings
             </NavLink>
-        </div>
-    </nav>
+        </li>
+    </ul>
 </div>
 
 @code {

@@ -32,51 +32,53 @@ else
                 </div>
             </RadzenSplitterPane>
             <RadzenSplitterPane>
-                
-                <RadzenButton Icon="add_circle_outline" style="margin-bottom: 10px" Text="Add New Product" Click="@InsertRow" Disabled=@(_purchaseItemToAdd != null) />
-                                    <RadzenDataGrid @ref="_purchaseItemGrid" AllowFiltering="true" AllowSorting="true" EditMode="DataGridEditMode.Single"
-                                                    Data="@_purchase.Items" TItem="PurchaseItem">
-                                        <Columns>
-                                            <RadzenDataGridColumn TItem="PurchaseItem" Property="ProductName" Title="Product Name" Width="150px">
-                                                <EditTemplate Context="purchaseItem">
-                                                    <RadzenTextBox @bind-Value="purchaseItem.ProductName" Style="width:100%; display: block" Name="ProductName"/>
-                                                    <RadzenRequiredValidator Text="The product name is required" Component="ProductName" Popup="true"/>
-                                                </EditTemplate>
-                                            </RadzenDataGridColumn>
-                                            <RadzenDataGridColumn TItem="PurchaseItem" Property="Price" Title="Price" Width="150px">
-                                                <EditTemplate Context="purchaseItem">
-                                                    <RadzenNumeric TValue="decimal" @bind-Value="purchaseItem.Price" RadzenTextBox Style="width:100%; display: block" Name="Price"/>
-                                                    <RadzenRequiredValidator Text="Please provide a price" Component="Price" Popup="true" />
-                                                    <RadzenNumericRangeValidator Min="0m" Text="Please provide a price that is not negative." Component="Price" Popup="true" />
-                                                </EditTemplate>
-                                            </RadzenDataGridColumn>
-                                            <RadzenDataGridColumn TItem="PurchaseItem" Property="Description" Title="Description" Width="250px">
-                                                <EditTemplate Context="purchaseItem">
-                                                    <RadzenTextBox @bind-Value="purchaseItem.Description" Style="width:100%; display: block"/>
-                                                </EditTemplate>
-                                            </RadzenDataGridColumn>
-                
-                
-                                            <RadzenDataGridColumn TItem="PurchaseItem" Context="purchaseItem" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="120px">
-                                                <EditTemplate Context="purchaseItem">
-                                                    <RadzenButton Icon="check" ButtonStyle="ButtonStyle.Primary" Class="m-1" Click="@((args) => SaveRow(purchaseItem))">
-                                                    </RadzenButton>
-                                                    <RadzenButton Icon="close" ButtonStyle="ButtonStyle.Light" Class="m-1" Click="@((args) => CancelEdit(purchaseItem))">
-                                                    </RadzenButton>
-                                                </EditTemplate>
-                                            </RadzenDataGridColumn>
-                                            <RadzenDataGridColumn TItem="PurchaseItem" Context="order" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="60px">
-                                                <Template Context="purchaseItem">
-                                                    <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Size="ButtonSize.Small" Class="m-1" Click="@(args => DeleteRow(purchaseItem))" @onclick:stopPropagation="true">
-                                                    </RadzenButton>
-                                                </Template>
-                                                <EditTemplate Context="purchaseItem">
-                                                    <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Size="ButtonSize.Small" Class="m-1" Click="@(args => DeleteRow(purchaseItem))">
-                                                    </RadzenButton>
-                                                </EditTemplate>
-                                            </RadzenDataGridColumn>
-                                        </Columns>
-                                    </RadzenDataGrid>
+                <button class="btn btn-primary" @onclick="InsertRow" disabled=@(_purchaseItemToAdd != null)>
+                    <span class="oi oi-plus" aria-hidden="true"></span> Add Item
+                </button>
+
+                <RadzenDataGrid @ref="_purchaseItemGrid" AllowFiltering="true" AllowSorting="true" EditMode="DataGridEditMode.Single"
+                                Data="@_purchase.Items" TItem="PurchaseItem">
+                    <Columns>
+                        <RadzenDataGridColumn TItem="PurchaseItem" Property="ProductName" Title="Product Name" Width="150px">
+                            <EditTemplate Context="purchaseItem">
+                                <RadzenTextBox @bind-Value="purchaseItem.ProductName" Style="width:100%; display: block" Name="ProductName"/>
+                                <RadzenRequiredValidator Text="The product name is required" Component="ProductName" Popup="true"/>
+                            </EditTemplate>
+                        </RadzenDataGridColumn>
+                        <RadzenDataGridColumn TItem="PurchaseItem" Property="Price" Title="Price" Width="150px">
+                            <EditTemplate Context="purchaseItem">
+                                <RadzenNumeric TValue="decimal" @bind-Value="purchaseItem.Price" RadzenTextBox Style="width:100%; display: block" Name="Price"/>
+                                <RadzenRequiredValidator Text="Please provide a price" Component="Price" Popup="true"/>
+                                <RadzenNumericRangeValidator Min="0m" Text="Please provide a price that is not negative." Component="Price" Popup="true"/>
+                            </EditTemplate>
+                        </RadzenDataGridColumn>
+                        <RadzenDataGridColumn TItem="PurchaseItem" Property="Description" Title="Description" Width="250px">
+                            <EditTemplate Context="purchaseItem">
+                                <RadzenTextBox @bind-Value="purchaseItem.Description" Style="width:100%; display: block"/>
+                            </EditTemplate>
+                        </RadzenDataGridColumn>
+
+
+                        <RadzenDataGridColumn TItem="PurchaseItem" Context="purchaseItem" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="120px">
+                            <EditTemplate Context="purchaseItem">
+                                <RadzenButton Icon="check" ButtonStyle="ButtonStyle.Primary" Class="m-1" Click="@((args) => SaveRow(purchaseItem))">
+                                </RadzenButton>
+                                <RadzenButton Icon="close" ButtonStyle="ButtonStyle.Light" Class="m-1" Click="@((args) => CancelEdit(purchaseItem))">
+                                </RadzenButton>
+                            </EditTemplate>
+                        </RadzenDataGridColumn>
+                        <RadzenDataGridColumn TItem="PurchaseItem" Context="order" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="60px">
+                            <Template Context="purchaseItem">
+                                <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Size="ButtonSize.Small" Class="m-1" Click="@(args => DeleteRow(purchaseItem))" @onclick:stopPropagation="true">
+                                </RadzenButton>
+                            </Template>
+                            <EditTemplate Context="purchaseItem">
+                                <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Size="ButtonSize.Small" Class="m-1" Click="@(args => DeleteRow(purchaseItem))">
+                                </RadzenButton>
+                            </EditTemplate>
+                        </RadzenDataGridColumn>
+                    </Columns>
+                </RadzenDataGrid>
             </RadzenSplitterPane>
         </RadzenSplitter>
     </div>
