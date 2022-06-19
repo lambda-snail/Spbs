@@ -16,5 +16,15 @@ public class AutoMapperProfiles : Profile
 
         CreateMap<PurchaseDto, Purchase>()
             .ForMember(purchase => purchase.Total, action => action.Ignore());
+
+        CreateMap<User, UserDto>();
+        CreateMap<UserDto, User>();
+        
+        CreateMap<UserSettings, UserSettingsDto>()
+            .ForMember(settingsDto => settingsDto.TimeZoneId, action => action.MapFrom(settings => settings.TimeZone.Id));
+        
+        CreateMap<UserSettingsDto, UserSettings>()
+            .ForMember(settingsDto => settingsDto.TimeZone, action => action.MapFrom( settingsDto => TimeZoneInfo.FindSystemTimeZoneById(settingsDto.TimeZoneId) )  );
+        
     }
 }

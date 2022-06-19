@@ -11,6 +11,5 @@ public class UserDto
 
 public class UserSettingsDto
 {
-    //[BsonSerializer(typeof(TimeZoneInfoSerializer))]
-    public TimeZoneInfo TimeZone { get; set; }
+    public string TimeZoneId { get; set; }
 }

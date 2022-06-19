@@ -42,8 +42,6 @@ public static class BsonClassMapRegistrator
             BsonClassMap.RegisterClassMap<UserSettingsDto>(cm =>
             {
                 cm.AutoMap();
-                cm.MapProperty(tz => tz.TimeZone.Id);
-                cm.MapMember(s => s.TimeZone).SetSerializer(new TimeZoneInfoSerializer());
             });
         }
     }
