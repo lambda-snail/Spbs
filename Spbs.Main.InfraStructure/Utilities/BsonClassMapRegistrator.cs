@@ -26,5 +26,25 @@ public static class BsonClassMapRegistrator
                 cm.AutoMap();
             });
         }
+
+        if (!BsonClassMap.IsClassMapRegistered(typeof(UserDto)))
+        {
+            BsonClassMap.RegisterClassMap<UserDto>(cm =>
+            {
+                cm.AutoMap();
+                cm.MapIdProperty(user => user.Id);
+                cm.IdMemberMap.SetIgnoreIfDefault(true);
+            });
+        }
+        
+        if (!BsonClassMap.IsClassMapRegistered(typeof(UserSettingsDto)))
+        {
+            BsonClassMap.RegisterClassMap<UserSettingsDto>(cm =>
+            {
+                cm.AutoMap();
+                cm.MapProperty(tz => tz.TimeZone.Id);
+                cm.MapMember(s => s.TimeZone).SetSerializer(new TimeZoneInfoSerializer());
+            });
+        }
     }
 }

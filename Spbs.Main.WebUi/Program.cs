@@ -58,6 +58,7 @@ builder.Services.AddSingleton<IMongoClient, MongoClient>(sp => new MongoClient(m
 builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddScoped<ILoggedInUserService, LoggedInUserService>();
 builder.Services.AddSingleton<IPurchaseRepository, PurchaseRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 // Automapper
 var mapperConfig = new MapperConfiguration(mapperconfig =>
