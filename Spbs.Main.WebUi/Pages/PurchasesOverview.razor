@@ -28,7 +28,7 @@
                 <RadzenDataGridColumn TItem="Purchase" Property="Location" Title="Location" Filterable="false" Sortable="false" TextAlign="TextAlign.Center"/>
                 <RadzenDataGridColumn TItem="Purchase" Property="PurchaseDateTime" Title="Date">
                     <Template Context="purchase">
-                        @purchase.PurchaseDateTime.ToString()
+                        @ToUserTimeZone(purchase.PurchaseDateTime).ToString()
                     </Template>
                 </RadzenDataGridColumn>
             </Columns>

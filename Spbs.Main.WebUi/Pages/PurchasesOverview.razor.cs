@@ -27,6 +27,8 @@ public partial class PurchasesOverview
 
     private RadzenDataGrid<Purchase> _purchasesGrid;
 
+    private User userDetails;
+    
     private bool _emptySelection => _selectedPurchase is null || _selectedPurchase.Count == 0;
 
         protected override async Task OnInitializedAsync()
@@ -35,12 +37,33 @@ public partial class PurchasesOverview
         
         StartDate = GetStartOfMonth();
         EndDate = GetEndOfMonth();
+        await GetUserDetails();
         await InitListOfPurchases();
     }
+
+        private DateTime ToUserTimeZone(DateTime dateTime)
+        {
+            if (userDetails is not null)
+            {
+                return userDetails.Settings.ToUserTimeZone(dateTime);
+            }
+
+            return dateTime;
+        }
 
     private async Task InitListOfPurchases()
     {
         await LoadPurchases();
+    }
+
+    private async Task GetUserDetails()
+    {
+        Guid userId = await UserService.GetLoggedInUserId();
+        var response = await Mediator.Send(new GetUserDetails.Request(UserId: userId));
+        if (response.Success)
+        {
+            userDetails = response.User;
+        }
     }
 
     private async Task LoadPurchases()
