@@ -14,5 +14,18 @@ public class ViewModelMapperProfiles : Profile
             .ForMember(p => p.Items, a => a.Ignore())
             .ForMember(p => p.Total, action => action.Ignore());
         CreateMap<NewPurchaseItemViewModel, PurchaseItem>();
+
+        CreateMap<User, UserViewModel>();
+        CreateMap<UserViewModel, User>();
+
+        CreateMap<UserSettingsViewModel, UserSettings>()
+            .ForMember(
+                settings => settings.TimeZone, 
+                action => 
+                    action.MapFrom( settingsvm => TimeZoneInfo.FindSystemTimeZoneById(settingsvm.TimeZone)));
+        CreateMap<UserSettings, UserSettingsViewModel>()
+            .ForMember(
+                settingsvm => settingsvm.TimeZone,
+                action => action.MapFrom(settings => settings.TimeZone.Id));
     }
 }

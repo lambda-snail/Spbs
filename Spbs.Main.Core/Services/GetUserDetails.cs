@@ -38,7 +38,7 @@ public class GetUserDetails
                 return new Response(Success: false, User: null);
             }
 
-            return new Response(Success: true, User : null);
+            return new Response(Success: true, User : user);
         }
     }
 }

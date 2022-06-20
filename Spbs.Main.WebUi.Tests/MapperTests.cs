@@ -13,7 +13,8 @@ public class MapperTests
             mapperconfig.AddProfile(new ViewModelMapperProfiles());
         });
     }
-
+    
+    [Fact]
     public void MapperConfiguration_ShouldBeValid()
     {
         var configuration = GetMapperConfiguration();

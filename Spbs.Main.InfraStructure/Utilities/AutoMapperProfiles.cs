@@ -21,10 +21,12 @@ public class AutoMapperProfiles : Profile
         CreateMap<UserDto, User>();
         
         CreateMap<UserSettings, UserSettingsDto>()
-            .ForMember(settingsDto => settingsDto.TimeZoneId, action => action.MapFrom(settings => settings.TimeZone.Id));
+            .ForMember(settingsDto => settingsDto.TimeZone, action => action.MapFrom(settings => settings.TimeZone.Id));
         
         CreateMap<UserSettingsDto, UserSettings>()
-            .ForMember(settingsDto => settingsDto.TimeZone, action => action.MapFrom( settingsDto => TimeZoneInfo.FindSystemTimeZoneById(settingsDto.TimeZoneId) )  );
-        
+            .ForMember(
+settings => settings.TimeZone, 
+    action => 
+                    action.MapFrom( settingsDto => TimeZoneInfo.FindSystemTimeZoneById(settingsDto.TimeZone)));
     }
 }
