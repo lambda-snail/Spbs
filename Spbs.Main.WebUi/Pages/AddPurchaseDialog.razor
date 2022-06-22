@@ -21,10 +21,8 @@
 
                         <div class="form-group col-md-10">
                             <label for="date">Date</label>
-                            <InputDate id="date"
-                                       class="form-control"
-                                       @bind-Value="@NewPurchase.PurchaseDateTime">
-                            </InputDate>
+                            <RadzenDatePicker TValue="DateTime" id="date" @bind-Value="@NewPurchase.PurchaseDateTime" ShowTime="true" HoursStep="1" MinutesStep="1" DateFormat="MM/dd/yyyy HH:mm" Class="w-100" />
+                            
                             <small id="post-content-small" class="form-text text-muted">When did you make the purchase?</small>
                             <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => NewPurchase.PurchaseDateTime)"/>
                         </div>
