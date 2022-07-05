@@ -28,5 +28,12 @@ public class AutoMapperProfiles : Profile
 settings => settings.TimeZone, 
     action => 
                     action.MapFrom( settingsDto => TimeZoneInfo.FindSystemTimeZoneById(settingsDto.TimeZone)));
+
+        CreateMap<Location, LocationDto>()
+            .ForMember(dto => dto.ParentId, action => 
+                action.MapFrom(location => location.Parent == null ? null : (Guid?)location.Parent.Id));
+        CreateMap<LocationDto, Location>()
+            .ForMember(location => location.Parent, action => action.Ignore())
+            .ForMember(location => location.Children, action => action.Ignore());
     }
 }

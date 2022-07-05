@@ -44,5 +44,16 @@ public static class BsonClassMapRegistrator
                 cm.AutoMap();
             });
         }
+        
+        if (!BsonClassMap.IsClassMapRegistered(typeof(LocationDto)))
+        {
+            BsonClassMap.RegisterClassMap<LocationDto>(cm =>
+            {
+                cm.AutoMap();
+                cm.MapIdProperty(l => l.Id);
+                cm.IdMemberMap.SetIgnoreIfDefault(true);
+                cm.IdMemberMap.SetIdGenerator(AscendingGuidGenerator.Instance);
+            });
+        }
     }
 }
