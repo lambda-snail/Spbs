@@ -9,11 +9,11 @@ using MongoDB.Driver;
 using Spbs.Main.Core.Contracts;
 using Spbs.Main.Core.Services;
 using Spbs.Main.Core.Settings;
+using Spbs.Main.InfraStructure.DtoModels;
 using Spbs.Main.InfraStructure.Identity;
 using Spbs.Main.InfraStructure.Persistence;
 using Spbs.Main.InfraStructure.Utilities;
 using Spbs.Main.WebUi.Areas.Identity;
-using Spbs.Main.WebUi.Data;
 using Spbs.Main.WebUi.Utilities;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -50,13 +50,13 @@ builder.Services
 // Mongo Db
 BsonClassMapRegistrator.RegisterBsonClassMaps();
 var mongoConnectionString = config.GetSection("SpbsMainDatabase").GetValue<string>("ConnectionString");
-builder.Services.AddSingleton<IMongoClient, MongoClient>(sp => new MongoClient(mongoConnectionString));
+builder.Services.AddScoped<IMongoClient, MongoClient>(sp => new MongoClient(mongoConnectionString));
 
 // Core services
-builder.Services.AddSingleton<WeatherForecastService>();
+builder.Services.AddTransient<IPurchaseRepository, PurchaseRepository>();
 builder.Services.AddScoped<ILoggedInUserService, LoggedInUserService>();
-builder.Services.AddSingleton<IPurchaseRepository, PurchaseRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ILocationContext, LocationContext>();
 
 // Automapper
 var mapperConfig = new MapperConfiguration(mapperconfig =>
