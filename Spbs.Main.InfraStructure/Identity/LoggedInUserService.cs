@@ -1,9 +1,9 @@
 using MediatR;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Security.Claims;
-using Spbs.Main.WebUi.Contracts;
+using Spbs.Main.Core.Contracts;
 
-namespace Spbs.Main.WebUi.Services;
+namespace Spbs.Main.InfraStructure.Identity;
 
 public class LoggedInUserService : ILoggedInUserService
 {

@@ -1,4 +1,4 @@
-namespace Spbs.Main.WebUi.Contracts;
+namespace Spbs.Main.Core.Contracts;
 
 public interface ILoggedInUserService
 {

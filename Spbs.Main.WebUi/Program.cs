@@ -13,9 +13,7 @@ using Spbs.Main.InfraStructure.Identity;
 using Spbs.Main.InfraStructure.Persistence;
 using Spbs.Main.InfraStructure.Utilities;
 using Spbs.Main.WebUi.Areas.Identity;
-using Spbs.Main.WebUi.Contracts;
 using Spbs.Main.WebUi.Data;
-using Spbs.Main.WebUi.Services;
 using Spbs.Main.WebUi.Utilities;
 
 var builder = WebApplication.CreateBuilder(args);

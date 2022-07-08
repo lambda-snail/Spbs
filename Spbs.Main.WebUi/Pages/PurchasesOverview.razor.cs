@@ -4,9 +4,9 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Radzen.Blazor;
+using Spbs.Main.Core.Contracts;
 using Spbs.Main.Core.Models;
 using Spbs.Main.Core.Services;
-using Spbs.Main.WebUi.Contracts;
 
 namespace Spbs.Main.WebUi.Pages;
 
