@@ -7,14 +7,14 @@ namespace Spbs.Main.InfraStructure.DtoModels;
 /// </summary>
 public class LocationContext
 {
-    private readonly Dictionary<Guid, Location> _context;
+    private readonly IDictionary<Guid, Location> _context;
 
     public LocationContext()
     {
-        _context = new();
+        _context = new Dictionary<Guid, Location>();
     }
 
-    public LocationContext(Dictionary<Guid, Location> context)
+    public LocationContext(IDictionary<Guid, Location> context)
     {
         _context = context;
     }
