@@ -25,6 +25,8 @@ public class LocationContext : ILocationContext
 
     public async Task InitLocations()
     {
+        if (_isInitialized) { return; }
+        
         GetUserLocationContext.Response response = await _mediator.Send(new GetUserLocationContext.Request());
         if(response.Success)
         {
