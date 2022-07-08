@@ -1,24 +1,38 @@
+using MediatR;
 using Spbs.Main.Core.Models;
+using Spbs.Main.Core.Services;
 
 namespace Spbs.Main.InfraStructure.DtoModels;
 
 /// <summary>
-/// A class that represents the context of all locations for a specified user.
+/// Represents the context of all locations for a specified user.
 /// </summary>
-public class LocationContext
+public class LocationContext : ILocationContext
 {
-    private readonly IDictionary<Guid, Location> _context;
+    private readonly IMediator _mediator;
+    private IDictionary<Guid, Location> _context { get; set; }
 
-    public LocationContext()
+    private bool _isInitialized = false;
+    public bool IsInitialized {
+        get { return _isInitialized; }
+    }
+    
+    public LocationContext(IMediator mediator)
     {
+        _mediator = mediator;
         _context = new Dictionary<Guid, Location>();
     }
 
-    public LocationContext(IDictionary<Guid, Location> context)
+    public async Task InitLocations()
     {
-        _context = context;
+        GetUserLocationContext.Response response = await _mediator.Send(new GetUserLocationContext.Request());
+        if(response.Success)
+        {
+            _context = response.Locations;
+            _isInitialized = true;
+        }
     }
-    
+
     public void AddLocation(Location location)
     {
         

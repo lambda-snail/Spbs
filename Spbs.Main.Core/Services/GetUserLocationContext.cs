@@ -1,14 +1,13 @@
 using MediatR;
 using Spbs.Main.Core.Contracts;
 using Spbs.Main.Core.Models;
-using Spbs.Main.InfraStructure.DtoModels;
 
 namespace Spbs.Main.Core.Services;
 
 public class GetUserLocationContext
 {
     public record Request() : IRequest<Response>;
-    public record Response(bool Success, LocationContext? Context);
+    public record Response(bool Success, IDictionary<Guid, Location> Locations);
 
     public class RequestHandler : IRequestHandler<Request, Response>
     {
@@ -27,14 +26,13 @@ public class GetUserLocationContext
             if (userId == Guid.Empty) { return GetFailureResponse(); }
 
             IDictionary<Guid, Location> locations = await _locationRepository.GetAllLocations(userId);
-            LocationContext context = new LocationContext(locations);
 
-            return new Response(Success: true, Context: context);
+            return new Response(Success: true, Locations: locations);
         }
 
         private Response GetFailureResponse()
         {
-            return new Response(Success: false, Context: null);
+            return new Response(Success: false, Locations: new Dictionary<Guid, Location>());
         }
     }
 }
