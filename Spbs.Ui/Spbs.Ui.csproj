@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <UserSecretsId>a576141c-d7bf-439b-bf59-3bd29898e93c</UserSecretsId>
+        <LangVersion>10</LangVersion>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.11" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="7.0.0" />
+        <PackageReference Include="Microsoft.Identity.Web" Version="1.*" />
+        <PackageReference Include="Microsoft.Identity.Web.UI" Version="1.*" />
+        <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="6.0.2" />
+    </ItemGroup>
+</Project>
