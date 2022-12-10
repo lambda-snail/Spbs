@@ -28,9 +28,7 @@ namespace Spbs.Ui
         }
 
         public IConfiguration Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
+        
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
@@ -38,22 +36,27 @@ namespace Spbs.Ui
             services.AddControllersWithViews()
                 .AddMicrosoftIdentityUI();
             
-            var serverVersion = MySqlServerVersion.AutoDetect(Configuration.GetConnectionString("SpbsExpenses"));
-        
-            services.AddPooledDbContextFactory<ExpensesDbContext>(o => o
-                .UseMySql(Configuration.GetConnectionString("SpbsExpenses"), serverVersion)
-                .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
-
             services.AddAuthorization(options =>
             {
                 // By default, all incoming requests will be authorized according to the default policy
                 options.FallbackPolicy = options.DefaultPolicy;
             });
 
+            RegisterDatabaseConnections(services);
+            
             services.AddRazorPages();
             services.AddServerSideBlazor()
                 .AddMicrosoftIdentityConsentHandler();
             services.AddSingleton<WeatherForecastService>();
+        }
+
+        private void RegisterDatabaseConnections(IServiceCollection services)
+        {
+            var serverVersion = MySqlServerVersion.AutoDetect(Configuration.GetConnectionString("SpbsExpenses"));
+
+            services.AddPooledDbContextFactory<ExpensesDbContext>(o => o
+                .UseMySql(Configuration.GetConnectionString("SpbsExpenses"), serverVersion)
+                .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

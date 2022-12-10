@@ -20,7 +20,7 @@ docker-compose down
 To perform a migration, go to the ```Spbs.Ui``` project and execute the following:
 
 ```
-dotnet ef --startup-project Spbs.Ui migrations add Initial-Migration
+dotnet ef migrations add Initial-Migration -o Data/Migrations 
 ```
 
 ## Updating
@@ -28,7 +28,7 @@ dotnet ef --startup-project Spbs.Ui migrations add Initial-Migration
 To apply the migrations execute the following command:
 
 ```
-dotnet ef --startup-project Spbs.Ui database update -- --environment Development
+dotnet ef database update -- --environment Development
 ```
 
 For production we will pass the flag ```Production``` to ef core. In the future there may be environment specific configurations added so it is best to have this practice from the start.
