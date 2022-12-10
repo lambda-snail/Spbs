@@ -17,6 +17,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Spbs.Ui.Data;
+using Spbs.Ui.Features.Expenses;
 
 namespace Spbs.Ui
 {
@@ -43,11 +44,18 @@ namespace Spbs.Ui
             });
 
             RegisterDatabaseConnections(services);
+            RegisterRepositories(services);
             
             services.AddRazorPages();
             services.AddServerSideBlazor()
                 .AddMicrosoftIdentityConsentHandler();
             services.AddSingleton<WeatherForecastService>();
+        }
+
+        private void RegisterRepositories(IServiceCollection services)
+        {
+            services.AddTransient<IExpenseReaderRepository, ExpenseReaderRepository>();
+            //services.AddTransient<IExpenseWriterRepository, ExpenseWriterRepository>();
         }
 
         private void RegisterDatabaseConnections(IServiceCollection services)
@@ -56,7 +64,13 @@ namespace Spbs.Ui
 
             services.AddPooledDbContextFactory<ExpensesDbContext>(o => o
                 .UseMySql(Configuration.GetConnectionString("SpbsExpenses"), serverVersion)
-                .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
+                .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
+    
+                #if DEBUG
+                .EnableDetailedErrors()
+                .LogTo(Console.WriteLine)
+                #endif
+            );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
