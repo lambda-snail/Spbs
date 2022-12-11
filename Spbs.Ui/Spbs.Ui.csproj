@@ -6,6 +6,11 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
     <ItemGroup>
+
+        <PackageReference Include="bootstrap" Version="5.2.3">
+            <GeneratePathProperty>true</GeneratePathProperty>
+        </PackageReference>
+
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.11" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="6.0.11" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.11">
@@ -16,4 +21,15 @@
         <PackageReference Include="Microsoft.Identity.Web.UI" Version="1.*" />
         <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="6.0.2" />
     </ItemGroup>
+    <ItemGroup>
+      <Folder Include="wwwroot\css\bootstrap" />
+    </ItemGroup>
+    <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+      <Exec Command="cp $(Pkgbootstrap)/contentFiles/any/any/wwwroot/css/bootstrap.min.css  $(ProjectDir)/wwwroot/css/bootstrap" />
+      <Exec Command="cp $(Pkgbootstrap)/contentFiles/any/any/wwwroot/css/bootstrap.min.css.map  $(ProjectDir)/wwwroot/css/bootstrap" />
+    </Target>
+    <!--ItemGroup>
+      <_ContentIncludedByDefault Remove="wwwroot\css\bootstrap\bootstrap.min.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\css\bootstrap\bootstrap.min.css.map" />
+    </ItemGroup-->
 </Project>
