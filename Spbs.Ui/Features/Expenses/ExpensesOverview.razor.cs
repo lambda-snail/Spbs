@@ -1,15 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.VisualBasic;
 using Spbs.Ui.Auth;
-using Spbs.Ui.Features.Expenses;
 
-namespace Spbs.Ui.Pages;
+namespace Spbs.Ui.Features.Expenses;
 
 public class ExpenseFilter 
 {
@@ -52,5 +48,10 @@ public partial class ExpensesOverview : ComponentBase
         _expenses ??= new();
         _expenses = await ExpenseRepository.GetSingleExpensesByUserAndMonth(userId.Value,
             new DateTime(ExpenseFilter.Year, ExpenseFilter.Month, 2));
+    }
+
+    public string GetExpenseDetailsUrl(Expense e)
+    {
+        return $"expenses/{e.Id}";
     }
 }

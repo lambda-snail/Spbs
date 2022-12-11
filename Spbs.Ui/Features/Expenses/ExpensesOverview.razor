@@ -1,0 +1,38 @@
+@page "/expenses"
+@using Spbs.Ui.Features.Expenses
+<h3>ExpensesOverview</h3>
+
+@if (_expenses is null || _expenses.Count == 0)
+{
+    <p>No expenses to show yet!</p>
+}
+else
+{
+    <container>
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Date</th>
+                <th scope="col">Venue</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (Expense e in _expenses)
+            {
+                <tr>
+                    <th scope="row">1</th>
+                    <td>
+                        <NavLink class="nav-link" href="@GetExpenseDetailsUrl(e)">
+                            @e.Name
+                        </NavLink>
+                    </td>
+                    <td>@e.Date.ToShortDateString()</td>
+                    <td>@e.Venue</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </container>
+}
