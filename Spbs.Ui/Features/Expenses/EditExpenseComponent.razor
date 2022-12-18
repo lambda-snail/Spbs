@@ -1,0 +1,74 @@
+@if (_doShowContent)
+{
+    <div class="modal fade show d-block" id="new-post-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="titleLabel">Expense Editor</h5>
+                    <button type="button" class="close" @onclick="@CloseDialog" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+
+                    <EditForm Model="@_editExpenseViewModel"
+                              OnValidSubmit="@HandleValidSubmit"
+                              OnInvalidSubmit="@HandleInvalidSubmit">
+
+                        <DataAnnotationsValidator/>
+                        <ValidationSummary></ValidationSummary>
+
+                        <div class="form-group col-md-10">
+                            <label for="expense-name">Name</label>
+                            <InputText id="expense-name"
+                                       class="form-control"
+                                       @bind-Value="@_editExpenseViewModel.Name">
+                            </InputText>
+                            <small id="expense-name-small" class="form-text text-muted">Choose a nifty title for your post!</small>
+                            <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => _editExpenseViewModel.Name)"/>
+                        </div>
+
+                        <div class="form-group col-md-10">
+                            <label for="expense-description">Description</label>
+                            <InputTextArea id="expense-description"
+                                           class="form-control"
+                                           @bind-Value="@_editExpenseViewModel.Description">
+                            </InputTextArea>
+                            <small id="expense-description-small" class="form-text text-muted">Add a description for the expense.</small>
+                            <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => _editExpenseViewModel.Description)"/>
+                        </div>
+
+                        <div class="form-group col-md-10">
+                            <label for="expense-date">Date and Time</label>
+                            <InputDate id="expense-date"
+                                       class="form-control"
+                                       @bind-Value="@_editExpenseViewModel.Date">
+                            </InputDate>
+                            <small id="post-date-small" class="form-text text-muted">Add a description for the expense.</small>
+                            <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => _editExpenseViewModel.Date)"/>
+                        </div>
+
+                        <div class="form-group col-md-10">
+                            <label for="expense-venue">Name</label>
+                            <InputText id="expense-venue"
+                                       class="form-control"
+                                       @bind-Value="@_editExpenseViewModel.Venue">
+                            </InputText>
+                            <small id="expense-venue-small" class="form-text text-muted">Where was the expense incurred?</small>
+                            <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => _editExpenseViewModel.Venue)"/>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary edit-btn">Submit</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" @onclick="@CloseDialog">Close</button>
+                    </EditForm>
+                </div>
+
+
+                <div class="modal-footer">
+
+                </div>
+            </div>
+        </div>
+    </div>
+}
