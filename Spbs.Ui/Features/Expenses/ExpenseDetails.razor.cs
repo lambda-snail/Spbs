@@ -25,10 +25,7 @@ public partial class ExpenseDetails : ComponentBase
 
     private async void FetchExpense()
     {
-        var authState = await authenticationStateTask;
-        var user = authState.User;
-
-        Guid? userId = user.GetUserId();
+        var userId = await UserId();
         if (userId is null)
         {
             return;
@@ -36,6 +33,21 @@ public partial class ExpenseDetails : ComponentBase
 
         Guid id = Guid.Parse(ExpenseId);
         _expense = await ExpenseRepository.GetUserExpenseById(userId.Value, id);
+    }
+
+    private Guid? _cachedUserId = null;
+    private async Task<Guid?> UserId()
+    {
+        if (_cachedUserId is not null)
+        {
+            return _cachedUserId;
+        }
+        
+        var authState = await authenticationStateTask;
+        var user = authState.User;
+
+        _cachedUserId = user.GetUserId();
+        return _cachedUserId;
     }
 
     private void ToggleEditMode()

@@ -5,7 +5,7 @@ using Spbs.Ui.Data;
 
 namespace Spbs.Ui.Features.Expenses;
 
-public interface IExpenseReaderRepository : IReaderRepositoryBase<Expense>
+public interface IExpenseReaderRepository
 {
     Task<List<Expense>> GetSingleExpensesByUser(Guid userId, int take = 50, int skip = 0);
     

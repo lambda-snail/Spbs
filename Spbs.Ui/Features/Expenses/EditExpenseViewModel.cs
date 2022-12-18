@@ -16,7 +16,7 @@ public class EditExpenseViewModel
 
     public bool Recurring { get; set; } = false;
 
-//    public Guid OwningUserId { get; set; }
+    public Guid OwningUserId { get; set; }
 
     [Required]
     public DateTime Date { get; set; }

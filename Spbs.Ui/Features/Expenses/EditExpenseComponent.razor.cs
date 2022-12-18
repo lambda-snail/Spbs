@@ -1,4 +1,6 @@
 using System;
+using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 
 namespace Spbs.Ui.Features.Expenses;
@@ -10,6 +12,8 @@ public partial class EditExpenseComponent : ComponentBase
     private EditExpenseViewModel _editExpenseViewModel = new() { Date = DateTime.Now };
 
     [Inject] public IExpenseWriterRepository ExpenseWriterRepository { get; set; } 
+    
+    [Parameter, Required] public Func<Guid?> GetUserId { get; set; }
     
     public void ShowModal()
     {
@@ -31,12 +35,24 @@ public partial class EditExpenseComponent : ComponentBase
         
     }
 
-    private void HandleValidSubmit()
+    private async Task HandleValidSubmit()
     {
         if (_editExpenseViewModel.Id is null)
         {
-            Expense e = new() { Name = };
-            ExpenseWriterRepository.InsertAsync();
+            CloseDialog();
+            
+            Guid? userId = GetUserId();
+            if (userId is null)
+            {
+                return;
+            }
+
+            _editExpenseViewModel.OwningUserId = userId.Value;
+            await ExpenseWriterRepository.InsertAsync(_editExpenseViewModel);
+        }
+        else
+        {
+            await ExpenseWriterRepository.UpdateAsync(_editExpenseViewModel);
         }
     }
 

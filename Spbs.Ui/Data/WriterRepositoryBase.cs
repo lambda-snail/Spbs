@@ -14,20 +14,20 @@ public class WriterRepositoryBase<TDto, TDbCOntext> : IAsyncDisposable, IWriterR
         _db = factory.CreateDbContext();
     }
 
-    public virtual async Task<TDto> InsertAsync(TDto row)
+    public async Task<TDto> InsertAsync(TDto row)
     {
         var result = _db.Set<TDto>().Add(row);
         await _db.SaveChangesAsync();
         return result.Entity;
     }
     
-    public virtual Task UpdateAsync(TDto row)
+    public Task UpdateAsync(TDto row)
     {
         _db.Set<TDto>().Update(row);
         return _db.SaveChangesAsync();
     }
 
-    public virtual Task DeleteAsync(TDto row)
+    public Task DeleteAsync(TDto row)
     {
         _db.Set<TDto>().Remove(row);
         return _db.SaveChangesAsync();
