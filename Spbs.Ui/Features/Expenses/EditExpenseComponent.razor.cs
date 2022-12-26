@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Components;
 
 namespace Spbs.Ui.Features.Expenses;
@@ -11,9 +12,11 @@ public partial class EditExpenseComponent : ComponentBase
 
     private EditExpenseViewModel _editExpenseViewModel = new() { Date = DateTime.Now };
 
+    [Inject] public IMapper mapper { get; set; }
     [Inject] public IExpenseWriterRepository ExpenseWriterRepository { get; set; } 
     
     [Parameter, Required] public Func<Guid?> GetUserId { get; set; }
+    [Parameter] public Action OnUpdateCallback { get; set; }
     
     public void ShowModal()
     {
@@ -32,15 +35,16 @@ public partial class EditExpenseComponent : ComponentBase
     /// </summary>
     public void SetModalContent(Expense? expense)
     {
-        
+        if (expense is not null)
+        {
+            _editExpenseViewModel = mapper.Map<EditExpenseViewModel>(expense);
+        }
     }
 
     private async Task HandleValidSubmit()
     {
         if (_editExpenseViewModel.Id is null)
         {
-            CloseDialog();
-            
             Guid? userId = GetUserId();
             if (userId is null)
             {
@@ -54,10 +58,20 @@ public partial class EditExpenseComponent : ComponentBase
         {
             await ExpenseWriterRepository.UpdateAsync(_editExpenseViewModel);
         }
+        
+        CloseDialog();
+        ResetModel();
+        OnUpdateCallback();
+        StateHasChanged();
     }
 
     private void HandleInvalidSubmit()
     {
         
+    }
+
+    private void ResetModel()
+    {
+        _editExpenseViewModel = new() { Date = DateTime.Now };
     }
 }

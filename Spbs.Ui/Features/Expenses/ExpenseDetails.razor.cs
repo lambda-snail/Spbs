@@ -52,6 +52,12 @@ public partial class ExpenseDetails : ComponentBase
 
     private void ToggleEditMode()
     {
+        _editExpenseComponent?.SetModalContent(_expense);
         _editExpenseComponent?.ShowModal();
+    }
+
+    private void ExpenseItemUpdated()
+    {
+        FetchExpense();
     }
 }
