@@ -10,9 +10,9 @@ public class ReaderRepositoryBase<TDto, TDbCOntext> : IAsyncDisposable,
 {
     protected TDbCOntext _db { get; set; }
 
-    public ReaderRepositoryBase(IDbContextFactory<TDbCOntext> factory)
+    public ReaderRepositoryBase(TDbCOntext context)
     {
-        _db = factory.CreateDbContext();
+        _db = context;//.CreateDbContext();
     }
 
     public async Task<TDto> GetByIdAsync(Guid id)

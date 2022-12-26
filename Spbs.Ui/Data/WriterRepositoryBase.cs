@@ -9,9 +9,9 @@ public class WriterRepositoryBase<TDto, TDbCOntext> : IAsyncDisposable, IWriterR
 {
     protected TDbCOntext _db { get; set; }
 
-    public WriterRepositoryBase(IDbContextFactory<TDbCOntext> factory)
+    public WriterRepositoryBase(TDbCOntext context)
     {
-        _db = factory.CreateDbContext();
+        _db = context;//.CreateDbContext();
     }
 
     public async Task<TDto> InsertAsync(TDto row)

@@ -9,7 +9,7 @@ namespace Spbs.Ui.Features.Expenses;
 
 public class ExpenseReaderRepository : ReaderRepositoryBase<Expense, ExpensesDbContext>, IExpenseReaderRepository
 {
-    public ExpenseReaderRepository(IDbContextFactory<ExpensesDbContext> factory) : base(factory)
+    public ExpenseReaderRepository(ExpensesDbContext context) : base(context)
     {
         
     }
