@@ -24,17 +24,20 @@ public partial class ExpensesOverview : ComponentBase
     
     public ExpenseFilter ExpenseFilter { get; set; } = new ExpenseFilter { Month = 12, Year = 2022 };
     
+    private EditExpenseComponent _editExpenseComponent;
+    
     public ExpensesOverview()
     {
         
     }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        FetchExpenses();
+        await FetchExpenses();
+        await UserId();
     }
 
-    private async void FetchExpenses()
+    private async Task FetchExpenses()
     {
         var authState = await authenticationStateTask;
         var user = authState.User;
@@ -46,12 +49,40 @@ public partial class ExpensesOverview : ComponentBase
         }
         
         _expenses ??= new();
-        _expenses = await ExpenseRepository.GetSingleExpensesByUserAndMonth(userId.Value,
-            new DateTime(ExpenseFilter.Year, ExpenseFilter.Month, 2));
+        // _expenses = await ExpenseRepository.GetSingleExpensesByUserAndMonth(userId.Value,
+        //     new DateTime(ExpenseFilter.Year, ExpenseFilter.Month, 2));
+        _expenses = await ExpenseRepository.GetSingleExpensesByUser(userId.Value);
     }
 
     public string GetExpenseDetailsUrl(Expense e)
     {
         return $"expenses/{e.Id}";
+    }
+    
+    private Guid? _cachedUserId = null;
+    private async Task<Guid?> UserId()
+    {
+        if (_cachedUserId is not null)
+        {
+            return _cachedUserId;
+        }
+        
+        var authState = await authenticationStateTask;
+        var user = authState.User;
+
+        _cachedUserId = user.GetUserId();
+        return _cachedUserId;
+    }
+
+    private async void ExpenseItemAdded()
+    {
+        await FetchExpenses();
+        StateHasChanged();
+    }
+    
+    private void ToggleAddExpenseMode()
+    {
+        _editExpenseComponent?.SetModalContent();
+        _editExpenseComponent?.ShowModal();
     }
 }

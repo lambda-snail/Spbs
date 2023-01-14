@@ -33,6 +33,7 @@ public partial class ExpenseDetails : ComponentBase
 
         Guid id = Guid.Parse(ExpenseId);
         _expense = await ExpenseRepository.GetUserExpenseById(userId.Value, id);
+        StateHasChanged();
     }
 
     private Guid? _cachedUserId = null;

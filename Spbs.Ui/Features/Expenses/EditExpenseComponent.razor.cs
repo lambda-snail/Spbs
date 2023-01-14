@@ -33,7 +33,7 @@ public partial class EditExpenseComponent : ComponentBase
     /// <summary>
     /// To edit an Expense using this component, use this method to set the content before displaying the component.
     /// </summary>
-    public void SetModalContent(Expense? expense)
+    public void SetModalContent(Expense? expense = null)
     {
         if (expense is not null)
         {
