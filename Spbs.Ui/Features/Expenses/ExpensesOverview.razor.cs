@@ -16,7 +16,8 @@ public class ExpenseFilter
 public partial class ExpensesOverview : ComponentBase
 {
     private List<Expense>? _expenses = null;
-
+    private int? _selectedRow = null;
+    
     [Inject] public IExpenseReaderRepository ExpenseRepository { get; set; }
     
     [CascadingParameter]
@@ -35,6 +36,27 @@ public partial class ExpensesOverview : ComponentBase
     {
         await FetchExpenses();
         await UserId();
+    }
+
+    /// <summary>
+    /// Determine which row is the selected one. If the selected row is clicked twice, it will be deselected.
+    /// </summary>
+    /// <param name="i"></param>
+    private void SetSelected(int i)
+    {
+        if (i >= 0 && i < _expenses?.Count)
+        {
+            _selectedRow = i == _selectedRow ? null : i;
+            StateHasChanged();
+        }
+        else
+        {
+            if (_selectedRow is not null)
+            {
+                _selectedRow = null;
+                StateHasChanged();
+            }
+        }
     }
 
     private async Task FetchExpenses()
@@ -80,9 +102,20 @@ public partial class ExpensesOverview : ComponentBase
         StateHasChanged();
     }
     
-    private void ToggleAddExpenseMode()
+    private void ToggleExpenseDialog()
     {
-        _editExpenseComponent?.SetModalContent();
+        Expense? e = null;
+        if (_selectedRow is not null && _selectedRow >= 0 && _selectedRow < _expenses?.Count)
+        {
+            e = _expenses?[_selectedRow.Value];
+        }
+        
+        _editExpenseComponent?.SetModalContent(e);
         _editExpenseComponent?.ShowModal();
+    }
+
+    private string GetRowClass(int i)
+    {
+        return _selectedRow == i ? "bg-secondary" : String.Empty;
     }
 }
