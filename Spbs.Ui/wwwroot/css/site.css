@@ -73,6 +73,7 @@ app {
 
         .sidebar .nav-item:first-of-type {
             padding-top: 1rem;
+            margin: 0;
         }
 
         .sidebar .nav-item:last-of-type {
