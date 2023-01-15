@@ -9,21 +9,22 @@ namespace Spbs.Ui.Features.Expenses;
 
 public class ExpenseFilter 
 {
-    public int Month { get; set; }
-    public int Year { get; set; }
+    public DateTime? FromDate { get; set; }
+    public bool FromDateMonthOnly { get; set; } = false;
 }
 
 public partial class ExpensesOverview : ComponentBase
 {
     private List<Expense>? _expenses = null;
     private int? _selectedRow = null;
+    private bool _displayFilter = false;
     
     [Inject] public IExpenseReaderRepository ExpenseRepository { get; set; }
     
     [CascadingParameter]
     private Task<AuthenticationState> authenticationStateTask { get; set; }
     
-    public ExpenseFilter ExpenseFilter { get; set; } = new ExpenseFilter { Month = 12, Year = 2022 };
+    private ExpenseFilter _expenseFilter { get; set; } = new ExpenseFilter();
     
     private EditExpenseComponent _editExpenseComponent;
     
@@ -73,7 +74,14 @@ public partial class ExpensesOverview : ComponentBase
         _expenses ??= new();
         // _expenses = await ExpenseRepository.GetSingleExpensesByUserAndMonth(userId.Value,
         //     new DateTime(ExpenseFilter.Year, ExpenseFilter.Month, 2));
-        _expenses = await ExpenseRepository.GetSingleExpensesByUser(userId.Value);
+        if (_expenseFilter?.FromDate is not null)
+        {
+            _expenses = await ExpenseRepository.GetSingleExpensesByUserAndMonth(userId.Value, _expenseFilter.FromDate.Value);
+        }
+        else
+        {
+            _expenses = await ExpenseRepository.GetSingleExpensesByUser(userId.Value);
+        }
     }
 
     public string GetExpenseDetailsUrl(Expense e)
@@ -116,6 +124,12 @@ public partial class ExpensesOverview : ComponentBase
 
     private string GetRowClass(int i)
     {
-        return _selectedRow == i ? "bg-secondary" : String.Empty;
+        return _selectedRow == i ? "bg-secondary text-white" : String.Empty;
+    }
+
+    private async void ApplyFilter()
+    {
+        await FetchExpenses();
+        StateHasChanged();
     }
 }
