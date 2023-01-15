@@ -53,7 +53,7 @@
 
                             <div class="d-flex justify-content-end col-6">
                                 <button type="submit" class="btn btn-primary edit-btn">Apply</button>
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal" @onclick="@(() => { _expenseFilter = new(); })">Clear Filter</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal" @onclick="@(async () => { _expenseFilter = new(); await FetchExpenses(); })">Clear Filter</button>
                             </div>
                         </div>
                     </EditForm>
