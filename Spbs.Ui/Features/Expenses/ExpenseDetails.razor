@@ -42,6 +42,20 @@ else
                             }
                         </div>
                     </div>
+
+
+                    @if (_expense?.Tags is not null)
+                    {
+                        <div class="row">
+                            <div class="col-3">Tags:</div>
+                            <div class="col-auto">
+                                @foreach (var tag in _expense.Tags.Split(" "))
+                                {
+                                    <span class="badge bg-success me-1">@tag</span>
+                                }
+                            </div>
+                        </div>
+                    }
                 </div>
 
                 <div class="card-footer">
@@ -65,7 +79,7 @@ else
                     <ul class="list-group list-group-flush">
                         @foreach (ExpenseItem ei in _expense.Items)
                         {
-                            <li class="list-group-item">@ei.Name @ei.Quantity x @ei.Price @ei.Currency</li>                            
+                            <li class="list-group-item">@ei.Name @ei.Quantity x @ei.Price @ei.Currency</li>
                         }
                     </ul>
                 }
