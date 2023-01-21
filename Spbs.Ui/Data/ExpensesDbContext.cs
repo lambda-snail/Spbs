@@ -39,13 +39,12 @@ public class ExpensesDbContext : DbContext
         modelBuilder.Entity<ExpenseItem>(builder =>
         {
             builder.Property(i => i.Currency).HasColumnType("nvarchar(8)"); // TODO: How to deal with currency?
-            builder.Property(i => i.Description).HasColumnType("nvarchar(2048)");
             builder.Property(i => i.Name).HasColumnType("nvarchar(128)");
 
             builder.Property(i => i.Name).IsRequired();
             builder.Property(i => i.Currency).IsRequired();
             builder.Property(i => i.Quantity).IsRequired();
-            builder.Property(i => i.Quantity).IsRequired();
+            builder.Property(i => i.Price).IsRequired();
         });
     }
 }
