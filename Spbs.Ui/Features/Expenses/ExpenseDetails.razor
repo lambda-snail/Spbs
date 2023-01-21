@@ -60,11 +60,19 @@ else
                 <div class="card-header">
                     Items in Purchase
                 </div>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">XXXXXX 1234 SEK</li>
-                    <li class="list-group-item">YYYYYY 6734 SEK</li>
-                    <li class="list-group-item">ZZZZZZ 3414 SEK</li>
-                </ul>
+                @if (_expense?.Items?.Count > 0)
+                {
+                    <ul class="list-group list-group-flush">
+                        @foreach (ExpenseItem ei in _expense.Items)
+                        {
+                            <li class="list-group-item">@ei.Name @ei.Quantity x @ei.Price @ei.Currency</li>                            
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <div>No items added yet. Click "add" to add one to your expense record.</div>
+                }
             </div>
         </div>
 

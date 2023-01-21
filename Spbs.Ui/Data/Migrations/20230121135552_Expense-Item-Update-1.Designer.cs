@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Spbs.Ui.Data;
 
@@ -10,9 +11,10 @@ using Spbs.Ui.Data;
 namespace Spbs.Ui.Data.Migrations
 {
     [DbContext(typeof(ExpensesDbContext))]
-    partial class ExpensesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230121135552_Expense-Item-Update-1")]
+    partial class ExpenseItemUpdate1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -74,7 +76,10 @@ namespace Spbs.Ui.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(8)");
 
-                    b.Property<Guid?>("ExpenseId")
+                    b.Property<Guid>("ExpenseId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid?>("ExpenseId1")
                         .HasColumnType("char(36)");
 
                     b.Property<string>("Name")
@@ -90,6 +95,8 @@ namespace Spbs.Ui.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ExpenseId");
+
+                    b.HasIndex("ExpenseId1");
 
                     b.ToTable("ExpenseItems");
                 });
@@ -121,8 +128,14 @@ namespace Spbs.Ui.Data.Migrations
             modelBuilder.Entity("Spbs.Ui.Features.Expenses.ExpenseItem", b =>
                 {
                     b.HasOne("Spbs.Ui.Features.Expenses.Expense", null)
+                        .WithMany()
+                        .HasForeignKey("ExpenseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Spbs.Ui.Features.Expenses.Expense", null)
                         .WithMany("Items")
-                        .HasForeignKey("ExpenseId");
+                        .HasForeignKey("ExpenseId1");
                 });
 
             modelBuilder.Entity("Spbs.Ui.Features.Expenses.Expense", b =>
