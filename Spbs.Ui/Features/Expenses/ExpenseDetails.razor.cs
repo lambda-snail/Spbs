@@ -101,7 +101,7 @@ public partial class ExpenseDetails : ComponentBase
 
         _expense!.Tags ??= string.Empty;
 
-        _expense!.Tags += tagList;
+        _expense!.Tags += " " + tagList;
         await SaveExpense();
     }
 
