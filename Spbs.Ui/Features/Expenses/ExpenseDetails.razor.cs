@@ -4,6 +4,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.JSInterop;
 using Spbs.Ui.Auth;
 
 namespace Spbs.Ui.Features.Expenses;
@@ -14,6 +15,7 @@ public partial class ExpenseDetails : ComponentBase
 
     [Inject] public IExpenseReaderRepository ExpenseReaderRepository { get; set; }
     [Inject] public IExpenseWriterRepository ExpenseWriterRepository { get; set; }
+    [Inject] public IJSRuntime JsRuntime { get; set; }
     [Inject] public IMapper Mapper { get; set; }
     
     [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
@@ -87,6 +89,20 @@ public partial class ExpenseDetails : ComponentBase
     private void ExpenseUpdated()
     {
         FetchExpense();
+    }
+
+    private async Task AddTagList()
+    {
+        string tagList = await JsRuntime.InvokeAsync<string>("prompt", "Add a list of tags separated by space");
+        if (tagList is null || tagList == string.Empty)
+        {
+            return;
+        }
+
+        _expense!.Tags ??= string.Empty;
+
+        _expense!.Tags += tagList;
+        await SaveExpense();
     }
 
     private async Task ExpenseItemUpdated(ExpenseItem? item)
