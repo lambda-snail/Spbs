@@ -30,6 +30,10 @@ else
                         <div class="col-auto">@_expense.Venue</div>
                     </div>
                     <div class="row">
+                        <div class="col-3">Total:</div>
+                        <div class="col-auto">@_expense.Total @_expense.Currency</div>
+                    </div>
+                    <div class="row">
                         <div class="col-3">Recurring:</div>
                         <div class="col-auto">
                             @if (_expense.Recurring)
@@ -79,7 +83,7 @@ else
                     <ul class="list-group list-group-flush">
                         @foreach (ExpenseItem ei in _expense.Items)
                         {
-                            <li class="list-group-item">@ei.Name @ei.Quantity x @ei.Price @ei.Currency</li>
+                            <li class="list-group-item">@ei.Name @ei.Quantity x @ei.Price</li>
                         }
                     </ul>
                 }

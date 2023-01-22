@@ -22,6 +22,7 @@ public class EditExpenseViewModel
     public DateTime Date { get; set; }
 
     public string? Venue { get; set; }
+    public string? Currency { get; set; }
 
     public string? Tags { get; set; }
 }

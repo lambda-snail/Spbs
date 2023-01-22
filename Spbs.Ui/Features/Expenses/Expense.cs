@@ -25,6 +25,7 @@ public class Expense
     public string? Tags { get; set; }
 
     public virtual double Total { get; set; }
+    public string Currency { get; set; }
 }
 
 public class ExpenseItem
@@ -34,5 +35,4 @@ public class ExpenseItem
     public string Name { get; set; }
     public int Quantity { get; set; }
     public double Price { get; set; }
-    public string Currency { get; set; }
 }

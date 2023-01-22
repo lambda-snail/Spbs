@@ -59,6 +59,16 @@
                             <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => _editExpenseViewModel.Venue)"/>
                         </div>
 
+                        <div class="form-group col-md-10">
+                            <label for="expense-currency">Currency</label>
+                            <InputText id="expense-currency"
+                                       class="form-control"
+                                       @bind-Value="@_editExpenseViewModel.Currency">
+                            </InputText>
+                            <small id="expense-currency-small" class="form-text text-muted">The currency that the purchase was made in.</small>
+                            <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => _editExpenseViewModel.Currency)"/>
+                        </div>
+
                         <button type="submit" class="btn btn-primary edit-btn">Submit</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal" @onclick="@CloseDialog">Close</button>
                     </EditForm>
