@@ -5,6 +5,6 @@ namespace Spbs.Ui.Features.Expenses;
 
 public interface IExpenseWriterRepository
 {
-    public Task<Expense> InsertAsync(EditExpenseViewModel editExpense);
-    public Task UpdateAsync(EditExpenseViewModel editExpense);
+    public Task<Expense> InsertExpenseAsync(Expense expense);
+    public Task UpdateExpenseAsync(Expense expense);
 }

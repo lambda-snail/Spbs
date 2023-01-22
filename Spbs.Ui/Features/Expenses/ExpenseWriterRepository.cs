@@ -15,20 +15,17 @@ public class ExpenseWriterRepository : WriterRepositoryBase<Expense, ExpensesDbC
         _mapper = mapper;
     }
 
-    public Task<Expense> InsertAsync(EditExpenseViewModel editExpense)
+    public Task<Expense> InsertExpenseAsync(Expense expense)
     {
-        var expense = _mapper.Map<Expense>(editExpense);
-        
+
         DateTime now = DateTime.Now;
         UpdateAuditColumns(expense, now); // TODO Add Datetime provider or similar
         SetOnCreateAuditColumns(expense, now);
         return InsertAsync(expense);
     }
     
-    public Task UpdateAsync(EditExpenseViewModel editExpense)
+    public Task UpdateExpenseAsync(Expense expense)
     {
-        var expense = _mapper.Map<Expense>(editExpense);
-        
         UpdateAuditColumns(expense, DateTime.Now);
         return UpdateAsync(expense);
     }

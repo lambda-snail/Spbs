@@ -8,5 +8,10 @@ public class ExpenseMapperProfiles : Profile
     {
         CreateMap<EditExpenseViewModel, Expense>();
         CreateMap<Expense, EditExpenseViewModel>();
+        
+        CreateMap<EditExpenseItemViewModel, ExpenseItem>();
+        CreateMap<ExpenseItem, EditExpenseItemViewModel>();
+        
+        CreateMap<ExpenseItem, ExpenseItem>();
     }
 }

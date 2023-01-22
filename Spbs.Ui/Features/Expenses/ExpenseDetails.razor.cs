@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Http.Features;
@@ -11,28 +12,54 @@ public partial class ExpenseDetails : ComponentBase
 {
     [Parameter] public string ExpenseId { get; set; }
 
-    [Inject] public IExpenseReaderRepository ExpenseRepository { get; set; }
-
+    [Inject] public IExpenseReaderRepository ExpenseReaderRepository { get; set; }
+    [Inject] public IExpenseWriterRepository ExpenseWriterRepository { get; set; }
+    [Inject] public IMapper Mapper { get; set; }
+    
     [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
 
     private Expense? _expense = null;
     private EditExpenseComponent _editExpenseComponent;
+    private EditExpenseItemComponent _editExpenseItemComponent;
 
+    private Guid? _userId = null;
+    
     protected override void OnInitialized()
     {
         FetchExpense();
     }
 
+    private async Task<bool> LoadUserIdCached()
+    {
+        if (_userId is null)
+        {
+            var userId = await UserId();
+            _userId = userId;
+        }
+        
+        return _userId is not null;
+    }
+    
     private async void FetchExpense()
     {
-        var userId = await UserId();
-        if (userId is null)
+        if (!await LoadUserIdCached())
         {
             return;
         }
 
         Guid id = Guid.Parse(ExpenseId);
-        _expense = await ExpenseRepository.GetUserExpenseById(userId.Value, id);
+        _expense = await ExpenseReaderRepository.GetUserExpenseById(_userId!.Value, id);
+        StateHasChanged();
+    }
+
+    private async Task SaveExpense()
+    {
+        if (!await LoadUserIdCached() || _expense is null)
+        {
+            return;
+        }
+
+        await ExpenseWriterRepository.UpdateExpenseAsync(_expense!);
         StateHasChanged();
     }
 
@@ -57,10 +84,49 @@ public partial class ExpenseDetails : ComponentBase
         _editExpenseComponent?.ShowModal();
     }
 
-    private void ExpenseItemUpdated()
+    private void ExpenseUpdated()
     {
         FetchExpense();
     }
+
+    private async Task ExpenseItemUpdated(ExpenseItem? item)
+    {
+        if (item is null)
+        {
+            return;
+        }
+
+        if (_selectedRow >= 0 && _expense?.Items[_selectedRow.Value].Id == item.Id)
+        {
+            Mapper.Map((ExpenseItem)item, _expense.Items[_selectedRow.Value]);
+        }
+        else
+        {
+            _expense?.Items?.Add(item);
+        }
+        
+        await SaveExpense();
+        //FetchExpense();
+    }
+    
+    #region ExpenseItems
+
+    private void ToggleEditItemsMode()
+    {
+        if (_selectedRow is not null && _selectedRow >= 0)
+        {
+            ExpenseItem selected = _expense.Items[_selectedRow.Value];
+            _editExpenseItemComponent?.SetModalContent(selected);
+        }
+        else
+        {
+            _editExpenseItemComponent?.SetModalContent(null);            
+        }
+        
+        _editExpenseItemComponent?.ShowModal();
+    }
+    
+    #endregion
     
     #region Selection
     
