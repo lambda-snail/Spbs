@@ -80,10 +80,13 @@ else
                 </div>
                 @if (_expense?.Items?.Count > 0)
                 {
+                    int rowCounter = 0;
                     <ul class="list-group list-group-flush">
                         @foreach (ExpenseItem ei in _expense.Items)
                         {
-                            <li class="list-group-item">@ei.Name @ei.Quantity x @ei.Price</li>
+                            int row = rowCounter;
+                            <li onclick="@(() => SetSelected(row))" class="list-group-item @GetRowClass(row)">@ei.Name @ei.Quantity.ToString() x @ei.Price.ToString()</li>
+                            ++rowCounter;
                         }
                     </ul>
                 }

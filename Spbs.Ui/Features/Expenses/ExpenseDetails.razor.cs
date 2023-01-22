@@ -61,4 +61,31 @@ public partial class ExpenseDetails : ComponentBase
     {
         FetchExpense();
     }
+    
+    #region Selection
+    
+    private int? _selectedRow = null;
+    private string GetRowClass(int i)
+    {
+        return _selectedRow == i ? "bg-secondary text-white" : String.Empty;
+    }
+    
+    private void SetSelected(int i)
+    {
+        if (i >= 0 && i < _expense?.Items.Count)
+        {
+            _selectedRow = i == _selectedRow ? null : i;
+            StateHasChanged();
+        }
+        else
+        {
+            if (_selectedRow is not null)
+            {
+                _selectedRow = null;
+                StateHasChanged();
+            }
+        }
+    }
+    
+    #endregion
 }
