@@ -29,6 +29,9 @@
       <Folder Include="Components" />
       <Folder Include="wwwroot\css\bootstrap" />
     </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\Shared\Shared.csproj" />
+    </ItemGroup>
     <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
       <Exec Command="cp $(Pkgbootstrap)/contentFiles/any/any/wwwroot/css/bootstrap.min.css  $(ProjectDir)/wwwroot/css/bootstrap" />
       <Exec Command="cp $(Pkgbootstrap)/contentFiles/any/any/wwwroot/css/bootstrap.min.css.map  $(ProjectDir)/wwwroot/css/bootstrap" />

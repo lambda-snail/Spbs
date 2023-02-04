@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Spbs.Shared.Data;
 using Spbs.Ui.Data;
 
 namespace Spbs.Ui.Features.Expenses;

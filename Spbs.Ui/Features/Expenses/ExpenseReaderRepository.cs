@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Spbs.Shared.Data;
 using Spbs.Ui.Data;
 
 namespace Spbs.Ui.Features.Expenses;

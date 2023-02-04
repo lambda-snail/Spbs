@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
-namespace Spbs.Ui.Data;
+namespace Spbs.Shared.Data;
 
 public class WriterRepositoryBase<TDto, TDbCOntext> : IAsyncDisposable, IWriterRepositoryBase<TDto> where TDbCOntext : DbContext
     where TDto : class

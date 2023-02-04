@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace Spbs.Ui.Data;
+namespace Spbs.Shared.Data;
 
 public interface IWriterRepositoryBase<TDto> where TDto : class
 {

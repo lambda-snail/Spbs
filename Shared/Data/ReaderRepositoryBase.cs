@@ -1,8 +1,6 @@
-using System;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
-namespace Spbs.Ui.Data;
+namespace Spbs.Shared.Data;
 
 public class ReaderRepositoryBase<TDto, TDbCOntext> : IAsyncDisposable,
     IReaderRepositoryBase<TDto> where TDbCOntext : DbContext

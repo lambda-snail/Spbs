@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Spbs.Ui.Data;
+namespace Spbs.Shared.Data;
 
 public interface IReaderRepositoryBase<TDto> where TDto : class
 {
