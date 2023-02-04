@@ -41,7 +41,6 @@ namespace Spbs.Ui
             services.AddRazorPages();
             services.AddServerSideBlazor()
                 .AddMicrosoftIdentityConsentHandler();
-            services.AddSingleton<WeatherForecastService>();
 
             services.AddAutoMapper(typeof(Startup));
         }
