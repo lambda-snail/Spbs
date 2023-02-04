@@ -27,6 +27,7 @@
     </ItemGroup>
     <ItemGroup>
       <Folder Include="Components" />
+      <Folder Include="Data\Migrations\RecurringExpenses" />
       <Folder Include="wwwroot\css\bootstrap" />
     </ItemGroup>
     <ItemGroup>
