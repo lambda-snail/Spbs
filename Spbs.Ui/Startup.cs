@@ -64,6 +64,14 @@ namespace Spbs.Ui
                 .EnableDetailedErrors()
                 .LogTo(Console.WriteLine)
                 #endif
+            ).AddDbContext<RecurringExpensesDbContext>(o => o
+                .UseMySql(Configuration.GetConnectionString("SpbsExpenses"), serverVersion)
+                .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
+
+                #if DEBUG
+                .EnableDetailedErrors()
+                .LogTo(Console.WriteLine)
+                #endif
             );
         }
 
