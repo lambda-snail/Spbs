@@ -8,11 +8,11 @@ using Spbs.Ui.Data;
 
 #nullable disable
 
-namespace Spbs.Ui.Data.Migrations
+namespace Spbs.Ui.Data.Migrations.Expenses
 {
     [DbContext(typeof(ExpensesDbContext))]
-    [Migration("20230122112509_Expense-Item-Update-3")]
-    partial class ExpenseItemUpdate3
+    [Migration("20230121135552_Expense-Item-Update-1")]
+    partial class ExpenseItemUpdate1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -29,10 +29,6 @@ namespace Spbs.Ui.Data.Migrations
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Currency")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(8)");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime(6)");
@@ -76,7 +72,14 @@ namespace Spbs.Ui.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<Guid?>("ExpenseId")
+                    b.Property<string>("Currency")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(8)");
+
+                    b.Property<Guid>("ExpenseId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid?>("ExpenseId1")
                         .HasColumnType("char(36)");
 
                     b.Property<string>("Name")
@@ -92,6 +95,8 @@ namespace Spbs.Ui.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ExpenseId");
+
+                    b.HasIndex("ExpenseId1");
 
                     b.ToTable("ExpenseItems");
                 });
@@ -123,8 +128,14 @@ namespace Spbs.Ui.Data.Migrations
             modelBuilder.Entity("Spbs.Ui.Features.Expenses.ExpenseItem", b =>
                 {
                     b.HasOne("Spbs.Ui.Features.Expenses.Expense", null)
+                        .WithMany()
+                        .HasForeignKey("ExpenseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Spbs.Ui.Features.Expenses.Expense", null)
                         .WithMany("Items")
-                        .HasForeignKey("ExpenseId");
+                        .HasForeignKey("ExpenseId1");
                 });
 
             modelBuilder.Entity("Spbs.Ui.Features.Expenses.Expense", b =>

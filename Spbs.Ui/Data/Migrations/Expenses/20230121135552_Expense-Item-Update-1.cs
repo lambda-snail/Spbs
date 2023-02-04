@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Spbs.Ui.Data.Migrations
+namespace Spbs.Ui.Data.Migrations.Expenses
 {
     public partial class ExpenseItemUpdate1 : Migration
     {

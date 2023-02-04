@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace Spbs.Ui.Data.Migrations
+namespace Spbs.Ui.Data.Migrations.Expenses
 {
     public partial class ExpenseItemUpdate3 : Migration
     {

@@ -8,11 +8,11 @@ using Spbs.Ui.Data;
 
 #nullable disable
 
-namespace Spbs.Ui.Data.Migrations
+namespace Spbs.Ui.Data.Migrations.Expenses
 {
     [DbContext(typeof(ExpensesDbContext))]
-    [Migration("20230121135552_Expense-Item-Update-1")]
-    partial class ExpenseItemUpdate1
+    [Migration("20221210122438_Initial-Migration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -76,10 +76,10 @@ namespace Spbs.Ui.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(8)");
 
-                    b.Property<Guid>("ExpenseId")
-                        .HasColumnType("char(36)");
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(2048)");
 
-                    b.Property<Guid?>("ExpenseId1")
+                    b.Property<Guid?>("ExpenseId")
                         .HasColumnType("char(36)");
 
                     b.Property<string>("Name")
@@ -95,8 +95,6 @@ namespace Spbs.Ui.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ExpenseId");
-
-                    b.HasIndex("ExpenseId1");
 
                     b.ToTable("ExpenseItems");
                 });
@@ -128,14 +126,8 @@ namespace Spbs.Ui.Data.Migrations
             modelBuilder.Entity("Spbs.Ui.Features.Expenses.ExpenseItem", b =>
                 {
                     b.HasOne("Spbs.Ui.Features.Expenses.Expense", null)
-                        .WithMany()
-                        .HasForeignKey("ExpenseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Spbs.Ui.Features.Expenses.Expense", null)
                         .WithMany("Items")
-                        .HasForeignKey("ExpenseId1");
+                        .HasForeignKey("ExpenseId");
                 });
 
             modelBuilder.Entity("Spbs.Ui.Features.Expenses.Expense", b =>

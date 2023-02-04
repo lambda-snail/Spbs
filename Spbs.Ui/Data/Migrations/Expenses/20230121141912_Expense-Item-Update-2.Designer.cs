@@ -8,11 +8,11 @@ using Spbs.Ui.Data;
 
 #nullable disable
 
-namespace Spbs.Ui.Data.Migrations
+namespace Spbs.Ui.Data.Migrations.Expenses
 {
     [DbContext(typeof(ExpensesDbContext))]
-    [Migration("20221210122438_Initial-Migration")]
-    partial class InitialMigration
+    [Migration("20230121141912_Expense-Item-Update-2")]
+    partial class ExpenseItemUpdate2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -75,9 +75,6 @@ namespace Spbs.Ui.Data.Migrations
                     b.Property<string>("Currency")
                         .IsRequired()
                         .HasColumnType("nvarchar(8)");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(2048)");
 
                     b.Property<Guid?>("ExpenseId")
                         .HasColumnType("char(36)");
