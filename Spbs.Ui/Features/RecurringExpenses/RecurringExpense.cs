@@ -25,7 +25,7 @@ public class RecurringExpenseHistoryItem
     public Guid Id { get; set; }
     public double Total { get; set; }
     public DateTime Date { get; set; }
-    public bool Payed { get; set; }
+    public bool Payed { get; set; } = false;
 }
 
 public class RecurringExpense
@@ -38,6 +38,7 @@ public class RecurringExpense
     public DateTime BillingDate { get; set; }
     public string BillingPrincipal { get; set; }
     public double Total { get; set; }
+    public string Currency { get; set; }
     public string? Tags { get; set; }
     
     public List<RecurringExpenseHistoryItem> PaymentHistory { get; set; } = new();
