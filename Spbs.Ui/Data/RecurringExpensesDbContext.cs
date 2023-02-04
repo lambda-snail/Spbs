@@ -1,6 +1,4 @@
-using System;
 using Microsoft.EntityFrameworkCore;
-using Spbs.Ui.Features.Expenses;
 using Spbs.Ui.Features.RecurringExpenses;
 using Spbs.Ui.Features.Users;
 
@@ -10,7 +8,7 @@ public class RecurringExpensesDbContext : DbContext
 {
     public DbSet<RecurringExpense> RecurringExpenses { get; set; }
 
-    public RecurringExpensesDbContext(DbContextOptions<ExpensesDbContext> options) : base(options) { }
+    public RecurringExpensesDbContext(DbContextOptions<RecurringExpensesDbContext> options) : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -39,5 +37,7 @@ public class RecurringExpensesDbContext : DbContext
             builder.Property(re => re.Total).IsRequired();
             builder.Property(re => re.Date).IsRequired();
         });
+
+        modelBuilder.Entity<User>().ToTable(nameof(User), t => t.ExcludeFromMigrations());
     }
 }
