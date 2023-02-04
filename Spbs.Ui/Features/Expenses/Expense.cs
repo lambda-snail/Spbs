@@ -24,7 +24,17 @@ public class Expense
     public List<ExpenseItem> Items { get; set; } = new();
     public string? Tags { get; set; }
 
-    public virtual double Total { get; set; }
+    public double Total {
+        get
+        {
+          double total = 0.0;
+          for (int i = 0; i < Items.Count; ++i)
+          {
+              total += Items[i].GetCostOfItem();
+          }
+          return total;
+        }
+    }
     public string Currency { get; set; }
 }
 
@@ -35,4 +45,9 @@ public class ExpenseItem
     public string Name { get; set; }
     public int Quantity { get; set; }
     public double Price { get; set; }
+
+    public double GetCostOfItem()
+    {
+        return Price * Quantity;
+    }
 }
