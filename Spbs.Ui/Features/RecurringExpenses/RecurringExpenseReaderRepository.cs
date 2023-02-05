@@ -20,10 +20,10 @@ public class RecurringExpenseReaderRepository : ReaderRepositoryBase<Expense, Re
             .ToListAsync();
     }
     
-    public Task<List<RecurringExpense>> GetRecurringExpensesByUserId(Guid userId, BillingType type)
+    public Task<List<RecurringExpense>> GetRecurringExpensesByUserId(Guid userId, RecurrenceType type)
     {
         return _db.RecurringExpenses.Where(rexp =>
-                rexp.OwningUserId == userId && rexp.BillingType == type)
+                rexp.OwningUserId == userId && rexp.RecurrenceType == type)
             .ToListAsync();
     }
 }

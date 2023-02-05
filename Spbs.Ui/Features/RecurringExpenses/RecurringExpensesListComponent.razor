@@ -1,0 +1,34 @@
+<div class="container">
+    <div class="card text-center">
+        <div class="card-header">
+            Recurring Expenses
+        </div>
+        <div class="card-body">
+            <div id="list">
+                @if (_recurringExpenses?.Count > 0)
+                {
+                    foreach (var recurringExpense in _recurringExpenses)
+                    {
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">@recurringExpense.Name</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">Billed on the @(recurringExpense.BillingDate.Day):th every month</h6>
+                                <a href="#" class="card-link">Details</a>
+                            </div>
+                        </div>    
+                    }
+                }
+            </div>
+        </div>
+        <div class="card-footer text-muted">
+            @if (_recurringExpenses?.Count > 0)
+            {
+                <p>You have @_recurringExpenses!.Count recurring expenses</p>
+            }
+            else
+            {
+                <p>No recurring expenses</p>   
+            }
+        </div>
+    </div>
+</div>
