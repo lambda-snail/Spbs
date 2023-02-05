@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Spbs.Ui.Data;
 using Spbs.Ui.Features.Expenses;
+using Spbs.Ui.Features.RecurringExpenses;
 
 namespace Spbs.Ui
 {
@@ -49,6 +50,8 @@ namespace Spbs.Ui
         {
             services.AddTransient<IExpenseReaderRepository, ExpenseReaderRepository>();
             services.AddTransient<IExpenseWriterRepository, ExpenseWriterRepository>();
+            
+            services.AddTransient<IRecurringExpenseReaderRepository, RecurringExpenseReaderRepository>();
         }
 
         private void RegisterDatabaseConnections(IServiceCollection services)

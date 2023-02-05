@@ -29,6 +29,7 @@ public class RecurringExpensesDbContext : DbContext
             
             builder.HasIndex(re => re.Name);
             builder.HasIndex(re => re.BillingDate);
+            builder.HasIndex(re => re.BillingType);
             builder.HasOne<User>().WithMany().HasPrincipalKey(u => u.AzureAdId).HasForeignKey(e => e.OwningUserId);
         });
 

@@ -18,7 +18,6 @@ public class ExpenseWriterRepository : WriterRepositoryBase<Expense, ExpensesDbC
 
     public Task<Expense> InsertExpenseAsync(Expense expense)
     {
-
         DateTime now = DateTime.Now;
         UpdateAuditColumns(expense, now); // TODO Add Datetime provider or similar
         SetOnCreateAuditColumns(expense, now);
