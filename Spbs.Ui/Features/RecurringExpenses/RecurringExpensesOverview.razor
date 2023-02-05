@@ -17,7 +17,21 @@ Content to show
             <p>xxxx</p>
         </div>
         <div class="col-6">
-            <RecurringExpensesListComponent></RecurringExpensesListComponent>
+            <div class="row col-2">
+                <div class="dropdown">
+                  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                    Filter
+                  </button>
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    <li><a class="dropdown-item" href="#">Subscriptions</a></li>
+                    <li><a class="dropdown-item" href="#">Bills</a></li>
+                    <li><a class="dropdown-item" href="#">Invoices</a></li>
+                  </ul>
+                </div>
+            </div>
+            <div class="row">
+                <RecurringExpensesListComponent/>
+            </div>
         </div>
     </div>
 

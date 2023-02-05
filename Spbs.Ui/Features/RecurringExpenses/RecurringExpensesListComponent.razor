@@ -1,7 +1,7 @@
 <div class="container">
     <div class="card text-center">
         <div class="card-header">
-            Recurring Expenses
+            @GetBillingTypeUIText()
         </div>
         <div class="card-body">
             <div id="list">
@@ -23,7 +23,7 @@
         <div class="card-footer text-muted">
             @if (_recurringExpenses?.Count > 0)
             {
-                <p>You have @_recurringExpenses!.Count recurring expenses</p>
+                <p>You have @_recurringExpenses!.Count @GetBillingTypeUIText()</p>
             }
             else
             {

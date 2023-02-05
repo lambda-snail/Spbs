@@ -29,6 +29,7 @@
       <Folder Include="Components" />
       <Folder Include="Data\Migrations\RecurringExpenses" />
       <Folder Include="wwwroot\css\bootstrap" />
+      <Folder Include="wwwroot\js\bootstrap" />
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\Shared\Shared.csproj" />
@@ -36,6 +37,8 @@
     <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
       <Exec Command="cp $(Pkgbootstrap)/contentFiles/any/any/wwwroot/css/bootstrap.min.css  $(ProjectDir)/wwwroot/css/bootstrap" />
       <Exec Command="cp $(Pkgbootstrap)/contentFiles/any/any/wwwroot/css/bootstrap.min.css.map  $(ProjectDir)/wwwroot/css/bootstrap" />
+        <Exec Command="cp $(Pkgbootstrap)/contentFiles/any/any/wwwroot/js/bootstrap.bundle.min.js  $(ProjectDir)/wwwroot/js/bootstrap" />
+        <Exec Command="cp $(Pkgbootstrap)/contentFiles/any/any/wwwroot/js/bootstrap.min.js  $(ProjectDir)/wwwroot/js/bootstrap" />
     </Target>
     <!--ItemGroup>
       <_ContentIncludedByDefault Remove="wwwroot\css\bootstrap\bootstrap.min.css" />

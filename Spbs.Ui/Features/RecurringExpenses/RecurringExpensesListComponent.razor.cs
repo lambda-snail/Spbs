@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -7,21 +8,43 @@ using Spbs.Ui.Auth;
 
 namespace Spbs.Ui.Features.RecurringExpenses;
 
+public class RecurringExpenseListFilter
+{
+    public RecurrenceType? RecurrenceType { get; set; }
+}
+
 public partial class RecurringExpensesListComponent
 {
-    [Parameter] public RecurrenceType? TypeFilter { get; set; }
     [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
     
     [Inject] public IRecurringExpenseReaderRepository RecurringExpenseReaderRepository { get; set; }
 
+    private RecurringExpenseListFilter? _filter;
     private List<RecurringExpense>? _recurringExpenses;
     
-    private Dictionary<RecurrenceType, string> _billingTypeUIString = new () { {RecurrenceType.Subscription, "Subscription" } };
+    private Dictionary<RecurrenceType, string> _billingTypeUIString = new ()
+    {
+        {RecurrenceType.Bill, "Bills" },
+        {RecurrenceType.Invoice, "Invoices" },
+        {RecurrenceType.Mortgage, "Mortgages" },
+        {RecurrenceType.Subscription, "Subscriptions" },
+    };
 
     protected override async Task OnInitializedAsync()
     {
         await FetchRecurringExpenses();
         await UserId();
+    }
+
+    public Task SetFilter(RecurringExpenseListFilter? filter)
+    {
+        _filter = filter;
+        return FetchRecurringExpenses();
+    }
+
+    public Task ClearFitler()
+    {
+        return SetFilter(null);
     }
 
     private async Task FetchRecurringExpenses()
@@ -33,13 +56,13 @@ public partial class RecurringExpensesListComponent
         }
 
         List<RecurringExpense>? recurringExpenses = null;
-        if (TypeFilter is null)
+        if (_filter is not null && _filter.RecurrenceType is not null)
         {
-            recurringExpenses = await RecurringExpenseReaderRepository.GetRecurringExpensesByUserId(_cachedUserId.Value);
+            recurringExpenses = await RecurringExpenseReaderRepository.GetRecurringExpensesByUserId(_cachedUserId.Value, _filter.RecurrenceType.Value);
         }
         else
         {
-            recurringExpenses = await RecurringExpenseReaderRepository.GetRecurringExpensesByUserId(_cachedUserId.Value, TypeFilter.Value);   
+            recurringExpenses = await RecurringExpenseReaderRepository.GetRecurringExpensesByUserId(_cachedUserId.Value);
         }
 
         _recurringExpenses = recurringExpenses;
@@ -59,5 +82,15 @@ public partial class RecurringExpensesListComponent
 
         _cachedUserId = user.GetUserId();
         return _cachedUserId;
+    }
+
+    private string GetBillingTypeUIText()
+    {
+        if (_filter?.RecurrenceType != null)
+        {
+            return _billingTypeUIString[_filter.RecurrenceType.Value];
+        }
+     
+        return "Recurring Expenses";
     }
 }
