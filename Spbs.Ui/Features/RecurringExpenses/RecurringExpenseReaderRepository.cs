@@ -9,7 +9,7 @@ using Spbs.Ui.Features.Expenses;
 
 namespace Spbs.Ui.Features.RecurringExpenses;
 
-public class RecurringExpenseReaderRepository : ReaderRepositoryBase<Expense, RecurringExpensesDbContext>, IRecurringExpenseReaderRepository
+public class RecurringExpenseReaderRepository : ReaderRepositoryBase<RecurringExpense, RecurringExpensesDbContext>, IRecurringExpenseReaderRepository
 {
     public RecurringExpenseReaderRepository(RecurringExpensesDbContext context) : base(context) {}
     
@@ -17,6 +17,7 @@ public class RecurringExpenseReaderRepository : ReaderRepositoryBase<Expense, Re
     {
         return _db.RecurringExpenses.Where(rexp =>
                 rexp.OwningUserId == userId)
+            .Include(re => re.PaymentHistory)
             .ToListAsync();
     }
     
@@ -24,6 +25,14 @@ public class RecurringExpenseReaderRepository : ReaderRepositoryBase<Expense, Re
     {
         return _db.RecurringExpenses.Where(rexp =>
                 rexp.OwningUserId == userId && rexp.RecurrenceType == type)
+            .Include(re => re.PaymentHistory)
             .ToListAsync();
+    }
+
+    public override Task<RecurringExpense?> GetByIdAsync(Guid id)
+    {
+        return _db.RecurringExpenses.Where(rexp => rexp.Id == id)
+            .Include(rexp => rexp.PaymentHistory)
+            .FirstOrDefaultAsync();
     }
 }

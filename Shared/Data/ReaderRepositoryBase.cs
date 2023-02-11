@@ -13,7 +13,7 @@ public class ReaderRepositoryBase<TDto, TDbCOntext> : IAsyncDisposable,
         _db = context;//.CreateDbContext();
     }
 
-    public async Task<TDto> GetByIdAsync(Guid id)
+    public virtual async Task<TDto?> GetByIdAsync(Guid id)
     {
         var result = await _db.Set<TDto>().FindAsync(id);
         return result;

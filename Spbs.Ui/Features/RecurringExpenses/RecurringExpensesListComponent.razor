@@ -9,13 +9,16 @@
                 {
                     foreach (var recurringExpense in _recurringExpenses)
                     {
+                        RecurringExpense expense = recurringExpense;
                         <div class="card">
                             <div class="card-body">
-                                <h5 class="card-title">@recurringExpense.Name</h5>
-                                <h6 class="card-subtitle mb-2 text-muted">Billed on the @(recurringExpense.BillingDate.Day):th every month</h6>
-                                <a href="#" class="card-link">Details</a>
+                                <h5 class="card-title">@expense.Name</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">Billed on the @(expense.BillingDate.Day):th every month</h6>
+                                <NavLink class="card-link" href="@expense.GetDetailsUrl()">
+                                    Details
+                                </NavLink>
                             </div>
-                        </div>    
+                        </div>
                     }
                 }
             </div>
@@ -27,7 +30,7 @@
             }
             else
             {
-                <p>No recurring expenses</p>   
+                <p>No recurring expenses</p>
             }
         </div>
     </div>

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Mvc.Diagnostics;
 using Spbs.Ui.Auth;
 
 namespace Spbs.Ui.Features.RecurringExpenses;
@@ -15,8 +16,9 @@ public class RecurringExpenseListFilter
 
 public partial class RecurringExpensesListComponent
 {
-    [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
+    [Parameter] public Action<RecurringExpense> OnSelect { get; set; }
     
+    [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
     [Inject] public IRecurringExpenseReaderRepository RecurringExpenseReaderRepository { get; set; }
 
     private RecurringExpenseListFilter? _filter;
