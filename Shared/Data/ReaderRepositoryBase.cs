@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Spbs.Shared.Data;
 
@@ -6,11 +7,13 @@ public class ReaderRepositoryBase<TDto, TDbCOntext> : IAsyncDisposable,
     IReaderRepositoryBase<TDto> where TDbCOntext : DbContext
     where TDto : class
 {
-    protected TDbCOntext _db { get; set; }
+    protected TDbCOntext _db { get => _contextFactory.CreateDbContext(); }
 
-    public ReaderRepositoryBase(TDbCOntext context)
+    private IDbContextFactory<TDbCOntext> _contextFactory;
+    
+    public ReaderRepositoryBase(IDbContextFactory<TDbCOntext> contextFactory)
     {
-        _db = context;//.CreateDbContext();
+        _contextFactory = contextFactory;
     }
 
     public virtual async Task<TDto?> GetByIdAsync(Guid id)

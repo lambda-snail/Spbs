@@ -11,7 +11,7 @@ namespace Spbs.Ui.Features.RecurringExpenses;
 
 public class RecurringExpenseReaderRepository : ReaderRepositoryBase<RecurringExpense, RecurringExpensesDbContext>, IRecurringExpenseReaderRepository
 {
-    public RecurringExpenseReaderRepository(RecurringExpensesDbContext context) : base(context) {}
+    public RecurringExpenseReaderRepository(IDbContextFactory<RecurringExpensesDbContext> context) : base(context) {}
     
     public Task<List<RecurringExpense>> GetRecurringExpensesByUserId(Guid userId)
     {
@@ -25,6 +25,7 @@ public class RecurringExpenseReaderRepository : ReaderRepositoryBase<RecurringEx
     {
         return _db.RecurringExpenses.Where(rexp =>
                 rexp.OwningUserId == userId && rexp.BillingDate.Day >= day)
+            .OrderByDescending(rexp => rexp.BillingDate)
             .ToListAsync();
     }
     

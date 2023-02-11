@@ -59,7 +59,7 @@ namespace Spbs.Ui
             var serverVersion = MySqlServerVersion.AutoDetect(Configuration.GetConnectionString("SpbsExpenses"));
 
             //services.AddPooledDbContextFactory<ExpensesDbContext>(o => o
-            services.AddDbContext<ExpensesDbContext>(o => o
+            services.AddDbContextFactory<ExpensesDbContext>(o => o
                 .UseMySql(Configuration.GetConnectionString("SpbsExpenses"), serverVersion)
                 .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
     
@@ -67,7 +67,7 @@ namespace Spbs.Ui
                 .EnableDetailedErrors()
                 .LogTo(Console.WriteLine)
                 #endif
-            ).AddDbContext<RecurringExpensesDbContext>(o => o
+            ).AddDbContextFactory<RecurringExpensesDbContext>(o => o
                 .UseMySql(Configuration.GetConnectionString("SpbsExpenses"), serverVersion)
                 .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
 
