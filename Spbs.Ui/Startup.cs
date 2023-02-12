@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Shared.Utilities;
 using Spbs.Ui.Data;
 using Spbs.Ui.Features.Expenses;
 using Spbs.Ui.Features.RecurringExpenses;
@@ -38,12 +39,18 @@ namespace Spbs.Ui
 
             RegisterDatabaseConnections(services);
             RegisterRepositories(services);
+            RegisterUtilities(services);
             
             services.AddRazorPages();
             services.AddServerSideBlazor()
                 .AddMicrosoftIdentityConsentHandler();
 
             services.AddAutoMapper(typeof(Startup));
+        }
+
+        private void RegisterUtilities(IServiceCollection services)
+        {
+            services.AddTransient<IDateTimeProvider, DateTimeProvider>();
         }
 
         private void RegisterRepositories(IServiceCollection services)
