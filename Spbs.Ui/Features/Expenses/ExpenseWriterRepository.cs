@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Shared.Utilities;
 using Spbs.Shared.Data;
 using Spbs.Ui.Data;
 
@@ -9,24 +10,25 @@ namespace Spbs.Ui.Features.Expenses;
 
 public class ExpenseWriterRepository : WriterRepositoryBase<Expense, ExpensesDbContext>, IExpenseWriterRepository
 {
-    private readonly IMapper _mapper;
+    private readonly IDateTimeProvider _dateTime;
 
-    public ExpenseWriterRepository(IMapper mapper, IDbContextFactory<ExpensesDbContext> contextFactory) : base(contextFactory)
+    public ExpenseWriterRepository(IDateTimeProvider dateTime, IDbContextFactory<ExpensesDbContext> contextFactory) :
+        base(contextFactory)
     {
-        _mapper = mapper;
+        _dateTime = dateTime;
     }
 
     public Task<Expense> InsertExpenseAsync(Expense expense)
     {
-        DateTime now = DateTime.Now;
-        UpdateAuditColumns(expense, now); // TODO Add Datetime provider or similar
+        DateTime now = _dateTime.Now();
+        UpdateAuditColumns(expense, now);
         SetOnCreateAuditColumns(expense, now);
         return InsertAsync(expense);
     }
     
     public Task UpdateExpenseAsync(Expense expense)
     {
-        UpdateAuditColumns(expense, DateTime.Now);
+        UpdateAuditColumns(expense, _dateTime.Now());
         return UpdateAsync(expense);
     }
 
