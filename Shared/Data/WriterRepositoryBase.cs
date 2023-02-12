@@ -7,11 +7,13 @@ namespace Spbs.Shared.Data;
 public class WriterRepositoryBase<TDto, TDbCOntext> : IAsyncDisposable, IWriterRepositoryBase<TDto> where TDbCOntext : DbContext
     where TDto : class
 {
-    protected TDbCOntext _db { get; set; }
+    protected TDbCOntext _db { get => _contextFactory.CreateDbContext(); }
 
-    public WriterRepositoryBase(TDbCOntext context)
+    private IDbContextFactory<TDbCOntext> _contextFactory;
+
+    public WriterRepositoryBase(IDbContextFactory<TDbCOntext> contextFactory)
     {
-        _db = context;//.CreateDbContext();
+        _contextFactory = contextFactory;
     }
 
     public async Task<TDto> InsertAsync(TDto row)

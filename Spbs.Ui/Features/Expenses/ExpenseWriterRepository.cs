@@ -11,7 +11,7 @@ public class ExpenseWriterRepository : WriterRepositoryBase<Expense, ExpensesDbC
 {
     private readonly IMapper _mapper;
 
-    public ExpenseWriterRepository(IMapper mapper, ExpensesDbContext context) : base(context)
+    public ExpenseWriterRepository(IMapper mapper, IDbContextFactory<ExpensesDbContext> contextFactory) : base(contextFactory)
     {
         _mapper = mapper;
     }
