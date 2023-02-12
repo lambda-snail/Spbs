@@ -1,0 +1,112 @@
+@if (_doShowContent)
+{
+    <div class="modal fade show d-block" id="new-post-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="titleLabel">Recurring Expense Editor</h5>
+                    <button type="button" class="close" @onclick="@CloseDialog" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+
+                    <EditForm Model="@_editRecurringExpenseViewModel"
+                              OnValidSubmit="@HandleValidSubmit"
+                              OnInvalidSubmit="@HandleInvalidSubmit">
+
+                        <DataAnnotationsValidator/>
+                        <ValidationSummary></ValidationSummary>
+
+                        <div class="form-group col-md-10">
+                            <label for="expense-name">Name</label>
+                            <InputText id="expense-name"
+                                       class="form-control"
+                                       @bind-Value="@_editRecurringExpenseViewModel.Name">
+                            </InputText>
+                            <small id="expense-name-small" class="form-text text-muted">Choose a descriptive name for the expense.</small>
+                            <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => _editRecurringExpenseViewModel.Name)"/>
+                        </div>
+
+                        <div class="form-group col-md-10">
+                            <label for="expense-description">Description</label>
+                            <InputTextArea id="expense-description"
+                                           class="form-control"
+                                           @bind-Value="@_editRecurringExpenseViewModel.Description">
+                            </InputTextArea>
+                            <small id="expense-description-small" class="form-text text-muted">Add a description for the expense.</small>
+                            <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => _editRecurringExpenseViewModel.Description)"/>
+                        </div>
+
+                        <div class="form-group col-md-10">
+                            <label for="expense-date">Billing Date</label>
+                            <InputDate id="expense-date"
+                                       class="form-control"
+                                       @bind-Value="@_editRecurringExpenseViewModel.BillingDate">
+                            </InputDate>
+                            <small id="post-date-small" class="form-text text-muted">Choose the day and month of the year when payment is due.</small>
+                            <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => _editRecurringExpenseViewModel.BillingDate)"/>
+                        </div>
+
+                        <div class="form-group col-md-10">
+                            <label for="expense-venue">Recipient</label>
+                            <InputText id="expense-venue"
+                                       class="form-control"
+                                       @bind-Value="@_editRecurringExpenseViewModel.BillingPrincipal">
+                            </InputText>
+                            <small id="expense-venue-small" class="form-text text-muted">Which company or serice will recieve the payment?</small>
+                            <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => _editRecurringExpenseViewModel.BillingPrincipal)"/>
+                        </div>
+
+                        <div class="form-group col-md-10">
+                            <label for="expense-currency">Currency</label>
+                            <InputText id="expense-currency"
+                                       class="form-control"
+                                       @bind-Value="@_editRecurringExpenseViewModel.Currency">
+                            </InputText>
+                            <small id="expense-currency-small" class="form-text text-muted">The currency that the purchase was made in.</small>
+                            <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => _editRecurringExpenseViewModel.Currency)"/>
+                        </div>
+
+                        <div class="form-group col-md-10">
+                            <label for="expense-currency">Type</label>
+                            <InputSelect id="expense-currency"
+                                         class="form-control"
+                                         @bind-Value="@_editRecurringExpenseViewModel.BillingType">
+                                @foreach (var type in Enum.GetValues(typeof(BillingType)))
+                                {
+                                    <option value="@type">@type</option>
+                                }
+                            </InputSelect>
+                            <small id="expense-currency-small" class="form-text text-muted">The type of the recurring expense.</small>
+                            <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => _editRecurringExpenseViewModel.BillingType)"/>
+                        </div>
+
+                        <div class="form-group col-md-10">
+                            <label for="expense-currency">Billing Frequency</label>
+                            <InputSelect id="expense-currency"
+                                         class="form-control"
+                                         @bind-Value="@_editRecurringExpenseViewModel.RecurrenceType">
+                                @foreach (var type in Enum.GetValues(typeof(RecurrenceType)))
+                                {
+                                    <option value="@type">@type</option>
+                                }
+                            </InputSelect>
+                            <small id="expense-currency-small" class="form-text text-muted">Is the expense billed montly or annually?</small>
+                            <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => _editRecurringExpenseViewModel.RecurrenceType)"/>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary edit-btn">Submit</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" @onclick="@CloseDialog">Close</button>
+                    </EditForm>
+                </div>
+
+
+                <div class="modal-footer">
+
+                </div>
+            </div>
+        </div>
+    </div>
+}

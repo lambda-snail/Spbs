@@ -3,17 +3,19 @@ using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Components;
+using Spbs.Ui.Features.Expenses;
 
-namespace Spbs.Ui.Features.Expenses;
+namespace Spbs.Ui.Features.RecurringExpenses;
 
-public partial class EditExpenseComponent : ComponentBase
+public partial class EditRecurringExpenseComponent
 {
     private bool _doShowContent = false;
 
-    private EditExpenseViewModel _editExpenseViewModel = new() { Date = DateTime.Now };
+    private EditRecurringExpenseViewModel _editRecurringExpenseViewModel = new() { BillingDate = DateTime.Now };
+            
 
-    [Inject] public IMapper mapper { get; set; }
-    [Inject] public IExpenseWriterRepository ExpenseWriterRepository { get; set; } 
+    [Inject] public IMapper Mapper { get; set; }
+    [Inject] public IRecurringExpenseWriterRepository RecurringExpenseWriterRepository { get; set; } 
     
     [Parameter, Required] public Func<Guid?> GetUserId { get; set; }
     [Parameter] public Action OnUpdateCallback { get; set; }
@@ -31,21 +33,21 @@ public partial class EditExpenseComponent : ComponentBase
     }
     
     /// <summary>
-    /// To edit an Expense using this component, use this method to set the content before displaying the component.
+    /// To edit a Recurring Expense using this component, use this method to set the content before displaying the component.
     /// </summary>
-    public void SetModalContent(Expense? expense = null)
+    public void SetModalContent(RecurringExpense? expense = null)
     {
         if (expense is not null)
         {
-            _editExpenseViewModel = mapper.Map<EditExpenseViewModel>(expense);
+            _editRecurringExpenseViewModel = Mapper.Map<EditRecurringExpenseViewModel>(expense);
         }
     }
 
     private async Task HandleValidSubmit()
     {
-        Expense expense = mapper.Map<Expense>(_editExpenseViewModel);
+        RecurringExpense expense = Mapper.Map<RecurringExpense>(_editRecurringExpenseViewModel);
         
-        if (_editExpenseViewModel.Id is null)
+        if (_editRecurringExpenseViewModel.Id is null)
         {
             Guid? userId = GetUserId();
             if (userId is null)
@@ -54,11 +56,11 @@ public partial class EditExpenseComponent : ComponentBase
             }
 
             expense.OwningUserId = userId.Value;
-            await ExpenseWriterRepository.InsertExpenseAsync(expense);
+            await RecurringExpenseWriterRepository.InsertExpenseAsync(expense);
         }
         else
         {
-            await ExpenseWriterRepository.UpdateExpenseAsync(expense);
+            await RecurringExpenseWriterRepository.UpdateExpenseAsync(expense);
         }
         
         CloseDialog();
@@ -74,6 +76,6 @@ public partial class EditExpenseComponent : ComponentBase
 
     private void ResetModel()
     {
-        _editExpenseViewModel = new() { Date = DateTime.Now };
-    }
+        _editRecurringExpenseViewModel = new() { BillingDate = DateTime.Now };
+    }   
 }
