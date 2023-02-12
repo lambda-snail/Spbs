@@ -23,6 +23,9 @@ public partial class RecurringExpensesListComponent
 
     private RecurringExpenseListFilter? _filter;
     private List<RecurringExpense>? _recurringExpenses;
+    private int? _selectedRow = null;
+    
+    EditRecurringExpenseComponent _editRecurringExpensesDialog;
     
     private Dictionary<RecurrenceType, string> _billingTypeUIString = new ()
     {
@@ -86,6 +89,36 @@ public partial class RecurringExpensesListComponent
         return _cachedUserId;
     }
 
+    private string GetRowClass(int i)
+    {
+        return _selectedRow == i ? "bg-secondary text-white" : String.Empty;
+    }
+    
+    /// <summary>
+    /// Determine which row is the selected one. If the selected row is clicked twice, it will be deselected.
+    /// </summary>
+    private void SetSelected(int i)
+    {
+        if (i >= 0 && i < _recurringExpenses?.Count)
+        {
+            _selectedRow = i == _selectedRow ? null : i;
+            StateHasChanged();
+        }
+        else
+        {
+            if (_selectedRow is not null)
+            {
+                _selectedRow = null;
+                StateHasChanged();
+            }
+        }
+    }
+
+    private bool IsSelected(int i)
+    {
+        return _selectedRow == i;
+    }
+    
     private string GetBillingTypeUIText()
     {
         if (_filter?.RecurrenceType != null)
@@ -94,5 +127,17 @@ public partial class RecurringExpensesListComponent
         }
      
         return "Recurring Expenses";
+    }
+    
+    private void ToggleExpenseDialog()
+    {
+        RecurringExpense? e = null;
+        if (_selectedRow is not null && _selectedRow >= 0 && _selectedRow < _recurringExpenses?.Count)
+        {
+            e = _recurringExpenses?[_selectedRow.Value];
+        }
+        
+        _editRecurringExpensesDialog?.SetModalContent(e);
+        _editRecurringExpensesDialog?.ShowModal();
     }
 }

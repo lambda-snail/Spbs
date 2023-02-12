@@ -59,6 +59,7 @@ namespace Spbs.Ui
             services.AddTransient<IExpenseWriterRepository, ExpenseWriterRepository>();
             
             services.AddTransient<IRecurringExpenseReaderRepository, RecurringExpenseReaderRepository>();
+            services.AddTransient<IRecurringExpenseWriterRepository, RecurringExpenseWriterRepository>();
         }
 
         private void RegisterDatabaseConnections(IServiceCollection services)
