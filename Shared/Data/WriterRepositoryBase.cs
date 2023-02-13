@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,9 +8,9 @@ namespace Spbs.Shared.Data;
 public class WriterRepositoryBase<TDto, TDbCOntext> : IAsyncDisposable, IWriterRepositoryBase<TDto> where TDbCOntext : DbContext
     where TDto : class
 {
-    protected TDbCOntext _db { get => _contextFactory.CreateDbContext(); }
+    //protected TDbCOntext _db { get => _contextFactory.CreateDbContext(); }
 
-    private IDbContextFactory<TDbCOntext> _contextFactory;
+    protected IDbContextFactory<TDbCOntext> _contextFactory;
 
     public WriterRepositoryBase(IDbContextFactory<TDbCOntext> contextFactory)
     {
@@ -18,25 +19,32 @@ public class WriterRepositoryBase<TDto, TDbCOntext> : IAsyncDisposable, IWriterR
 
     public async Task<TDto> InsertAsync(TDto row)
     {
-        var result = _db.Set<TDto>().Add(row);
-        await _db.SaveChangesAsync();
+        await using var db = await _contextFactory.CreateDbContextAsync();
+
+        var result = db.Set<TDto>().Add(row);
+        await db.SaveChangesAsync();
         return result.Entity;
     }
     
-    public Task UpdateAsync(TDto row)
+    public async Task UpdateAsync(TDto row)
     {
-        _db.Set<TDto>().Update(row);
-        return _db.SaveChangesAsync();
+        await using var db = await _contextFactory.CreateDbContextAsync();
+        
+        db.Set<TDto>().Update(row);
+        await db.SaveChangesAsync();
     }
 
-    public Task DeleteAsync(TDto row)
+    public async Task DeleteAsync(TDto row)
     {
-        _db.Set<TDto>().Remove(row);
-        return _db.SaveChangesAsync();
+        await using var db = await _contextFactory.CreateDbContextAsync();
+        
+        db.Set<TDto>().Remove(row);
+        await db.SaveChangesAsync();
     }
 
     public ValueTask DisposeAsync()
     {
-        return _db.DisposeAsync();
+        //return _db.DisposeAsync();
+        return ValueTask.CompletedTask;
     }
 }

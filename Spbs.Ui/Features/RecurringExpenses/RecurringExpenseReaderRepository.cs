@@ -13,33 +13,37 @@ public class RecurringExpenseReaderRepository : ReaderRepositoryBase<RecurringEx
 {
     public RecurringExpenseReaderRepository(IDbContextFactory<RecurringExpensesDbContext> context) : base(context) {}
     
-    public Task<List<RecurringExpense>> GetRecurringExpensesByUserId(Guid userId)
+    public async Task<List<RecurringExpense>> GetRecurringExpensesByUserId(Guid userId)
     {
-        return _db.RecurringExpenses.Where(rexp =>
+        await using var db = await _contextFactory.CreateDbContextAsync();
+        return await db.RecurringExpenses.Where(rexp =>
                 rexp.OwningUserId == userId)
             .Include(re => re.PaymentHistory)
             .ToListAsync();
     }
     
-    public Task<List<RecurringExpense>> GetRecurringExpensesAfterDayOfMonth(Guid userId, int day)
+    public async Task<List<RecurringExpense>> GetRecurringExpensesAfterDayOfMonth(Guid userId, int day)
     {
-        return _db.RecurringExpenses.Where(rexp =>
+        await using var db = await _contextFactory.CreateDbContextAsync();
+        return await db.RecurringExpenses.Where(rexp =>
                 rexp.OwningUserId == userId && rexp.BillingDate.Day >= day)
             .OrderByDescending(rexp => rexp.BillingDate)
             .ToListAsync();
     }
     
-    public Task<List<RecurringExpense>> GetRecurringExpensesByUserId(Guid userId, RecurrenceType type)
+    public async Task<List<RecurringExpense>> GetRecurringExpensesByUserId(Guid userId, RecurrenceType type)
     {
-        return _db.RecurringExpenses.Where(rexp =>
+        await using var db = await _contextFactory.CreateDbContextAsync();
+        return await db.RecurringExpenses.Where(rexp =>
                 rexp.OwningUserId == userId && rexp.RecurrenceType == type)
             .Include(re => re.PaymentHistory)
             .ToListAsync();
     }
 
-    public override Task<RecurringExpense?> GetByIdAsync(Guid id)
+    public override async Task<RecurringExpense?> GetByIdAsync(Guid id)
     {
-        return _db.RecurringExpenses.Where(rexp => rexp.Id == id)
+        await using var db = await _contextFactory.CreateDbContextAsync();
+        return await db.RecurringExpenses.Where(rexp => rexp.Id == id)
             .Include(rexp => rexp.PaymentHistory)
             .FirstOrDefaultAsync();
     }

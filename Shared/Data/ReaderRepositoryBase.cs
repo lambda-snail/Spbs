@@ -7,9 +7,9 @@ public class ReaderRepositoryBase<TDto, TDbCOntext> : IAsyncDisposable,
     IReaderRepositoryBase<TDto> where TDbCOntext : DbContext
     where TDto : class
 {
-    protected TDbCOntext _db { get => _contextFactory.CreateDbContext(); }
+    //protected TDbCOntext _db { get => _contextFactory.CreateDbContext(); }
 
-    private IDbContextFactory<TDbCOntext> _contextFactory;
+    protected IDbContextFactory<TDbCOntext> _contextFactory;
     
     public ReaderRepositoryBase(IDbContextFactory<TDbCOntext> contextFactory)
     {
@@ -18,12 +18,14 @@ public class ReaderRepositoryBase<TDto, TDbCOntext> : IAsyncDisposable,
 
     public virtual async Task<TDto?> GetByIdAsync(Guid id)
     {
-        var result = await _db.Set<TDto>().FindAsync(id);
+        await using var db = await _contextFactory.CreateDbContextAsync();
+        var result = await db.Set<TDto>().FindAsync(id);
         return result;
     }
 
     public ValueTask DisposeAsync()
     {
-        return _db.DisposeAsync();
+        //return _db.DisposeAsync();
+        return ValueTask.CompletedTask;
     }
 }
