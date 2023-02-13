@@ -19,19 +19,19 @@ Content to show
             
         </div>
         <div class="col-6">
-            <div class="row col-2">
-                <div class="dropdown">
-                  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                    Filter
-                  </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                        <li><a class="dropdown-item" @onclick="() => SetFocusRecurrenceType(null)">All</a></li>
-                        <li><a class="dropdown-item" @onclick="() => SetFocusRecurrenceType(RecurrenceType.Subscription)">Subscriptions</a></li>
-                        <li><a class="dropdown-item" @onclick="() => SetFocusRecurrenceType(RecurrenceType.Bill)">Bills</a></li>
-                        <li><a class="dropdown-item" @onclick="() => SetFocusRecurrenceType(RecurrenceType.Invoice)">Invoices</a></li>
-                    </ul>
-                </div>
-            </div>
+            @* <div class="row col-2"> *@
+            @*     <div class="dropdown"> *@
+            @*       <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"> *@
+            @*         Filter *@
+            @*       </button> *@
+            @*         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1"> *@
+            @*             <li><a class="dropdown-item" @onclick="() => SetFocusRecurrenceType(null)">All</a></li> *@
+            @*             <li><a class="dropdown-item" @onclick="() => SetFocusRecurrenceType(RecurrenceType.Subscription)">Subscriptions</a></li> *@
+            @*             <li><a class="dropdown-item" @onclick="() => SetFocusRecurrenceType(RecurrenceType.Bill)">Bills</a></li> *@
+            @*             <li><a class="dropdown-item" @onclick="() => SetFocusRecurrenceType(RecurrenceType.Invoice)">Invoices</a></li> *@
+            @*         </ul> *@
+            @*     </div> *@
+            @* </div> *@
             <div class="row">
                 <RecurringExpensesListComponent @ref="_recurringExpensesList"/>
             </div>

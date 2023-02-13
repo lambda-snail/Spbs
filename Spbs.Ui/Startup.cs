@@ -65,8 +65,7 @@ namespace Spbs.Ui
         private void RegisterDatabaseConnections(IServiceCollection services)
         {
             var serverVersion = MySqlServerVersion.AutoDetect(Configuration.GetConnectionString("SpbsExpenses"));
-
-            //services.AddPooledDbContextFactory<ExpensesDbContext>(o => o
+            
             services.AddDbContextFactory<ExpensesDbContext>(o => o
                 .UseMySql(Configuration.GetConnectionString("SpbsExpenses"), serverVersion)
                 .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)

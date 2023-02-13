@@ -18,7 +18,7 @@ public partial class EditRecurringExpenseComponent
     [Inject] public IRecurringExpenseWriterRepository RecurringExpenseWriterRepository { get; set; } 
     
     [Parameter, Required] public Func<Guid?> GetUserId { get; set; }
-    [Parameter] public Action OnUpdateCallback { get; set; }
+    [Parameter] public Func<Task> OnUpdateCallback { get; set; }
     
     public void ShowModal()
     {
@@ -65,7 +65,7 @@ public partial class EditRecurringExpenseComponent
         
         CloseDialog();
         ResetModel();
-        OnUpdateCallback();
+        await OnUpdateCallback();
         StateHasChanged();
     }
 

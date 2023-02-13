@@ -6,6 +6,7 @@ namespace Spbs.Ui.Features.RecurringExpenses;
 public class EditRecurringExpenseViewModel
 {
     public Guid? Id { get; set; }
+    public Guid? OwningUserId { get; set; }
 
     [Required]
     public string Name { get; set; }

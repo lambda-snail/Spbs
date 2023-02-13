@@ -140,4 +140,18 @@ public partial class RecurringExpensesListComponent
         _editRecurringExpensesDialog?.SetModalContent(e);
         _editRecurringExpensesDialog?.ShowModal();
     }
+
+    private void SetFocusRecurrenceType(RecurrenceType? type)
+    {
+        SetFilter(new()
+        {
+            RecurrenceType = type
+        });
+    }
+
+    private async Task ItemAddedOrUpdated()
+    {
+        await FetchRecurringExpenses();
+        StateHasChanged();
+    }
 }
