@@ -32,6 +32,7 @@
       <Folder Include="wwwroot\js\bootstrap" />
     </ItemGroup>
     <ItemGroup>
+      <ProjectReference Include="..\Integrations\Integrations.Nordigen\Integrations.Nordigen.csproj" />
       <ProjectReference Include="..\Shared\Shared.csproj" />
     </ItemGroup>
     <Target Name="PreBuild" BeforeTargets="PreBuildEvent">

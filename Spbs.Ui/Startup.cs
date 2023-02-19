@@ -1,4 +1,5 @@
 using System;
+using Integrations.Nordigen;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.UI;
@@ -46,6 +47,8 @@ namespace Spbs.Ui
                 .AddMicrosoftIdentityConsentHandler();
 
             services.AddAutoMapper(typeof(Startup));
+
+            services.RegisterNordigenIntegration(Configuration);
         }
 
         private void RegisterUtilities(IServiceCollection services)
