@@ -7,16 +7,20 @@ public class NordigenApiClient
 {
     private readonly HttpClient _client;
     private readonly IOptions<NordigenOptions> _options;
-    private readonly NordigenTokenClient _tokenCLient;
+    private readonly NordigenTokenClient _tokenClient;
     private readonly IConfidentialClientApplication _application;
     
-    public NordigenApiClient(HttpClient client, IOptions<NordigenOptions> options, NordigenTokenClient tokenCLient)
+    public NordigenApiClient(HttpClient client, IOptions<NordigenOptions> options, NordigenTokenClient tokenClient)
     {
         _client = client;
         _options = options;
-        _tokenCLient = tokenCLient;
+        _tokenClient = tokenClient;
 
         _client.BaseAddress = new Uri(options.Value.ServiceUrl);
-        var tokens = tokenCLient.GetNewToken();
+    }
+
+    public async Task GetListOfInstitutions()
+    {
+        var tokens = await _tokenClient.ObtainTokenAsync();
     }
 }

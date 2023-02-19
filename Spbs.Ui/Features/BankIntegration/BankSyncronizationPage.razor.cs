@@ -1,13 +1,16 @@
 using Integrations.Nordigen;
+using Microsoft.AspNetCore.Components;
 
 namespace Spbs.Ui.Features.BankIntegration;
 
 public partial class BankSyncronizationPage
 {
-    private readonly NordigenApiClient _client;
+    [Inject] public NordigenApiClient Client { get; set; }
 
-    public BankSyncronizationPage(NordigenApiClient client)
+    public BankSyncronizationPage() { }
+
+    protected override void OnInitialized()
     {
-        _client = client;
+        
     }
 }

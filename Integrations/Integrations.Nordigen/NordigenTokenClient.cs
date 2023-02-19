@@ -13,27 +13,20 @@ public class NordigenTokenClient
 {
     private readonly HttpClient _client;
     private readonly IOptions<NordigenOptions> _options;
-    
-    private const string _newTokenEndpoint = "/new";
-    private const string _refreshTokenEndpoint = "/refresh";
 
     public NordigenTokenClient(HttpClient client, IOptions<NordigenOptions> options)
     {
         _client = client;
         _options = options;
 
-        client.BaseAddress = new Uri(options.Value.TokenEndpoint);
+        client.BaseAddress = new Uri(options.Value.ServiceUrl);
     }
 
-    public async Task<NewTokenResult> GetNewToken()
+    public async Task<NewTokenResult> ObtainTokenAsync()
     {
-        JWTObtainPairRequest requestBody = new()
-        {
-            SecretId = _options.Value.ClientId,
-            SecretKey = _options.Value.ClientSecret
-        };
+        JWTObtainPairRequest requestBody = new(_options.Value.ClientId, _options.Value.ClientSecret);
 
-        var response = await SendRequest(requestBody, _refreshTokenEndpoint);
+        var response = await SendRequest(requestBody, _options.Value.NewTokenEndpoint);
         var jwt = await ParseResponse<SpectacularJWTObtain>(response);
         if (jwt is not null)
         {
@@ -43,14 +36,11 @@ public class NordigenTokenClient
         return new NewTokenResult(null, false, "An error occured while requesting the token.");
     }
 
-    public async Task<RefreshTokenResult> RefreshToken(string refreshToken)
+    public async Task<RefreshTokenResult> RefreshTokenAsync(string refreshToken)
     {
-        JWTRefreshRequest requestBody = new()
-        {
-            Refresh = refreshToken
-        };
+        JWTRefreshRequest requestBody = new(refreshToken);
 
-        var response = await SendRequest(requestBody, _refreshTokenEndpoint);
+        var response = await SendRequest(requestBody, _options.Value.NewTokenEndpoint);
         var jwt = await ParseResponse<SpectacularJWTRefresh>(response);
         if (jwt is not null)
         {
@@ -63,6 +53,7 @@ public class NordigenTokenClient
     private async Task<TResponse?> ParseResponse<TResponse>(HttpResponseMessage response) where TResponse : class
     {
         var content = await response.Content.ReadAsStringAsync();
+        Console.WriteLine(content);
         if (response.IsSuccessStatusCode)
         {
             return JsonConvert.DeserializeObject<TResponse>(content);
@@ -74,7 +65,7 @@ public class NordigenTokenClient
     private Task<HttpResponseMessage> SendRequest<TRequest>(TRequest requestBody, string endpoint) 
         where TRequest : class
     {
-        HttpRequestMessage request = new(HttpMethod.Post, _newTokenEndpoint);
+        HttpRequestMessage request = new(HttpMethod.Post, endpoint);
         request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json"));
         request.Content = new StringContent(
             JsonConvert.SerializeObject(requestBody),

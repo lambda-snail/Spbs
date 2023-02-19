@@ -10,13 +10,20 @@ public class NordigenOptionsValidator : AbstractValidator<NordigenOptions>
         RuleFor(o => o.ClientSecret).NotEmpty().NotNull();
         RuleFor(o => o.ServiceUrl).NotEmpty().NotNull();
         RuleFor(o => o.CallbackUrl).NotEmpty().NotNull();
-        RuleFor(o => o.TokenEndpoint).NotEmpty().NotNull();
 
         RuleFor(o => o.ServiceUrl)
             .Must(uri => Uri.IsWellFormedUriString(uri, UriKind.Absolute));
         RuleFor(o => o.CallbackUrl)
             .Must(uri => Uri.IsWellFormedUriString(uri, UriKind.Absolute));
-        RuleFor(o => o.TokenEndpoint)
+        RuleFor(o => o.NewTokenEndpoint)
+            .NotEmpty()
+            .NotNull()
+            .Must(uri => uri.EndsWith('/')) // Post redirects to Get otherwise
+            .Must(uri => Uri.IsWellFormedUriString(uri, UriKind.Absolute));
+        RuleFor(o => o.RefreshTokenEndpoint)
+            .NotEmpty()
+            .NotNull()
+            .Must(uri => uri.EndsWith('/'))
             .Must(uri => Uri.IsWellFormedUriString(uri, UriKind.Absolute));
         
         RuleFor(o => o.DefaultMaxHistoricalDays)
