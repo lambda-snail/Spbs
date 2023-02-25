@@ -2,4 +2,10 @@
 
 <h3>BankSyncronizationPage</h3>
 
-<button @onclick="async () => await Client.GetListOfInstitutions()" >Test</button>
+<link href="https://unpkg.com/nordigen-bank-ui@1.5.2/package/src/selector.min.css" rel="stylesheet" />
+
+    <div id="institution-content-wrapper"></div>
+
+<script src="https://unpkg.com/nordigen-bank-ui@1.5.2/package/src/selector.min.js"></script>
+
+<button @onclick="(async () => await Client.GetListOfInstitutionsAsync(_country))" >Test</button>

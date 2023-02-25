@@ -19,12 +19,17 @@ public class NordigenOptionsValidator : AbstractValidator<NordigenOptions>
             .NotEmpty()
             .NotNull()
             .Must(uri => uri.EndsWith('/')) // Post redirects to Get otherwise
-            .Must(uri => Uri.IsWellFormedUriString(uri, UriKind.Absolute));
+            .Must(uri => Uri.IsWellFormedUriString(uri, UriKind.Relative));
         RuleFor(o => o.RefreshTokenEndpoint)
             .NotEmpty()
             .NotNull()
             .Must(uri => uri.EndsWith('/'))
-            .Must(uri => Uri.IsWellFormedUriString(uri, UriKind.Absolute));
+            .Must(uri => Uri.IsWellFormedUriString(uri, UriKind.Relative));
+        RuleFor(o => o.ListOfInstitutionsEndpoint)
+            .NotEmpty()
+            .NotNull()
+            .Must(uri => uri.EndsWith('/'))
+            .Must(uri => Uri.IsWellFormedUriString(uri, UriKind.Relative));
         
         RuleFor(o => o.DefaultMaxHistoricalDays)
             .GreaterThan(0)

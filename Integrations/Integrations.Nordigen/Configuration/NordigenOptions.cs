@@ -14,6 +14,7 @@ public class NordigenOptions
     
     public string NewTokenEndpoint { get; set; }
     public string RefreshTokenEndpoint { get; set; }
+    public string ListOfInstitutionsEndpoint { get; set; }
     
     public int? DefaultMaxHistoricalDays { get; set; }
     public int? DefaultAccessValidForDays { get; set; }
