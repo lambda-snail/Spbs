@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net7.0</TargetFramework>
         <UserSecretsId>a576141c-d7bf-439b-bf59-3bd29898e93c</UserSecretsId>
         <LangVersion>10</LangVersion>
         <Nullable>enable</Nullable>
@@ -15,15 +15,16 @@
             <GeneratePathProperty>true</GeneratePathProperty>
         </PackageReference>
 
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.11" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="6.0.11" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.11">
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.3" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="7.0.3" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.3">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="7.0.3" />
         <PackageReference Include="Microsoft.Identity.Web" Version="1.*" />
         <PackageReference Include="Microsoft.Identity.Web.UI" Version="1.*" />
-        <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="6.0.2" />
+        <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="7.0.0" />
     </ItemGroup>
     <ItemGroup>
       <Folder Include="Components" />
@@ -36,10 +37,18 @@
       <ProjectReference Include="..\Shared\Shared.csproj" />
     </ItemGroup>
     <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-      <Exec Command="cp $(Pkgbootstrap)/contentFiles/any/any/wwwroot/css/bootstrap.min.css  $(ProjectDir)/wwwroot/css/bootstrap" />
-      <Exec Command="cp $(Pkgbootstrap)/contentFiles/any/any/wwwroot/css/bootstrap.min.css.map  $(ProjectDir)/wwwroot/css/bootstrap" />
-        <Exec Command="cp $(Pkgbootstrap)/contentFiles/any/any/wwwroot/js/bootstrap.bundle.min.js  $(ProjectDir)/wwwroot/js/bootstrap" />
-        <Exec Command="cp $(Pkgbootstrap)/contentFiles/any/any/wwwroot/js/bootstrap.min.js  $(ProjectDir)/wwwroot/js/bootstrap" />
+        <Content Include="libNative.dll" Condition=" '$(OS)' == 'Windows_NT' ">
+            <Exec Command="copy $(Pkgbootstrap)\contentFiles\any\any\wwwroot\css\bootstrap.min.css  $(ProjectDir)wwwroot\css\bootstrap" />
+            <Exec Command="copy $(Pkgbootstrap)\contentFiles\any\any\wwwroot\css\bootstrap.min.css.map  $(ProjectDir)wwwroot\css\bootstrap" />
+            <Exec Command="copy $(Pkgbootstrap)\contentFiles\any\any\wwwroot\js\bootstrap.bundle.min.js  $(ProjectDir)wwwroot\js\bootstrap" />
+            <Exec Command="copy $(Pkgbootstrap)\contentFiles\any\any\wwwroot\js\bootstrap.min.js  $(ProjectDir)wwwroot\js\bootstrap" />
+        </Content>
+        <Content Include="libNative.so" Condition=" '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' ">
+            <Exec Command="cp $(Pkgbootstrap)/contentFiles/any/any/wwwroot/css/bootstrap.min.css  $(ProjectDir)wwwroot/css/bootstrap" />
+            <Exec Command="cp $(Pkgbootstrap)/contentFiles/any/any/wwwroot/css/bootstrap.min.css.map  $(ProjectDir)wwwroot/css/bootstrap" />
+            <Exec Command="cp $(Pkgbootstrap)/contentFiles/any/any/wwwroot/js/bootstrap.bundle.min.js  $(ProjectDir)wwwroot/js/bootstrap" />
+            <Exec Command="cp $(Pkgbootstrap)/contentFiles/any/any/wwwroot/js/bootstrap.min.js  $(ProjectDir)wwwroot/js/bootstrap" />
+        </Content>
     </Target>
     <!--ItemGroup>
       <_ContentIncludedByDefault Remove="wwwroot\css\bootstrap\bootstrap.min.css" />
