@@ -12,7 +12,7 @@ public static class OptionsBuilderValidationExtensions
     public static OptionsBuilder<TOptions> ValidateFluently<TOptions>(this OptionsBuilder<TOptions> optionsBuilder) where TOptions : class
     {
         optionsBuilder.Services
-            .AddSingleton<IValidateOptions<TOptions>>(s => new FluentValidationOptions<TOptions>(optionsBuilder.Name, s.GetService<IValidator<TOptions>>()));
+            .AddSingleton<IValidateOptions<TOptions>>(s => new FluentValidationOptions<TOptions>(optionsBuilder.Name, s.GetService<IValidator<TOptions>>()!));
         return optionsBuilder;
     }
 }
@@ -28,7 +28,7 @@ public class FluentValidationOptions<TOptions> : IValidateOptions<TOptions> wher
         _validator = validator;
     }
 
-    public ValidateOptionsResult Validate(string name, TOptions options)
+    public ValidateOptionsResult Validate(string? name, TOptions options)
     {
         if (Name != null && Name != name)
         {
