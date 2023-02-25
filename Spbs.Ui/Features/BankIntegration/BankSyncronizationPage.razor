@@ -2,10 +2,24 @@
 
 <h3>BankSyncronizationPage</h3>
 
-<link href="https://unpkg.com/nordigen-bank-ui@1.5.2/package/src/selector.min.css" rel="stylesheet" />
+<button @onclick="(async () => await GetListOfInstitutions())">Test</button>
 
-    <div id="institution-content-wrapper"></div>
-
-<script src="https://unpkg.com/nordigen-bank-ui@1.5.2/package/src/selector.min.js"></script>
-
-<button @onclick="(async () => await Client.GetListOfInstitutionsAsync(_country))" >Test</button>
+@if (_institutions is not null)
+{
+    <div class="container">
+        <div class="row row-cols-6 gy-2 gx-2">
+            @foreach (var i in _institutions)
+            {
+                <div class="col">
+                    <div class="card">
+                        <img src="@i.Logo" class="card-img-top img-responsive" alt="Logotype of @i.Name">
+                        <div class="card-body">
+                            <h5 class="card-title">@i.Name</h5>
+                            <p class="card-text">@i.Bic</p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
