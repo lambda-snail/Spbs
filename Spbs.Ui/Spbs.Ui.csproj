@@ -37,18 +37,15 @@
       <ProjectReference Include="..\Shared\Shared.csproj" />
     </ItemGroup>
     <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-        <Content Include="libNative.dll" Condition=" '$(OS)' == 'Windows_NT' ">
-            <Exec Command="copy $(Pkgbootstrap)\contentFiles\any\any\wwwroot\css\bootstrap.min.css  $(ProjectDir)wwwroot\css\bootstrap" />
-            <Exec Command="copy $(Pkgbootstrap)\contentFiles\any\any\wwwroot\css\bootstrap.min.css.map  $(ProjectDir)wwwroot\css\bootstrap" />
-            <Exec Command="copy $(Pkgbootstrap)\contentFiles\any\any\wwwroot\js\bootstrap.bundle.min.js  $(ProjectDir)wwwroot\js\bootstrap" />
-            <Exec Command="copy $(Pkgbootstrap)\contentFiles\any\any\wwwroot\js\bootstrap.min.js  $(ProjectDir)wwwroot\js\bootstrap" />
-        </Content>
-        <Content Include="libNative.so" Condition=" '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' ">
-            <Exec Command="cp $(Pkgbootstrap)/contentFiles/any/any/wwwroot/css/bootstrap.min.css  $(ProjectDir)wwwroot/css/bootstrap" />
-            <Exec Command="cp $(Pkgbootstrap)/contentFiles/any/any/wwwroot/css/bootstrap.min.css.map  $(ProjectDir)wwwroot/css/bootstrap" />
-            <Exec Command="cp $(Pkgbootstrap)/contentFiles/any/any/wwwroot/js/bootstrap.bundle.min.js  $(ProjectDir)wwwroot/js/bootstrap" />
-            <Exec Command="cp $(Pkgbootstrap)/contentFiles/any/any/wwwroot/js/bootstrap.min.js  $(ProjectDir)wwwroot/js/bootstrap" />
-        </Content>
+        <Exec Condition="$([MSBuild]::IsOSPlatform('Windows'))" Command="copy $(Pkgbootstrap)\contentFiles\any\any\wwwroot\css\bootstrap.min.css  $(ProjectDir)wwwroot\css\bootstrap" />
+        <Exec Condition="$([MSBuild]::IsOSPlatform('Windows'))" Command="copy $(Pkgbootstrap)\contentFiles\any\any\wwwroot\css\bootstrap.min.css.map  $(ProjectDir)wwwroot\css\bootstrap" />
+        <Exec Condition="$([MSBuild]::IsOSPlatform('Windows'))" Command="copy $(Pkgbootstrap)\contentFiles\any\any\wwwroot\js\bootstrap.bundle.min.js  $(ProjectDir)wwwroot\js\bootstrap" />
+        <Exec Condition="$([MSBuild]::IsOSPlatform('Windows'))" Command="copy $(Pkgbootstrap)\contentFiles\any\any\wwwroot\js\bootstrap.min.js  $(ProjectDir)wwwroot\js\bootstrap" />
+        
+        <Exec Condition="$([MSBuild]::IsOSPlatform('Linux'))" Command="cp $(Pkgbootstrap)/contentFiles/any/any/wwwroot/css/bootstrap.min.css  $(ProjectDir)wwwroot/css/bootstrap" />
+        <Exec Condition="$([MSBuild]::IsOSPlatform('Linux'))" Command="cp $(Pkgbootstrap)/contentFiles/any/any/wwwroot/css/bootstrap.min.css.map  $(ProjectDir)wwwroot/css/bootstrap" />
+        <Exec Condition="$([MSBuild]::IsOSPlatform('Linux'))" Command="cp $(Pkgbootstrap)/contentFiles/any/any/wwwroot/js/bootstrap.bundle.min.js  $(ProjectDir)wwwroot/js/bootstrap" />
+        <Exec Condition="$([MSBuild]::IsOSPlatform('Linux'))" Command="cp $(Pkgbootstrap)/contentFiles/any/any/wwwroot/js/bootstrap.min.js  $(ProjectDir)wwwroot/js/bootstrap" />
     </Target>
     <!--ItemGroup>
       <_ContentIncludedByDefault Remove="wwwroot\css\bootstrap\bootstrap.min.css" />
