@@ -92,7 +92,7 @@ public partial class RecurringExpensesListComponent : SelectableListComponent<Re
 
     private string GetRowClass(int i)
     {
-        return GetSelected() == i ? "bg-secondary text-white" : String.Empty;
+        return GetSelected() == i ? "bg-secondary text-white" : string.Empty;
     }
 
     private string GetBillingTypeUIText()

@@ -1,15 +1,20 @@
+@using Spbs.Ui.Features.BankIntegration.Models
+@inherits Spbs.Ui.Components.SelectableListComponent<Spbs.Ui.Features.BankIntegration.Models.Institution>
+
 @if (_institutions is not null)
 {
     <div class="container">
         <div class="row row-cols-6 gy-2 gx-2">
-            @foreach (var i in _institutions)
+            @for (int i = 0; i < _institutions.Count; ++i)
             {
+                int row = i;
+                Institution institution = _institutions[i];
                 <div class="col">
-                    <div class="card">
-                        <img src="@i.Logo" class="card-img-top img-responsive" alt="Logotype of @i.Name">
+                    <div class="card @GetRowClass(row)" onclick="@(() => SetSelected(row))">
+                        <img src="@institution.Logo" class="card-img-top img-responsive" alt="Logotype of @institution.Name">
                         <div class="card-body">
-                            <h5 class="card-title">@i.Name</h5>
-                            <p class="card-text">@i.Bic</p>
+                            <h5 class="card-title">@institution.Name</h5>
+                            <p class="card-text">@institution.Bic</p>
                         </div>
                     </div>
                 </div>
