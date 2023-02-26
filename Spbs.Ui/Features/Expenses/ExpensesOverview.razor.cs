@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Spbs.Ui.Auth;
+using Spbs.Ui.Components;
 
 namespace Spbs.Ui.Features.Expenses;
 
@@ -13,10 +14,11 @@ public class ExpenseFilter
     public bool FromDateMonthOnly { get; set; } = false;
 }
 
-public partial class ExpensesOverview : ComponentBase
+public partial class ExpensesOverview : SelectableListComponent<Expense>
 {
     private List<Expense>? _expenses = null;
-    private int? _selectedRow = null;
+    protected override List<Expense>? GetList() => _expenses;
+    
     private bool _displayFilter = false;
     
     [Inject] public IExpenseReaderRepository ExpenseRepository { get; set; }
@@ -37,27 +39,6 @@ public partial class ExpensesOverview : ComponentBase
     {
         await FetchExpenses();
         await UserId();
-    }
-
-    /// <summary>
-    /// Determine which row is the selected one. If the selected row is clicked twice, it will be deselected.
-    /// </summary>
-    /// <param name="i"></param>
-    private void SetSelected(int i)
-    {
-        if (i >= 0 && i < _expenses?.Count)
-        {
-            _selectedRow = i == _selectedRow ? null : i;
-            StateHasChanged();
-        }
-        else
-        {
-            if (_selectedRow is not null)
-            {
-                _selectedRow = null;
-                StateHasChanged();
-            }
-        }
     }
 
     private async Task FetchExpenses()
@@ -113,9 +94,10 @@ public partial class ExpensesOverview : ComponentBase
     private void ToggleExpenseDialog()
     {
         Expense? e = null;
-        if (_selectedRow is not null && _selectedRow >= 0 && _selectedRow < _expenses?.Count)
+        int? selectedRow = GetSelected();
+        if (selectedRow is not null && selectedRow >= 0 && selectedRow < _expenses?.Count)
         {
-            e = _expenses?[_selectedRow.Value];
+            e = _expenses?[selectedRow.Value];
         }
         
         _editExpenseComponent?.SetModalContent(e);
@@ -124,7 +106,7 @@ public partial class ExpensesOverview : ComponentBase
 
     private string GetRowClass(int i)
     {
-        return _selectedRow == i ? "bg-secondary text-white" : String.Empty;
+        return GetSelected() == i ? "bg-secondary text-white" : string.Empty;
     }
 
     private async void ApplyFilter()

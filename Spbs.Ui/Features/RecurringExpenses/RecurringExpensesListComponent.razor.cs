@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Mvc.Diagnostics;
 using Spbs.Ui.Auth;
+using Spbs.Ui.Components;
 
 namespace Spbs.Ui.Features.RecurringExpenses;
 
@@ -14,7 +15,7 @@ public class RecurringExpenseListFilter
     public RecurrenceType? RecurrenceType { get; set; }
 }
 
-public partial class RecurringExpensesListComponent
+public partial class RecurringExpensesListComponent : SelectableListComponent<RecurringExpense>
 {
     [Parameter] public Action<RecurringExpense> OnSelect { get; set; }
     
@@ -23,7 +24,7 @@ public partial class RecurringExpensesListComponent
 
     private RecurringExpenseListFilter? _filter;
     private List<RecurringExpense>? _recurringExpenses;
-    private int? _selectedRow = null;
+    protected override List<RecurringExpense>? GetList() => _recurringExpenses;
     
     EditRecurringExpenseComponent _editRecurringExpensesDialog;
     
@@ -91,34 +92,9 @@ public partial class RecurringExpensesListComponent
 
     private string GetRowClass(int i)
     {
-        return _selectedRow == i ? "bg-secondary text-white" : String.Empty;
-    }
-    
-    /// <summary>
-    /// Determine which row is the selected one. If the selected row is clicked twice, it will be deselected.
-    /// </summary>
-    private void SetSelected(int i)
-    {
-        if (i >= 0 && i < _recurringExpenses?.Count)
-        {
-            _selectedRow = i == _selectedRow ? null : i;
-            StateHasChanged();
-        }
-        else
-        {
-            if (_selectedRow is not null)
-            {
-                _selectedRow = null;
-                StateHasChanged();
-            }
-        }
+        return GetSelected() == i ? "bg-secondary text-white" : String.Empty;
     }
 
-    private bool IsSelected(int i)
-    {
-        return _selectedRow == i;
-    }
-    
     private string GetBillingTypeUIText()
     {
         if (_filter?.RecurrenceType != null)
@@ -132,9 +108,10 @@ public partial class RecurringExpensesListComponent
     private void ToggleExpenseDialog()
     {
         RecurringExpense? e = null;
-        if (_selectedRow is not null && _selectedRow >= 0 && _selectedRow < _recurringExpenses?.Count)
+        int? selectedRow = GetSelected();
+        if (selectedRow is not null && selectedRow >= 0 && selectedRow < _recurringExpenses?.Count)
         {
-            e = _recurringExpenses?[_selectedRow.Value];
+            e = _recurringExpenses?[selectedRow.Value];
         }
         
         _editRecurringExpensesDialog?.SetModalContent(e);
