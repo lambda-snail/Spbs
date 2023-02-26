@@ -10,23 +10,12 @@ namespace Spbs.Ui.Features.BankIntegration;
 
 public partial class BankSyncronizationPage
 {
-    private string _country = "se";
-    private List<Institution>? _institutions = null;
-
-    [Inject] public IMapper Mapper { get; set; }
-    [Inject] public INordigenApiClient Client { get; set; }
-
-    public BankSyncronizationPage() { }
+    private InstitutionSelectorComponent _institutionSelector;
+    
 
     protected override void OnInitialized()
     {
         
     }
 
-    private async Task GetListOfInstitutions()
-    {
-        var aspsps = await Client.GetListOfInstitutionsAsync(_country);
-        _institutions = Mapper.Map<List<Institution>>(aspsps);
-        StateHasChanged();
-    }
 }
