@@ -1,8 +1,6 @@
-using System.Reflection;
 using FluentValidation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Shared.Utilities.OptionsExtensions;
 
 namespace Integrations.Nordigen;
@@ -24,5 +22,7 @@ public static class Startup
         services.AddHttpClient<INordigenApiClient, NordigenApiClient>();
 
         services.AddLazyCache();
+        
+        services.AddAutoMapper(typeof(Integrations.Nordigen.Startup));
     }
 }

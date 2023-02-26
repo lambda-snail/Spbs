@@ -1,21 +1,24 @@
+using AutoMapper;
 using Integrations.Nordigen.Extensions;
 using Integrations.Nordigen.Models;
 using Microsoft.Extensions.Options;
 
 namespace Integrations.Nordigen;
 
-public record NewTokenResult(SpectacularJWTObtain? Token, bool Success = true, string? Error = null);
-public record RefreshTokenResult(SpectacularJWTRefresh? Token, bool Success = true, string? Error = null);
+public record NewTokenResult(TokenPair? Token, bool Success = true, string? Error = null);
+public record RefreshTokenResult(TokenRefreshResult? Token, bool Success = true, string? Error = null);
 
 public class NordigenTokenClient
 {
+    private readonly IMapper _mapper; 
     private readonly HttpClient _client;
     private readonly IOptions<NordigenOptions> _options;
 
-    public NordigenTokenClient(HttpClient client, IOptions<NordigenOptions> options)
+    public NordigenTokenClient(HttpClient client, IOptions<NordigenOptions> options, IMapper mapper)
     {
         _client = client;
         _options = options;
+        _mapper = mapper;
 
         client.BaseAddress = new Uri(options.Value.ServiceUrl);
     }
@@ -24,7 +27,8 @@ public class NordigenTokenClient
     {
         JWTObtainPairRequest requestBody = new(_options.Value.ClientId, _options.Value.ClientSecret);
         var response = await _client.SendPostRequest(requestBody, _options.Value.NewTokenEndpoint, null);
-        var jwt = await response.ParseResponseAsync<SpectacularJWTObtain>();
+        var jwtObtain = await response.ParseResponseAsync<SpectacularJWTObtain>();
+        var jwt = _mapper.Map<TokenPair>(jwtObtain);
         if (jwt is not null)
         {
             return new NewTokenResult(jwt);
@@ -37,7 +41,8 @@ public class NordigenTokenClient
     {
         JWTRefreshRequest requestBody = new(refreshToken);
         var response = await _client.SendPostRequest(requestBody, _options.Value.NewTokenEndpoint, null);
-        var jwt = await response.ParseResponseAsync<SpectacularJWTRefresh>();
+        var jwtRefresh = await response.ParseResponseAsync<SpectacularJWTRefresh>();
+        var jwt = _mapper.Map<TokenRefreshResult>(jwtRefresh);
         if (jwt is not null)
         {
             return new RefreshTokenResult(jwt);

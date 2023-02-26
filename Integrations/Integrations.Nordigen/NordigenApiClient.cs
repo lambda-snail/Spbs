@@ -1,3 +1,4 @@
+using System.Runtime.Loader;
 using Integrations.Nordigen.Extensions;
 using Integrations.Nordigen.Models;
 using LazyCache;
@@ -36,7 +37,7 @@ public class NordigenApiClient : INordigenApiClient
         }
 
         string queryString = _options.Value.ListOfInstitutionsEndpoint + "?country=" + country;
-        var response = await _client.SendGetRequest( queryString, token.Access);
+        var response = await _client.SendGetRequest( queryString, token);
         List<Aspsp>? institutions = await response.ParseResponseAsync<List<Aspsp>>();
         
         institutions ??= new();
@@ -47,14 +48,20 @@ public class NordigenApiClient : INordigenApiClient
         return institutions;
     }
 
-    private async Task<SpectacularJWTObtain?> GetTokenCached()
+    private async Task<string?> GetTokenCached() // TODO: Handle case when refresh is expired
     {
         var tokenResult = await _cache.GetOrAddAsync(_tokenCacheString,
             async () => await _tokenClient.ObtainTokenAsync()
         );
 
         var token = tokenResult.Token;
-        return token;
+        if (token.HasAccessTokenExpiredAtTime(DateTime.UtcNow.AddMinutes(10)))
+        {
+            var refreshedToken = await _tokenClient.RefreshTokenAsync(token.Refresh);
+            token.UpdateAccessToken(refreshedToken.Token.Access, refreshedToken.Token.AccessExpires);
+        }
+
+        return token.Access;
     }
 
     public async Task<Aspsp?> GetInstitutionAsync(string id)
@@ -66,7 +73,7 @@ public class NordigenApiClient : INordigenApiClient
         }
 
         string queryString = _options.Value.ListOfInstitutionsEndpoint + id;
-        var response = await _client.SendGetRequest(queryString, token.Access);
+        var response = await _client.SendGetRequest(queryString, token);
         Aspsp? institution = await response.ParseResponseAsync<Aspsp>();
         return institution;
     }
