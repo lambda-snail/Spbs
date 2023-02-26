@@ -21,6 +21,8 @@ public static class Startup
             .ValidateOnStart();
 
         services.AddHttpClient<NordigenTokenClient>();
-        services.AddHttpClient<NordigenApiClient>();
+        services.AddHttpClient<INordigenApiClient, NordigenApiClient>();
+
+        services.AddLazyCache();
     }
 }

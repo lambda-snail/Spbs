@@ -14,7 +14,7 @@ public partial class BankSyncronizationPage
     private List<Institution>? _institutions = null;
 
     [Inject] public IMapper Mapper { get; set; }
-    [Inject] public NordigenApiClient Client { get; set; }
+    [Inject] public INordigenApiClient Client { get; set; }
 
     public BankSyncronizationPage() { }
 
