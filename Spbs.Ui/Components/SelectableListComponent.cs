@@ -39,6 +39,12 @@ public abstract class SelectableListComponent<T> : ComponentBase
     public int? GetSelected() => _selectedRow;
 
     public bool IsSelected(int i) => _selectedRow == i;
+
+    /// <summary>
+    /// Returns true if anything is selected, without asking what is selected exactly.
+    /// </summary>
+    /// <returns></returns>
+    public bool HasSelection() => _selectedRow is not null;
     
     /// <summary>
     /// Clears the selected index. Returns the value that was selected, if any.

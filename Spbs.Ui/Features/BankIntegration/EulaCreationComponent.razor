@@ -1,0 +1,49 @@
+﻿<h3>EulaCreationComponent</h3>
+
+<div class="container">
+    <EditForm Model="@_eula"
+              OnValidSubmit="@HandleValidSubmit"
+              OnInvalidSubmit="@HandleInvalidSubmit">
+
+        <DataAnnotationsValidator/>
+        <ValidationSummary></ValidationSummary>
+
+        <div class="form-group col-md-10">
+            <label for="historical-days">Max Historical Days</label>
+            <InputNumber id="historical-days"
+                         class="form-control"
+                         TValue="Int32"
+                         @bind-Value="@_eula.MaxHistoricalDays">
+            </InputNumber>
+            <small id="historical-days-small" class="form-text text-muted">The mamixum number of days back in time for fetching transactions.</small>
+            <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => _eula.MaxHistoricalDays)"/>
+        </div>
+
+        <div class="form-group col-md-10">
+            <label for="access-days">Access Valid For (Days)</label>
+            <InputNumber id="access-days"
+                         class="form-control"
+                         TValue="Int32"
+                         @bind-Value="@_eula.AccessValidForDays">
+            </InputNumber>
+            <small id="access-days-small" class="form-text text-muted">For how many days are we allowed to access your data?</small>
+            <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => _eula.AccessValidForDays)"/>
+        </div>
+
+        <div class="form-group col-md-10">
+            <label for="access-scope">Permissions</label>
+            <InputSelect id="access-scope"
+                         class="form-control"
+                         @bind-Value="@_eula.AccessScope">
+                <option value="balances">Balances</option>
+                <option value="details">Details</option>
+                <option value="transactions">Transactions</option>
+            </InputSelect>
+            <small id="access-scope-small" class="form-text text-muted">Limit what data we are allowed to access.</small>
+            <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => _eula.AccessScope)"/>
+        </div>
+
+        <button type="submit" class="btn btn-primary edit-btn">Accept</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">On Second Thought</button>
+    </EditForm>
+</div>
