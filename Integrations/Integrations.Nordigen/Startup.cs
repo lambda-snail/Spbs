@@ -7,14 +7,14 @@ namespace Integrations.Nordigen;
 
 public static class Startup
 {
-    public static void RegisterNordigenIntegration(this IServiceCollection services, IConfiguration configuration)
+    public static void RegisterNordigenIntegration(this IServiceCollection services, IConfiguration configuration, string configSectionPath)
     {
         //services.AddValidatorsFromAssembly(Assembly.GetCallingAssembly());
 
         services.AddSingleton<IValidator<NordigenOptions>, NordigenOptionsValidator>();
         
         services.AddOptions<NordigenOptions>()
-            .BindConfiguration(NordigenOptions.NordigenOptionsSectionName)
+            .BindConfiguration(configSectionPath)
             .ValidateFluently()
             .ValidateOnStart();
 

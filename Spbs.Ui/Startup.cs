@@ -37,7 +37,9 @@ namespace Spbs.Ui
                 // By default, all incoming requests will be authorized according to the default policy
                 options.FallbackPolicy = options.DefaultPolicy;
             });
-
+            
+            services.AddAzureAppConfiguration();
+            
             RegisterDatabaseConnections(services);
             RegisterRepositories(services);
             RegisterUtilities(services);
@@ -48,7 +50,7 @@ namespace Spbs.Ui
 
             services.AddAutoMapper(typeof(Startup));
 
-            services.RegisterNordigenIntegration(Configuration);
+            services.RegisterNordigenIntegration(Configuration, "Spbs:NordigenOptions");
         }
 
         private void RegisterUtilities(IServiceCollection services)
@@ -67,18 +69,24 @@ namespace Spbs.Ui
 
         private void RegisterDatabaseConnections(IServiceCollection services)
         {
-            var serverVersion = MySqlServerVersion.AutoDetect(Configuration.GetConnectionString("SpbsExpenses"));
+            var mysqlConnectionString = Configuration.GetSection("Spbs:ConnectionStrings").GetValue<string>("SpbsExpenses");
+            ArgumentNullException.ThrowIfNull(mysqlConnectionString); 
+
+            var serverVersion = MySqlServerVersion.AutoDetect(mysqlConnectionString);
             
             services.AddDbContextFactory<ExpensesDbContext>(o => o
-                .UseMySql(Configuration.GetConnectionString("SpbsExpenses"), serverVersion)
+                .UseMySql(mysqlConnectionString, serverVersion)
                 .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
-    
+                
                 #if DEBUG
                 .EnableDetailedErrors()
                 .LogTo(Console.WriteLine)
                 #endif
             ).AddDbContextFactory<RecurringExpensesDbContext>(o => o
-                .UseMySql(Configuration.GetConnectionString("SpbsExpenses"), serverVersion)
+                .UseMySql(mysqlConnectionString, serverVersion, options =>
+                {
+                    options.EnableRetryOnFailure(3);
+                })
                 .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
 
                 #if DEBUG
@@ -101,6 +109,10 @@ namespace Spbs.Ui
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            
+            // Use Azure App Configuration middleware for dynamic configuration refresh.
+            // For options registered with IOptionsSnapshot<T>
+            //app.UseAzureAppConfiguration();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
