@@ -58,7 +58,7 @@ stages:
     jobs:
     - job: Deploy
       steps:
-      - checkout: none
+      #- checkout: none
       - task: DownloadBuildArtifacts@1
         inputs:
           buildType: 'current'
@@ -68,7 +68,7 @@ stages:
           cleanDestinationFolder: true
 
       - script: 'ls -l "$(System.ArtifactsDirectory)"'
-      - script: 'ls -l "$(Build.SourcesDirectory)"'
+      - script: 'ls -l "$(System.DefaultWorkingDirectory)"'
 
       - task: AzureResourceManagerTemplateDeployment@3
         displayName: 'Deploy Using Template'
