@@ -70,6 +70,8 @@ stages:
       - script: 'ls -l "$(System.ArtifactsDirectory)"'
       - script: 'ls -l "$(System.ArtifactsDirectory)/drop"'
       - script: 'ls -l "$(System.ArtifactsDirectory)/drop/Spbs/Infrastructure"'
+      - script: 'ls -l "$(System.ArtifactsDirectory)/Spbs"'
+      - script: 'ls -l "$(System.ArtifactsDirectory)/Spbs/Infrastructure"'
 
       - task: AzureResourceManagerTemplateDeployment@3
         displayName: 'Deploy Using Template'
