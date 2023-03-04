@@ -12,6 +12,11 @@ variables:
   isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
 
 steps:
+- task: NuGetToolInstaller@1
+  inputs:
+    versionSpec: 6.x
+    checkLatest: true
+  
 - task: DotNetCoreCLI@2
   displayName: 'DotNet restore'
   inputs:
