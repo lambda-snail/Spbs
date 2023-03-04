@@ -80,7 +80,7 @@ stages:
           #csmFile: '$(System.ArtifactsDirectory)/Spbs/Infrastructure/main.bicep'
           csmFile: '**/*.bicep'
           csmParametersFile: '**/*.parameters.json'
-          overrideParameters: '-webAppName $(web-app-name) -appServicePlanName $(app-service-plan-name) -appServicePlanResourceGroup $(app-service-plan-resource-group) -location "Sweden Central"'
+          overrideParameters: '-webAppName $(web-app-name) -appServicePlanName $(app-service-plan-name) -location "Sweden Central"'
 
 
 #

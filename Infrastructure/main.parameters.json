@@ -3,9 +3,6 @@
     "appServicePlanName": {
       "type": "secret"
     },
-    "appServicePlanResourceGroup": {
-      "type": "secret"
-    },
     "webAppName": {
       "type": "secret"
     }

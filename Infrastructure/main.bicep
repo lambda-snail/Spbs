@@ -1,5 +1,4 @@
 param appServicePlanName string
-param appServicePlanResourceGroup string
 param webAppName string
 param location string = resourceGroup().location
 
@@ -7,7 +6,6 @@ var linuxFxVersion = 'DOTNETCORE|Latest'
 
 resource appServicePlan 'Microsoft.Web/serverfarms@2021-02-01' existing = {
   name: appServicePlanName
-  resourceGroup: appServicePlanResourceGroup
 }
 
 resource webApp 'Microsoft.Web/sites@2021-02-01' = {
