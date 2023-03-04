@@ -1,0 +1,8 @@
+"parameters": {
+  "appServicePlanName": {
+    "type": "secret"
+  },
+  "webAppName": {
+    "type": "secret"
+  }
+}

@@ -54,7 +54,7 @@ stages:
           publishLocation: 'Container'
 
   - stage: Deployment
-    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+    #condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     jobs:
     - job: Deploy
       steps:
@@ -66,23 +66,6 @@ stages:
           artifactName: 'drop'
           downloadPath: '$(System.ArtifactsDirectory)'
           cleanDestinationFolder: true
-
-      - task: AzureAppConfiguration@6
-        inputs:
-          azureSubscription: 'sc-az-spbs-prod'
-          AppConfigurationEndpoint: '$(app-config-url)'
-          KeyFilter: 'Spbs:Build:*'
-          Label: 'Production'
-          TrimKeyPrefix: |
-            Spbs
-            Build
-
-      - task: CmdLine@2
-        inputs:
-          script: |
-            echo $(AppServicePlanName)
-
-      - script: ${env:AppServicePlanName}
 
       - task: AzureResourceManagerTemplateDeployment@3
         displayName: 'Deploy Using Template'
