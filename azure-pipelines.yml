@@ -24,7 +24,7 @@ steps:
   inputs:
     command: build
     projects: '**/*.csproj'
-    arguments: '--configuration $(buildConfiguration) --arch $(buildPlatform) --norestore'
+    arguments: '--configuration $(buildConfiguration) --arch $(buildPlatform) --no-restore'
 
 #- task: VSBuild@1
 #  inputs:
