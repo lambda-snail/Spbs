@@ -67,20 +67,16 @@ stages:
           downloadPath: '$(System.ArtifactsDirectory)'
           cleanDestinationFolder: true
 
-      - script: 'ls -l "$(System.ArtifactsDirectory)"'
-      - script: 'ls -l "$(System.DefaultWorkingDirectory)"'
-
       - task: AzureResourceManagerTemplateDeployment@3
         displayName: 'Deploy Using Template'
         inputs:
           azureResourceManagerConnection: 'sc-az-spbs-prod'
           subscriptionId: '$(subscription-id)'
           resourceGroupName: '$(resource-group)'
-          location: 'Sweden Central'
-          #csmFile: '$(System.ArtifactsDirectory)/Spbs/Infrastructure/main.bicep'
+          location: 'West Europe'
           csmFile: '**/*.bicep'
           csmParametersFile: '**/*.parameters.json'
-          overrideParameters: '-webAppName $(web-app-name) -appServicePlanName $(app-service-plan-name) -location "Sweden Central"'
+          overrideParameters: '-webAppName $(web-app-name) -appServicePlanName $(app-service-plan-name) -location "West Europe"'
 
 
 #
