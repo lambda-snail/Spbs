@@ -35,10 +35,6 @@ stages:
           projects: '**/*.csproj'
           arguments: '--configuration $(buildConfiguration) --no-restore'
     
-    - job: Tests
-      dependsOn: Build
-      displayName: 'Unit Tests'
-      steps:
       - task: DotNetCoreCLI@2
         displayName: 'Run Tests'
         inputs:
