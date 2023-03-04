@@ -6,6 +6,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "Shared\Shared.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integrations.Nordigen", "Integrations\Integrations.Nordigen\Integrations.Nordigen.csproj", "{8A5879A9-30BB-450A-9626-4FA0C23E3E1B}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{691203E7-38A9-4088-B471-5AE25B133B79}"
+	ProjectSection(SolutionItems) = preProject
+		Infrastructure\main.bicep = Infrastructure\main.bicep
+		Infrastructure\main.parameters.json = Infrastructure\main.parameters.json
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
