@@ -2,58 +2,46 @@ trigger:
 - master
 - development
 
-pool:
-  vmImage: 'ubuntu-latest'
-
 variables:
   solution: '**/*.sln'
   buildPlatform: 'x64'
   buildConfiguration: 'Release'
   isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
-#
-#stages
-#  - stage: Build Stage
-#    displayName: 'Build Project'
-#    jobs:
-#      - job: Build
-#        displayName 'XXX'
-#        steps:
-#          
-
-
-
-
-steps:
-#- task: NuGetToolInstaller@1
-#  inputs:
-#    versionSpec: 6.x
-#    checkLatest: true
-
-- task: UseDotNet@2
-  displayName: 'Use .NET Core sdk 7.x'
-  inputs:
-    packageType: 'sdk'
-    version: 7.x
   
-- task: DotNetCoreCLI@2
-  displayName: 'DotNet restore'
-  inputs:
-    command: restore
-    projects: '**/*.csproj'
+stages:
+  - stage: Build
+    pool:
+      vmImage: 'ubuntu-latest'
+    jobs:
+    - job: Build
 
-- task: DotNetCoreCLI@2
-  displayName: 'DotNet Build'
-  inputs:
-    command: build
-    projects: '**/*.csproj'
-    arguments: '--configuration $(buildConfiguration) --no-restore'
+    steps:
+    - task: UseDotNet@2
+      displayName: 'Use .NET Core sdk 7.x'
+      inputs:
+        packageType: 'sdk'
+        version: 7.x
+      
+    - task: DotNetCoreCLI@2
+      displayName: 'Restore'
+      inputs:
+        command: restore
+        projects: '**/*.csproj'
+    
+    - task: DotNetCoreCLI@2
+      displayName: 'Build'
+      inputs:
+        command: build
+        projects: '**/*.csproj'
+        arguments: '--configuration $(buildConfiguration) --no-restore'
+    
+    - task: DotNetCoreCLI@2
+      displayName: 'Run Tests'
+      inputs:
+        command: test
+        projects: '**/*[Tt]ests/*.csproj'
 
-#
-#- task: DotNetCoreCLI@2
-#  displayName: 'DotNet Test'
-#  inputs:
-#    command: test
-#    projects: '**/*[Tt]ests/*.csproj'
+
 #
 #- ${{ if eq(variables.isMain, 'true') }}:
 #  - task: PublishBuildArtifacts@1
