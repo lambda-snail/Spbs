@@ -1,8 +1,10 @@
-"parameters": {
-  "appServicePlanName": {
-    "type": "secret"
-  },
-  "webAppName": {
-    "type": "secret"
+{
+  "parameters": {
+    "appServicePlanName": {
+      "type": "secret"
+    },
+    "webAppName": {
+      "type": "secret"
+    }
   }
 }
