@@ -81,3 +81,47 @@ stages:
         inputs:
           script: |
             echo $(AppServicePlanName)
+
+      - script: ${env:AppServicePlanName}
+
+      - task: AzureResourceManagerTemplateDeployment@3
+        displayName: 'Deploy Using Template'
+        inputs:
+          azureResourceManagerConnection: 'sc-az-spbs-prod'
+          subscriptionId: '$(subscription-id)'
+          resourceGroupName: '$(resource-group)'
+          location: 'Sweden Central'
+          csmFile: '$(System.ArtifactsDirectory)/Spbs/Infrastructure/main.bicep'
+          #csmParametersFile: '$(System.ArtifactsDirectory)/Spbs/Infrastructure/main.parameters.json'
+          overrideParameters: '-webAppName $(web-app-name) -appServicePlanName $(app-service-plan-name) -location "Sweden Central"'
+
+
+#
+#Batch script: %SUBSCRIPTION-ID%
+#PowerShell script: ${env:SUBSCRIPTION-ID}
+#Bash script: $(SUBSCRIPTION-ID)
+#
+#variables:
+#  subscriptionId: ''
+#  name: 'func-crm-geolocation-dev'
+#  location: 'West Europe'
+#  hostingPlanName: 'asp-rgcrmgeolocation'
+#  serverFarmResourceGroup: 'rg-crm-geolocation'
+#  storageAccountName: 'stgcrmgeolocationdev'
+#  CosmosDbConnectionString: 'AccountEndpoint=https://cosmos-crm-geolocation.documents.azure.com:443/;AccountKey=EDXk9w9V5R75Uov2nSK6hxEkQabf1Gk8mM51ZZIQLqQpF8Zh0eu5L2koKob5qjYs9kiaenCX5uz9VvrhEmGX6A==;'
+#  CosmosDbCollectionName: 'locations'
+#  CosmosDbName: 'cosmos-crm-geolocation'
+#  WorkspaceNameParameter: 'DefaultWorkspace-d64b37dd-6c05-41e4-beaf-72f995fc1f29-WEU'
+#  WorkspaceResourceIdParameter: '/subscriptions/d64b37dd-6c05-41e4-beaf-72f995fc1f29/resourceGroups/DefaultResourceGroup-WEU/providers/Microsoft.OperationalInsights/workspaces/DefaultWorkspace-d64b37dd-6c05-41e4-beaf-72f995fc1f29-WEU'
+#
+#steps:
+#  - task: AzureResourceManagerTemplateDeployment@3
+#    displayName: 'Deploy Using Arm Template'
+#    inputs:
+#      azureResourceManagerConnection:
+#      subscriptionId: 'd64b37dd-6c05-41e4-beaf-72f995fc1f29'
+#      resourceGroupName: 'rg-crm-geolocation'
+#      location: 'West Europe'
+#      csmFile: '$(System.DefaultWorkingDirectory)/Github Drops/Azure.ArmTemplates/azuredeploy.json'
+#      csmParametersFile: '$(System.DefaultWorkingDirectory)/Github Drops/Azure.ArmTemplates/azuredeploy.parameters.json'
+#      overrideParameters: '-subscriptionId $(subscriptionId) -name $(name) -location "$(location)" -hostingPlanName $(hostingPlanName) -serverFarmResourceGroup $(serverFarmResourceGroup) -storageAccountName $(storageAccountName) -CosmosDbConnectionStringParameter $(CosmosDbConnectionString) -CosmosDbCollectionNameParameter $(CosmosDbCollectionName) -CosmosDbNameParameter $(CosmosDbName) -WorkspaceNameParameter $(WorkspaceNameParameter) -WorkspaceResourceIdParameter $(WorkspaceResourceIdParameter)'
