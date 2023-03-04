@@ -66,16 +66,13 @@ stages:
           artifactName: 'drop'
           downloadPath: '$(System.ArtifactsDirectory)'
           cleanDestinationFolder: true
-      
+
+      - task: AzureAppConfiguration.azure-app-configuration-task.custom-build-release-task.AzureAppConfiguration@5
+        inputs:
+          azureSubscription: 'sc-az-spbs-prod'
+          AppConfigurationEndpoint: '$(app-config-url)'
+          
       - task: PowerShell@2
         inputs:
-          targetType: 'inline' 
-          script: 'pwd'
-      
-#
-#- ${{ if eq(variables.isMain, 'true') }}:
-#  - task: PublishBuildArtifacts@1
-#    inputs:
-#      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-#      ArtifactName: 'drop'
-#      publishLocation: 'Container'
+          targetType: 'inline'
+          script: '$(Spbs:Build:AppServicePlanName)'
