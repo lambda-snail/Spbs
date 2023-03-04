@@ -7,14 +7,14 @@ variables:
   buildPlatform: 'x64'
   buildConfiguration: 'Release'
   isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
+    
+pool:
+  vmImage: 'ubuntu-latest'
   
 stages:
   - stage: Build
-    pool:
-      vmImage: 'ubuntu-latest'
     jobs:
     - job: Build
-
       steps:
       - task: UseDotNet@2
         displayName: 'Use .NET Core sdk 7.x'
@@ -34,14 +34,25 @@ stages:
           command: build
           projects: '**/*.csproj'
           arguments: '--configuration $(buildConfiguration) --no-restore'
-      
+    
+    - job: Unit Tests
+      steps:
       - task: DotNetCoreCLI@2
         displayName: 'Run Tests'
         inputs:
           command: test
           projects: '**/*[Tt]ests/*.csproj'
 
-
+  - ${{ if eq(variables.isMain, 'true') }}:
+    - stage: Deployment
+      jobs:
+      - job: Deploy
+        steps:
+        - task: PowerShell@2
+          inputs:
+            targetType: inline' 
+            script: 'pwd'
+      
 #
 #- ${{ if eq(variables.isMain, 'true') }}:
 #  - task: PublishBuildArtifacts@1
