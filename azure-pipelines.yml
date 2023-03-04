@@ -46,7 +46,7 @@ steps:
   inputs:
     command: build
     projects: '**/*.csproj'
-    arguments: '--configuration $(buildConfiguration) --arch $(buildPlatform) --no-restore'
+    arguments: '--configuration $(buildConfiguration) --no-restore'
 
 #
 #- task: DotNetCoreCLI@2
