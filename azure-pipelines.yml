@@ -77,8 +77,9 @@ stages:
           subscriptionId: '$(subscription-id)'
           resourceGroupName: '$(resource-group)'
           location: 'Sweden Central'
-          csmFile: '$(System.ArtifactsDirectory)/Spbs/Infrastructure/main.bicep'
-          csmParametersFile: '$(System.ArtifactsDirectory)/Spbs/Infrastructure/main.parameters.json'
+          #csmFile: '$(System.ArtifactsDirectory)/Spbs/Infrastructure/main.bicep'
+          csmFile: '**/*.bicep'
+          csmParametersFile: '**/*.parameters.json'
           overrideParameters: '-webAppName $(web-app-name) -appServicePlanName $(app-service-plan-name) -location "Sweden Central"'
 
 
