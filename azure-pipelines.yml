@@ -67,6 +67,7 @@ stages:
           downloadPath: '$(System.ArtifactsDirectory)'
           cleanDestinationFolder: true
 
+      - script: 'ls -l "$(System.ArtifactsDirectory)"'
       - script: 'ls -l "$(System.ArtifactsDirectory)/Spbs/Infrastructure"'
 
       - task: AzureResourceManagerTemplateDeployment@3
