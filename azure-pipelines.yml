@@ -42,6 +42,7 @@ stages:
           projects: '**/*[Tt]ests/*.csproj'
 
       - task: DotNetCoreCLI@2
+        displayName: 'Package Code'
         inputs:
           command: publish
           arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
