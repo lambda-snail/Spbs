@@ -67,7 +67,7 @@ stages:
           downloadPath: '$(System.ArtifactsDirectory)'
           cleanDestinationFolder: true
 
-      - task: AzureAppConfiguration.azure-app-configuration-task.custom-build-release-task.AzureAppConfiguration@5
+      - task: AzureAppConfiguration@5
         inputs:
           azureSubscription: 'sc-az-spbs-prod'
           AppConfigurationEndpoint: '$(app-config-url)'
