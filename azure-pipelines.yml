@@ -67,17 +67,6 @@ stages:
           downloadPath: '$(System.ArtifactsDirectory)'
           cleanDestinationFolder: true
 
-#      - task: AzureResourceManagerTemplateDeployment@3
-#        displayName: 'Deploy Using Template'
-#        inputs:
-#          azureResourceManagerConnection: 'sc-az-spbs-prod'
-#          subscriptionId: '$(subscription-id)'
-#          resourceGroupName: '$(resource-group)'
-#          location: 'West Europe'
-#          csmFile: '**/*.bicep'
-#          csmParametersFile: '**/*.parameters.json'
-#          overrideParameters: '-webAppName $(web-app-name) -appServicePlanName $(app-service-plan-name) -location "West Europe"'
-
       - task: AzureWebApp@1
         displayName: 'Deploy to Web App'
         inputs:
