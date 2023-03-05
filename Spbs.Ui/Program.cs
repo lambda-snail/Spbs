@@ -28,6 +28,7 @@ namespace Spbs.Ui
                             var appConfigEndpoint = settings.GetSection("AppConfigBootstrap").GetValue<string>("Endpoint");
                             ArgumentNullException.ThrowIfNull(appConfigEndpoint);
                             
+                            Console.WriteLine(appConfigEndpoint);
                             //var refreshTimer = settings.GetSection("AppConfigBootstrap").GetValue<int?>("DefaultConfigRefreshHours");
 
                             config.AddAzureAppConfiguration(options =>
