@@ -31,7 +31,7 @@ namespace Spbs.Ui
                             //var refreshTimer = settings.GetSection("AppConfigBootstrap").GetValue<int?>("DefaultConfigRefreshHours");
 
                             config.AddAzureAppConfiguration(options =>
-                                options.Connect(new Uri(appConfigEndpoint), new ManagedIdentityCredential())
+                                options.Connect(new Uri(appConfigEndpoint), new ManagedIdentityCredential()) // or DefaultAzureCredential?
                                     .Select("Spbs:*", LabelFilter.Null)
                                     .Select("Spbs:*", Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"))
                                     //.ConfigureRefresh(refreshOptions => refreshOptions.SetCacheExpiration(TimeSpan.FromHours(refreshTimer ?? 24)))
