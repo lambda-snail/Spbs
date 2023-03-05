@@ -86,3 +86,4 @@ stages:
           appName: $(web-app-name)
           deployToSlotOrASE: 'false'
           resourceGroupName: $(resource-group)
+          package: '$(System.ArtifactsDirectory)/**/*.zip'
