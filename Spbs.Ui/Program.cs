@@ -30,11 +30,16 @@ namespace Spbs.Ui
                             
                             Console.WriteLine(appConfigEndpoint);
                             //var refreshTimer = settings.GetSection("AppConfigBootstrap").GetValue<int?>("DefaultConfigRefreshHours");
+                            
+                            var credential = new ManagedIdentityCredential();
 
-                            config.AddAzureAppConfiguration(options =>
-                                options.Connect(new Uri(appConfigEndpoint), new ManagedIdentityCredential()) // or DefaultAzureCredential?
+                            var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+                            Console.WriteLine(env);
+                            
+                            config.AddAzureAppConfiguration(options => 
+                                options.Connect(new Uri(appConfigEndpoint), credential) // or ManagedIdentityCredential?
                                     .Select("Spbs:*", LabelFilter.Null)
-                                    .Select("Spbs:*", Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"))
+                                    .Select("Spbs:*", env)
                                     //.ConfigureRefresh(refreshOptions => refreshOptions.SetCacheExpiration(TimeSpan.FromHours(refreshTimer ?? 24)))
                                 ).Build();
                         })

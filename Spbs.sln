@@ -1,5 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spbs.Ui", "Spbs.Ui\Spbs.Ui.csproj", "{C4D956E4-341E-4CF6-8777-AC37ADD2E571}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "Shared\Shared.csproj", "{28F0D5E4-47CA-4EAF-B46E-D7BE9A767DB2}"
@@ -8,9 +11,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integrations.Nordigen", "In
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{691203E7-38A9-4088-B471-5AE25B133B79}"
 	ProjectSection(SolutionItems) = preProject
+		azure-pipelines.yml = azure-pipelines.yml
 		Infrastructure\main.bicep = Infrastructure\main.bicep
 		Infrastructure\main.parameters.json = Infrastructure\main.parameters.json
-		azure-pipelines.yml = azure-pipelines.yml
 	EndProjectSection
 EndProject
 Global
@@ -31,5 +34,11 @@ Global
 		{8A5879A9-30BB-450A-9626-4FA0C23E3E1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8A5879A9-30BB-450A-9626-4FA0C23E3E1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8A5879A9-30BB-450A-9626-4FA0C23E3E1B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8909F0F1-F340-4CFC-95D4-5131951FFD31}
 	EndGlobalSection
 EndGlobal

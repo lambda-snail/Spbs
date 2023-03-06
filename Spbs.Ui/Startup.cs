@@ -28,7 +28,7 @@ namespace Spbs.Ui
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
-                .AddMicrosoftIdentityWebApp(Configuration.GetSection("AzureAd"));
+                .AddMicrosoftIdentityWebApp(Configuration.GetSection("Spbs:AzureAd"));
             services.AddControllersWithViews()
                 .AddMicrosoftIdentityUI();
             

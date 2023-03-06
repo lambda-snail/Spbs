@@ -76,3 +76,10 @@ stages:
           deployToSlotOrASE: 'false'
           resourceGroupName: $(resource-group)
           package: '$(System.ArtifactsDirectory)/**/*.zip'
+      
+      - task: AzureAppServiceManage@0
+        displayName: 'Restart Azure App Service'
+        inputs:
+          azureSubscription: 'sc-az-spbs-prod'
+          Action: 'Restart Azure App Service'
+          WebAppName: $(web-app-name)
