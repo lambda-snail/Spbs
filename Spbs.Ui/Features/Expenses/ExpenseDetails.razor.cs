@@ -5,10 +5,13 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.JSInterop;
+using Spbs.Generators.UserExtensions;
 using Spbs.Ui.Auth;
+using Spbs.Ui.Features.Users;
 
 namespace Spbs.Ui.Features.Expenses;
 
+[AuthenticationTaskExtension()]
 public partial class ExpenseDetails : ComponentBase
 {
     [Parameter] public string ExpenseId { get; set; }
@@ -17,67 +20,33 @@ public partial class ExpenseDetails : ComponentBase
     [Inject] public IExpenseWriterRepository ExpenseWriterRepository { get; set; }
     [Inject] public IJSRuntime JsRuntime { get; set; }
     [Inject] public IMapper Mapper { get; set; }
-    
-    [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
 
     private Expense? _expense = null;
     private EditExpenseComponent _editExpenseComponent;
     private EditExpenseItemComponent _editExpenseItemComponent;
 
-    private Guid? _userId = null;
-    
     protected override void OnInitialized()
     {
         FetchExpense();
     }
 
-    private async Task<bool> LoadUserIdCached()
-    {
-        if (_userId is null)
-        {
-            var userId = await UserId();
-            _userId = userId;
-        }
-        
-        return _userId is not null;
-    }
-    
     private async void FetchExpense()
     {
-        if (!await LoadUserIdCached())
-        {
-            return;
-        }
-
         Guid id = Guid.Parse(ExpenseId);
-        _expense = await ExpenseReaderRepository.GetUserExpenseById(_userId!.Value, id);
+        Guid? userId = await UserId();
+        _expense = await ExpenseReaderRepository.GetUserExpenseById(userId!.Value, id);
         StateHasChanged();
     }
 
     private async Task SaveExpense()
     {
-        if (!await LoadUserIdCached() || _expense is null)
+        if (_expense is null)
         {
             return;
         }
 
         await ExpenseWriterRepository.UpdateExpenseAsync(_expense!);
         StateHasChanged();
-    }
-
-    private Guid? _cachedUserId = null;
-    private async Task<Guid?> UserId()
-    {
-        if (_cachedUserId is not null)
-        {
-            return _cachedUserId;
-        }
-        
-        var authState = await authenticationStateTask;
-        var user = authState.User;
-
-        _cachedUserId = user.GetUserId();
-        return _cachedUserId;
     }
 
     private void ToggleEditMode()
