@@ -12,8 +12,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{691203E7-38A9-4088-B471-5AE25B133B79}"
 	ProjectSection(SolutionItems) = preProject
 		azure-pipelines.yml = azure-pipelines.yml
-		Infrastructure\main.bicep = Infrastructure\main.bicep
-		Infrastructure\main.parameters.json = Infrastructure\main.parameters.json
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spbs.Generators", "Spbs.Generators\Spbs.Generators.csproj", "{A9843AFF-9E34-4EE0-BE1E-42D32EFE8546}"
