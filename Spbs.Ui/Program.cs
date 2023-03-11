@@ -4,11 +4,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using Azure.Core;
 using Azure.Identity;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.AzureAppConfiguration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Serilog;
+using Serilog.Events;
 
 namespace Spbs.Ui
 {
@@ -16,48 +20,97 @@ namespace Spbs.Ui
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            ConfigureLoggingForStartup();
+
+            try
+            {
+                Log.Information("Starting web host");
+                CreateHostBuilder(args).Build().Run();
+            }
+            catch (Exception e)
+            {
+                Log.Fatal(e, "Host terminated unexpectedly");
+                return;
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                    webBuilder.ConfigureAppConfiguration((hostingContext, config) =>
+        public static IHostBuilder CreateHostBuilder(string[] args)
+        {
+            IHostBuilder builder = Host.CreateDefaultBuilder(args);
+            
+            var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            if (env == "Production")
+            {
+                builder.UseSerilog((context, services, loggerConfiguration) => loggerConfiguration
+                    .WriteTo.ApplicationInsights(
+                        services.GetRequiredService<TelemetryConfiguration>(),
+                        TelemetryConverter.Traces));
+            }
+            else
+            {
+
+                builder.UseSerilog((context, services, loggerConfiguration) => loggerConfiguration
+                    .WriteTo.File("log.txt", rollingInterval: RollingInterval.Day));
+            }
+
+            builder.ConfigureWebHostDefaults(webBuilder =>
+                webBuilder.ConfigureAppConfiguration((hostingContext, config) =>
+                    {
+                        var settings = config.Build();
+
+                        var appConfigEndpoint =
+                            settings.GetSection("AppConfigBootstrap").GetValue<string>("Endpoint");
+                        ArgumentNullException.ThrowIfNull(appConfigEndpoint);
+
+                        TokenCredential credential;
+                        if (env == "Development")
                         {
-                            var settings = config.Build();
-                            
-                            var appConfigEndpoint = settings.GetSection("AppConfigBootstrap").GetValue<string>("Endpoint");
-                            ArgumentNullException.ThrowIfNull(appConfigEndpoint);
+                            var tenantId = settings.GetSection("LocalDevelopmentCredentials")
+                                .GetValue<string>("TenantId");
+                            var clientId = settings.GetSection("LocalDevelopmentCredentials")
+                                .GetValue<string>("ClientId");
+                            var clientSecret = settings.GetSection("LocalDevelopmentCredentials")
+                                .GetValue<string>("ClientSecret");
+                            credential = new ClientSecretCredential(tenantId, clientId, clientSecret);
+                        }
+                        else
+                        {
+                            credential = new ManagedIdentityCredential();
+                        }
 
-                            TokenCredential credential;
-                            var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-                            if (env == "Development")
-                            {
-                                var tenantId = settings.GetSection("LocalDevelopmentCredentials").GetValue<string>("TenantId");
-                                var clientId = settings.GetSection("LocalDevelopmentCredentials").GetValue<string>("ClientId");
-                                var clientSecret = settings.GetSection("LocalDevelopmentCredentials").GetValue<string>("ClientSecret");
-                                credential = new ClientSecretCredential(tenantId, clientId, clientSecret);
-                            }
-                            else
-                            {
-                                credential = new ManagedIdentityCredential();
-                            }
-
-                            //var refreshTimer = settings.GetSection("AppConfigBootstrap").GetValue<int?>("DefaultConfigRefreshHours");
-                            config.AddAzureAppConfiguration(options => 
-                                options.Connect(new Uri(appConfigEndpoint), credential) // or ManagedIdentityCredential?
+                        //var refreshTimer = settings.GetSection("AppConfigBootstrap").GetValue<int?>("DefaultConfigRefreshHours");
+                        config.AddAzureAppConfiguration(options =>
+                                options
+                                    .Connect(new Uri(appConfigEndpoint),
+                                        credential) // or ManagedIdentityCredential?
                                     .Select("Spbs:*", LabelFilter.Null)
                                     .Select("Spbs:*", env)
-                                    //.ConfigureRefresh(refreshOptions => refreshOptions.SetCacheExpiration(TimeSpan.FromHours(refreshTimer ?? 24)))
-                                );
+                            //.ConfigureRefresh(refreshOptions => refreshOptions.SetCacheExpiration(TimeSpan.FromHours(refreshTimer ?? 24)))
+                        );
 
-                            if (env == "Development")
-                            {
-                                config.AddUserSecrets<Spbs.Ui.Program>();
-                            }
+                        if (env == "Development")
+                        {
+                            config.AddUserSecrets<Spbs.Ui.Program>();
+                        }
 
-                            config.Build();
-                        })
-                        .UseStartup<Startup>());
+                        config.Build();
+                    })
+                    .UseStartup<Startup>());
+
+            return builder;
+        }
+
+        private static void ConfigureLoggingForStartup()
+        {
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+                .Enrich.FromLogContext()
+                .WriteTo.Console()
+                .CreateBootstrapLogger();
+        }
     }
 }
