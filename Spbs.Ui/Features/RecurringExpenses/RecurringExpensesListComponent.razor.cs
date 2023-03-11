@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Mvc.Diagnostics;
+using Spbs.Generators.UserExtensions;
 using Spbs.Ui.Auth;
 using Spbs.Ui.Components;
 
@@ -15,11 +16,11 @@ public class RecurringExpenseListFilter
     public RecurrenceType? RecurrenceType { get; set; }
 }
 
+[AuthenticationTaskExtension()]
 public partial class RecurringExpensesListComponent : SelectableListComponent<RecurringExpense>
 {
     [Parameter] public Action<RecurringExpense> OnSelect { get; set; }
     
-    [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
     [Inject] public IRecurringExpenseReaderRepository RecurringExpenseReaderRepository { get; set; }
 
     private RecurringExpenseListFilter? _filter;
@@ -56,38 +57,24 @@ public partial class RecurringExpensesListComponent : SelectableListComponent<Re
     private async Task FetchRecurringExpenses()
     {
         await UserId();
-        if (_cachedUserId is null)
+        if (_userId is null)
         {
             return; 
         }
 
         List<RecurringExpense>? recurringExpenses = null;
-        if (_filter is not null && _filter.RecurrenceType is not null)
+        //if (_filter is not null && _filter.RecurrenceType is not null)
+        if (_filter is { RecurrenceType: not null })
         {
-            recurringExpenses = await RecurringExpenseReaderRepository.GetRecurringExpensesByUserId(_cachedUserId.Value, _filter.RecurrenceType.Value);
+            recurringExpenses = await RecurringExpenseReaderRepository.GetRecurringExpensesByUserId(_userId.Value, _filter.RecurrenceType.Value);
         }
         else
         {
-            recurringExpenses = await RecurringExpenseReaderRepository.GetRecurringExpensesByUserId(_cachedUserId.Value);
-        }
-
-        _recurringExpenses = recurringExpenses;
-        StateHasChanged();
-    }
-
-    private Guid? _cachedUserId = null;
-    private async Task<Guid?> UserId()
-    {
-        if (_cachedUserId is not null)
-        {
-            return _cachedUserId;
+            recurringExpenses = await RecurringExpenseReaderRepository.GetRecurringExpensesByUserId(_userId.Value);
         }
         
-        var authState = await authenticationStateTask;
-        var user = authState.User;
-
-        _cachedUserId = user.GetUserId();
-        return _cachedUserId;
+        _recurringExpenses = recurringExpenses;
+        StateHasChanged();
     }
 
     private string GetRowClass(int i)
