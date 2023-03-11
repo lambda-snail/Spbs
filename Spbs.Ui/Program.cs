@@ -46,15 +46,21 @@ namespace Spbs.Ui
             if (env == "Production")
             {
                 builder.UseSerilog((context, services, loggerConfiguration) => loggerConfiguration
+                    .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+                    .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
                     .WriteTo.ApplicationInsights(
                         services.GetRequiredService<TelemetryConfiguration>(),
-                        TelemetryConverter.Traces));
+                        TelemetryConverter.Traces)
+                    .Enrich.FromLogContext());
             }
             else
             {
 
                 builder.UseSerilog((context, services, loggerConfiguration) => loggerConfiguration
-                    .WriteTo.File("log.txt", rollingInterval: RollingInterval.Day));
+                    .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+                    .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
+                    .WriteTo.File("log.txt", rollingInterval: RollingInterval.Day)
+                    .Enrich.FromLogContext());
             }
 
             builder.ConfigureWebHostDefaults(webBuilder =>

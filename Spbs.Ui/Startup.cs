@@ -9,11 +9,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Serilog;
 using Shared.Utilities;
 using Spbs.Ui.ComponentServices;
 using Spbs.Ui.Data;
 using Spbs.Ui.Features.Expenses;
 using Spbs.Ui.Features.RecurringExpenses;
+using Spbs.Ui.Middleware;
 
 namespace Spbs.Ui
 {
@@ -116,15 +118,24 @@ namespace Spbs.Ui
             // Use Azure App Configuration middleware for dynamic configuration refresh.
             // For options registered with IOptionsSnapshot<T>
             //app.UseAzureAppConfiguration();
-
+            
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
+            app.UseSerilogRequestLogging(config =>
+            {
+                config.MessageTemplate =
+                    "HTTP {RequestMethod} {RequestPath} response was: {StatusCode} in {Elapsed} ms, from userid: {UserId}";
+                config.EnrichDiagnosticContext = UserInformationLogEnricher.PushSeriLogProperties;
+            });
 
             app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.UseMiddleware<UserInformationLogEnricher>();
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
@@ -132,5 +143,7 @@ namespace Spbs.Ui
                 endpoints.MapFallbackToPage("/_Host");
             });
         }
+        
+        
     }
 }
