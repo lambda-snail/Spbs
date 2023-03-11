@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Shared.Utilities;
+using Spbs.Ui.ComponentServices;
 using Spbs.Ui.Data;
 using Spbs.Ui.Features.Expenses;
 using Spbs.Ui.Features.RecurringExpenses;
@@ -47,6 +48,8 @@ namespace Spbs.Ui
             services.AddRazorPages();
             services.AddServerSideBlazor()
                 .AddMicrosoftIdentityConsentHandler();
+
+            services.AddScoped<NotificationService>();
 
             services.AddAutoMapper(typeof(Startup));
 
