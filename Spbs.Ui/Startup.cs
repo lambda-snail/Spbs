@@ -134,8 +134,6 @@ namespace Spbs.Ui
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseMiddleware<UserInformationLogEnricher>();
-            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
