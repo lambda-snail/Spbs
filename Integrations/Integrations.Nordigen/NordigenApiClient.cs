@@ -38,13 +38,10 @@ public class NordigenApiClient : INordigenApiClient
 
         string queryString = _options.Value.ListOfInstitutionsEndpoint + "?country=" + country;
         var response = await _client.SendGetRequest( queryString, token);
-        List<Aspsp>? institutions = await response.ParseResponseAsync<List<Aspsp>>();
         
+        List<Aspsp>? institutions = await response.ParseResponseAsync<List<Aspsp>>();
         institutions ??= new();
-        foreach (var institution in institutions)
-        {
-            Console.WriteLine(institution.Name);
-        }        
+        
         return institutions;
     }
 
