@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using Spbs.Generators.UserExtensions;
 using Spbs.Ui.Auth;
 using Spbs.Ui.Components;
 
@@ -14,6 +15,7 @@ public class ExpenseFilter
     public bool FromDateMonthOnly { get; set; } = false;
 }
 
+[AuthenticationTaskExtension()]
 public partial class ExpensesOverview : SelectableListComponent<Expense>
 {
     private List<Expense>? _expenses = null;
@@ -22,10 +24,7 @@ public partial class ExpensesOverview : SelectableListComponent<Expense>
     private bool _displayFilter = false;
     
     [Inject] public IExpenseReaderRepository ExpenseRepository { get; set; }
-    
-    [CascadingParameter]
-    private Task<AuthenticationState> authenticationStateTask { get; set; }
-    
+
     private ExpenseFilter _expenseFilter { get; set; } = new ExpenseFilter();
     
     private EditExpenseComponent _editExpenseComponent;
@@ -38,24 +37,13 @@ public partial class ExpensesOverview : SelectableListComponent<Expense>
     protected override async Task OnInitializedAsync()
     {
         await FetchExpenses();
-        await UserId();
     }
 
     private async Task FetchExpenses()
     {
-        var authState = await authenticationStateTask;
-        var user = authState.User;
-        
-        Guid? userId = user.GetUserId();
-        if (userId is null)
-        {
-            return;
-        }
-        
+        Guid? userId = await UserId();
         _expenses ??= new();
-        // _expenses = await ExpenseRepository.GetSingleExpensesByUserAndMonth(userId.Value,
-        //     new DateTime(ExpenseFilter.Year, ExpenseFilter.Month, 2));
-        if (_expenseFilter?.FromDate is not null)
+        if (_expenseFilter is { FromDate: not null })
         {
             _expenses = await ExpenseRepository.GetSingleExpensesByUserAndMonth(userId.Value, _expenseFilter.FromDate.Value);
         }
@@ -68,21 +56,6 @@ public partial class ExpensesOverview : SelectableListComponent<Expense>
     public string GetExpenseDetailsUrl(Expense e)
     {
         return $"expenses/{e.Id}";
-    }
-    
-    private Guid? _cachedUserId = null;
-    private async Task<Guid?> UserId()
-    {
-        if (_cachedUserId is not null)
-        {
-            return _cachedUserId;
-        }
-        
-        var authState = await authenticationStateTask;
-        var user = authState.User;
-
-        _cachedUserId = user.GetUserId();
-        return _cachedUserId;
     }
 
     private async void ExpenseItemAdded()
