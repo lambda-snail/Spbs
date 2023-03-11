@@ -49,7 +49,14 @@ namespace Spbs.Ui
                                     .Select("Spbs:*", LabelFilter.Null)
                                     .Select("Spbs:*", env)
                                     //.ConfigureRefresh(refreshOptions => refreshOptions.SetCacheExpiration(TimeSpan.FromHours(refreshTimer ?? 24)))
-                                ).Build();
+                                );
+
+                            if (env == "Development")
+                            {
+                                config.AddUserSecrets<Spbs.Ui.Program>();
+                            }
+
+                            config.Build();
                         })
                         .UseStartup<Startup>());
     }
