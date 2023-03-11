@@ -78,7 +78,7 @@ namespace Spbs.Ui
             ArgumentNullException.ThrowIfNull(mysqlConnectionString); 
 
             var serverVersion = MySqlServerVersion.AutoDetect(mysqlConnectionString);
-            
+
             services.AddDbContextFactory<ExpensesDbContext>(o => o
                 .UseMySql(mysqlConnectionString, serverVersion)
                 .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
@@ -141,7 +141,5 @@ namespace Spbs.Ui
                 endpoints.MapFallbackToPage("/_Host");
             });
         }
-        
-        
     }
 }

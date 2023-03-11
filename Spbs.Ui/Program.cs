@@ -41,21 +41,28 @@ namespace Spbs.Ui
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
             IHostBuilder builder = Host.CreateDefaultBuilder(args);
+            var tempConfiguration = new ConfigurationBuilder()
+                                        .AddJsonFile("appsettings.json")
+                                        .AddUserSecrets<Program>()
+                                        .Build();
             
             var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
             if (env == "Production")
             {
+                var serilogConfig = tempConfiguration.GetSection("Serilog");
+                
+                // APPINSIGHTS_INSTRUMENTATIONKEY
                 builder.UseSerilog((context, services, loggerConfiguration) => loggerConfiguration
                     .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
                     .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
-                    .WriteTo.ApplicationInsights(
-                        services.GetRequiredService<TelemetryConfiguration>(),
-                        TelemetryConverter.Traces)
+                    .ReadFrom.Configuration(serilogConfig)
+                    // .WriteTo.ApplicationInsights(
+                    //     services.GetRequiredService<TelemetryConfiguration>(),
+                    //     TelemetryConverter.Traces)
                     .Enrich.FromLogContext());
             }
             else
             {
-
                 builder.UseSerilog((context, services, loggerConfiguration) => loggerConfiguration
                     .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
                     .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
@@ -66,20 +73,20 @@ namespace Spbs.Ui
             builder.ConfigureWebHostDefaults(webBuilder =>
                 webBuilder.ConfigureAppConfiguration((hostingContext, config) =>
                     {
-                        var settings = config.Build();
+                        //var settings = config.Build();
 
                         var appConfigEndpoint =
-                            settings.GetSection("AppConfigBootstrap").GetValue<string>("Endpoint");
+                            tempConfiguration.GetSection("AppConfigBootstrap").GetValue<string>("Endpoint");
                         ArgumentNullException.ThrowIfNull(appConfigEndpoint);
 
                         TokenCredential credential;
                         if (env == "Development")
                         {
-                            var tenantId = settings.GetSection("LocalDevelopmentCredentials")
+                            var tenantId = tempConfiguration.GetSection("LocalDevelopmentCredentials")
                                 .GetValue<string>("TenantId");
-                            var clientId = settings.GetSection("LocalDevelopmentCredentials")
+                            var clientId = tempConfiguration.GetSection("LocalDevelopmentCredentials")
                                 .GetValue<string>("ClientId");
-                            var clientSecret = settings.GetSection("LocalDevelopmentCredentials")
+                            var clientSecret = tempConfiguration.GetSection("LocalDevelopmentCredentials")
                                 .GetValue<string>("ClientSecret");
                             credential = new ClientSecretCredential(tenantId, clientId, clientSecret);
                         }
