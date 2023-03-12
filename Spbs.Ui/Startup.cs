@@ -94,6 +94,7 @@ namespace Spbs.Ui
             services.AddTransient<IRecurringExpenseWriterRepository, RecurringExpenseWriterRepository>();
 
             services.AddTransient<INordigenEulaWriterRepository, NordigenEulaWriterRepository>();
+            services.AddTransient<INordigenEulaReaderRepository, NordigenEulaReaderRepository>();
         }
 
         private void RegisterDatabaseConnections(IServiceCollection services)

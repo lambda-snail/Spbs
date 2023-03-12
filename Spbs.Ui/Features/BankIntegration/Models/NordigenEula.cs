@@ -8,7 +8,7 @@ namespace Spbs.Ui.Features.BankIntegration.Models;
 public class NordigenEula
 {
     [JsonProperty("id")]
-    public string Id { get; set; }
+    public Guid Id { get; set; }
     [JsonProperty("userId")]
     public Guid UserId { get; set; }
 

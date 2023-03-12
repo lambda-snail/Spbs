@@ -12,10 +12,11 @@ namespace Spbs.Ui.Features.BankIntegration;
 public partial class EulaCreationComponent : ComponentBase
 {
     private static Guid guid = Guid.NewGuid();
-    private NordigenEula _eula = new() { Id = guid.ToString() };
+    private NordigenEula _eula = new() { Id = guid };
 
     [Inject] private INordigenApiClient _nordigenClient { get; set; }
     [Inject] private INordigenEulaWriterRepository _eulaWriterRepository { get; set; }
+    [Inject] private INordigenEulaReaderRepository _eulaReaderRepository { get; set; }
     [Inject] private IDateTimeProvider _dateTime { get; set; }
 
     private async Task HandleValidSubmit()
@@ -28,6 +29,8 @@ public partial class EulaCreationComponent : ComponentBase
         _eula.Accepted = now;
         _eula.UserId = userId.Value;
         await _eulaWriterRepository.Upsert(_eula);
+
+        var eu = await _eulaReaderRepository.GetEulaById(_eula.Id, _eula.UserId);
     }
 
     private async Task HandleInvalidSubmit()
