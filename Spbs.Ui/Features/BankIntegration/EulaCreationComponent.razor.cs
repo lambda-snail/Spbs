@@ -1,27 +1,36 @@
-﻿using Integrations.Nordigen;
+﻿using System;
+using System.Threading.Tasks;
+using Integrations.Nordigen;
 using Microsoft.AspNetCore.Components;
+using Shared.Utilities;
+using Spbs.Generators.UserExtensions;
 using Spbs.Ui.Features.BankIntegration.Models;
 
 namespace Spbs.Ui.Features.BankIntegration;
 
-public class EulaCreationViewModel
-{
-    
-}
-
+[AuthenticationTaskExtension()]
 public partial class EulaCreationComponent : ComponentBase
 {
-    private NordigenEula _eula = new();
+    private static Guid guid = Guid.NewGuid();
+    private NordigenEula _eula = new() { Id = guid.ToString() };
 
-    [Inject] private INordigenApiClient NordigenClient { get; set; }
+    [Inject] private INordigenApiClient _nordigenClient { get; set; }
+    [Inject] private INordigenEulaWriterRepository _eulaWriterRepository { get; set; }
+    [Inject] private IDateTimeProvider _dateTime { get; set; }
 
-    private void HandleValidSubmit()
+    private async Task HandleValidSubmit()
     {
+        Guid? userId = await UserId();
+        if (userId is null) { return; } // Something is wrong
         
+        var now = _dateTime.Now();
+        _eula.Created = now;
+        _eula.Accepted = now;
+        _eula.UserId = userId.Value;
+        await _eulaWriterRepository.Upsert(_eula);
     }
 
-    private void HandleInvalidSubmit()
+    private async Task HandleInvalidSubmit()
     {
-        
     }
 }

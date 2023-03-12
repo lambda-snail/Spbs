@@ -1,18 +1,23 @@
 using System;
+using FluentValidation;
 using Integrations.Nordigen;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.UI;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Azure.Cosmos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Shared.Utilities;
+using Shared.Utilities.OptionsExtensions;
+using Spbs.Shared.Data;
 using Spbs.Ui.ComponentServices;
 using Spbs.Ui.Data;
+using Spbs.Ui.Features.BankIntegration;
 using Spbs.Ui.Features.Expenses;
 using Spbs.Ui.Features.RecurringExpenses;
 using Spbs.Ui.Middleware;
@@ -30,6 +35,8 @@ namespace Spbs.Ui
         
         public void ConfigureServices(IServiceCollection services)
         {
+            var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            
             services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
                 .AddMicrosoftIdentityWebApp(Configuration.GetSection("Spbs:AzureAd"));
             services.AddControllersWithViews()
@@ -46,16 +53,31 @@ namespace Spbs.Ui
             RegisterDatabaseConnections(services);
             RegisterRepositories(services);
             RegisterUtilities(services);
+            RegisterConfigurations(services);
             
             services.AddRazorPages();
-            services.AddServerSideBlazor()
+            var blazorBuilder = services.AddServerSideBlazor()
                 .AddMicrosoftIdentityConsentHandler();
 
+            if (env == "Development")
+            {
+                blazorBuilder.AddCircuitOptions(options => options.DetailedErrors = true);
+            }
+            
             services.AddScoped<NotificationService>();
 
             services.AddAutoMapper(typeof(Startup));
 
             services.RegisterNordigenIntegration(Configuration, "Spbs:NordigenOptions");
+        }
+
+        private void RegisterConfigurations(IServiceCollection services)
+        {
+            services.AddSingleton<IValidator<DataConfigurationOptions>, DataConfigurationOptionsValidator>();
+            services.AddOptions<DataConfigurationOptions>()
+                .BindConfiguration("Spbs:Data")
+                .ValidateFluently()
+                .ValidateOnStart();
         }
 
         private void RegisterUtilities(IServiceCollection services)
@@ -70,6 +92,8 @@ namespace Spbs.Ui
             
             services.AddTransient<IRecurringExpenseReaderRepository, RecurringExpenseReaderRepository>();
             services.AddTransient<IRecurringExpenseWriterRepository, RecurringExpenseWriterRepository>();
+
+            services.AddTransient<INordigenEulaWriterRepository, NordigenEulaWriterRepository>();
         }
 
         private void RegisterDatabaseConnections(IServiceCollection services)
@@ -98,6 +122,14 @@ namespace Spbs.Ui
                 .EnableDetailedErrors()
                 .LogTo(Console.WriteLine)
                 #endif
+            );
+
+            var cosmosDbConnectionString =
+                Configuration.GetSection("Spbs:ConnectionStrings").GetValue<string>("CosmosDb");
+            services.AddSingleton<CosmosClient>(
+                new CosmosClient(
+                    connectionString: cosmosDbConnectionString
+                )
             );
         }
 
