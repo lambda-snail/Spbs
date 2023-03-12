@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Integrations.Nordigen;
 using Microsoft.AspNetCore.Components;
@@ -17,6 +18,9 @@ public partial class EulaCreationComponent : ComponentBase
     [Inject] private IEulaService _eulaService { get; set; }
     [Inject] private IDateTimeProvider _dateTime { get; set; }
 
+    [Parameter, Required] public Func<Institution> SetInstitution { get; set; }
+    private Institution? _institution = null;
+    
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
@@ -28,6 +32,9 @@ public partial class EulaCreationComponent : ComponentBase
         _eula.Created = now;
         _eula.Accepted = now;
         _eula.UserId = userId.Value;
+        
+        _institution = SetInstitution();
+        _eula.InstitutionId = _institution.Id;
     }
 
     private async Task HandleValidSubmit()
@@ -37,5 +44,6 @@ public partial class EulaCreationComponent : ComponentBase
 
     private async Task HandleInvalidSubmit()
     {
+
     }
 }

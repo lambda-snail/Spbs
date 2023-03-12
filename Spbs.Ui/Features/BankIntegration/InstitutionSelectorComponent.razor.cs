@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -32,5 +33,16 @@ public partial class InstitutionSelectorComponent : SelectableListComponent<Inst
     private string GetRowClass(int i)
     {
         return GetSelected() == i ? "bg-secondary text-white" : string.Empty;
+    }
+
+    public Institution? GetSelectedInstitution()
+    {
+        int? i = GetSelected();
+        if (i is null || _institutions is null)
+        {
+            return null;
+        }
+
+        return _institutions[i.Value];
     }
 }

@@ -16,20 +16,28 @@ enum SelectionState
     CreateEula
 }
 
+internal class SelectionViewModel
+{
+    public SelectionState State { get; set; }
+    public Institution Institution { get; set; }
+}
+
 public partial class BankLinkCreationPage
 {
     [Inject] private NotificationService NotificationService { get; set; }
     
     private InstitutionSelectorComponent _institutionSelector;
-    private SelectionState _selectionState = SelectionState.SelectInstitution;
-
+    private EulaCreationComponent _eulaCreator;
+    
+    private SelectionViewModel _selectionData = new() { State = SelectionState.SelectInstitution };
+    
     protected override void OnInitialized()
     {
     }
 
     public async Task OnContinueButtonClicked()
     {
-        switch (_selectionState)
+        switch (_selectionData.State)
         {
             case SelectionState.SelectInstitution:
                 TrySetState_CreateEula();
@@ -41,12 +49,14 @@ public partial class BankLinkCreationPage
 
     public void TrySetState_CreateEula()
     {
-        if (!_institutionSelector.HasSelection())
+        var institution = _institutionSelector.GetSelectedInstitution();
+        if (!_institutionSelector.HasSelection() || institution is null)
         {
             NotificationService.ShowToast("No Institution Selected", "Please select an institution before proceeding.", NotificationLevel.Warning);            
             return;
         }
-        
-        _selectionState = SelectionState.CreateEula;
+
+        _selectionData.Institution = institution!;
+        _selectionData.State = SelectionState.CreateEula;
     }
 }
