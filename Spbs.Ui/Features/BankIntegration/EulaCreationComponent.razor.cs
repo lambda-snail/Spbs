@@ -5,22 +5,22 @@ using Microsoft.AspNetCore.Components;
 using Shared.Utilities;
 using Spbs.Generators.UserExtensions;
 using Spbs.Ui.Features.BankIntegration.Models;
+using Spbs.Ui.Features.BankIntegration.Services;
 
 namespace Spbs.Ui.Features.BankIntegration;
 
 [AuthenticationTaskExtension()]
 public partial class EulaCreationComponent : ComponentBase
 {
-    private static Guid guid = Guid.NewGuid();
-    private NordigenEula _eula = new() { Id = guid };
-
-    [Inject] private INordigenApiClient _nordigenClient { get; set; }
-    [Inject] private INordigenEulaWriterRepository _eulaWriterRepository { get; set; }
-    [Inject] private INordigenEulaReaderRepository _eulaReaderRepository { get; set; }
+    private NordigenEula _eula = new();
+    
+    [Inject] private IEulaService _eulaService { get; set; }
     [Inject] private IDateTimeProvider _dateTime { get; set; }
 
-    private async Task HandleValidSubmit()
+    protected override async Task OnInitializedAsync()
     {
+        await base.OnInitializedAsync();
+        
         Guid? userId = await UserId();
         if (userId is null) { return; } // Something is wrong
         
@@ -28,9 +28,11 @@ public partial class EulaCreationComponent : ComponentBase
         _eula.Created = now;
         _eula.Accepted = now;
         _eula.UserId = userId.Value;
-        await _eulaWriterRepository.Upsert(_eula);
+    }
 
-        var eu = await _eulaReaderRepository.GetEulaById(_eula.Id, _eula.UserId);
+    private async Task HandleValidSubmit()
+    {
+        await _eulaService.UpsertEula(_eula);
     }
 
     private async Task HandleInvalidSubmit()

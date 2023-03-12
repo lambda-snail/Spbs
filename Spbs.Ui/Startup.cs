@@ -18,6 +18,9 @@ using Spbs.Shared.Data;
 using Spbs.Ui.ComponentServices;
 using Spbs.Ui.Data;
 using Spbs.Ui.Features.BankIntegration;
+using Spbs.Ui.Features.BankIntegration.Models;
+using Spbs.Ui.Features.BankIntegration.Models.Validation;
+using Spbs.Ui.Features.BankIntegration.Services;
 using Spbs.Ui.Features.Expenses;
 using Spbs.Ui.Features.RecurringExpenses;
 using Spbs.Ui.Middleware;
@@ -53,8 +56,9 @@ namespace Spbs.Ui
             RegisterDatabaseConnections(services);
             RegisterRepositories(services);
             RegisterUtilities(services);
+            RegisterValidators(services);
             RegisterConfigurations(services);
-            
+
             services.AddRazorPages();
             var blazorBuilder = services.AddServerSideBlazor()
                 .AddMicrosoftIdentityConsentHandler();
@@ -64,16 +68,24 @@ namespace Spbs.Ui
                 blazorBuilder.AddCircuitOptions(options => options.DetailedErrors = true);
             }
             
-            services.AddScoped<NotificationService>();
-
             services.AddAutoMapper(typeof(Startup));
-
+            services.AddTransient<IEulaService, EulaService>();
+            services.AddScoped<NotificationService>();
             services.RegisterNordigenIntegration(Configuration, "Spbs:NordigenOptions");
+        }
+
+        /// <summary>
+        /// Validators may be used to validate some configurations on startup, so this method must be called before
+        /// RegisterConfigurations.
+        /// </summary>
+        private void RegisterValidators(IServiceCollection services)
+        {
+            services.AddSingleton<IValidator<DataConfigurationOptions>, DataConfigurationOptionsValidator>();
+            services.AddSingleton<IValidator<NordigenEula>, NordigenEulaFluentValidation>();
         }
 
         private void RegisterConfigurations(IServiceCollection services)
         {
-            services.AddSingleton<IValidator<DataConfigurationOptions>, DataConfigurationOptionsValidator>();
             services.AddOptions<DataConfigurationOptions>()
                 .BindConfiguration("Spbs:Data")
                 .ValidateFluently()

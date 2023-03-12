@@ -22,13 +22,13 @@ public class NordigenEula
     /// Maximum number of days of transaction data to retrieve.
     /// </summary>
     [JsonProperty("maxHistoricalDays")]
-    public int MaxHistoricalDays { get; set; }
+    public int MaxHistoricalDays { get; set; } = 90;
 
     /// <summary>
     /// Number of days from acceptance that the access can be used.
     /// </summary>
     [JsonProperty("accessValidForDays")]
-    public int AccessValidForDays { get; set; }
+    public int AccessValidForDays { get; set; } = 90;
 
     /// <summary>
     /// Array containing one or several values of [&#39;balances&#39;, &#39;details&#39;, &#39;transactions&#39;]
