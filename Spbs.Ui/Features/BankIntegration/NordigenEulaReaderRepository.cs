@@ -6,6 +6,7 @@ using Microsoft.Azure.Cosmos.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Spbs.Shared.Data;
+using Spbs.Ui.Data.Cosmos;
 using Spbs.Ui.Features.BankIntegration.Models;
 
 namespace Spbs.Ui.Features.BankIntegration;
@@ -15,11 +16,13 @@ public class NordigenEulaReaderRepository : CosmosRepositoryBase, INordigenEulaR
     public NordigenEulaReaderRepository(CosmosClient client, IOptions<DataConfigurationOptions> options)
         :base(client, options) {}
 
-    public async Task<NordigenEula> GetEulaById(Guid id, Guid userId)
+    public async Task<NordigenEula?> GetEulaById(Guid id, Guid userId)
     {
         // TODO: Add loggin and error handling
-        var response = _container.GetItemLinqQueryable<NordigenEula>().Where(eula => eula.Id == id && eula.UserId == userId).ToFeedIterator();
-        var x = await response.ReadNextAsync();
-        return x.FirstOrDefault(); // Should only be one
+        var feedIterator = _container.GetItemLinqQueryable<CosmosDocument<NordigenEula>>()
+                                     .Where(doc => doc.Id == id && doc.Data.UserId == userId)
+                                     .ToFeedIterator();
+        var response = await feedIterator.ReadNextAsync();
+        return response.FirstOrDefault()?.Data; // Should only be one
     }
 }

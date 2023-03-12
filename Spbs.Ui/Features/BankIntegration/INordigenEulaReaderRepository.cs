@@ -6,5 +6,5 @@ namespace Spbs.Ui.Features.BankIntegration;
 
 public interface INordigenEulaReaderRepository
 {
-    Task<NordigenEula> GetEulaById(Guid id, Guid userId);
+    Task<NordigenEula?> GetEulaById(Guid id, Guid userId);
 }

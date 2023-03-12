@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SerilogTimings.Extensions;
 using Spbs.Shared.Data;
+using Spbs.Ui.Data.Cosmos;
 using Spbs.Ui.Features.BankIntegration.Models;
 
 namespace Spbs.Ui.Features.BankIntegration;
@@ -23,9 +24,16 @@ public class NordigenEulaWriterRepository : CosmosRepositoryBase, INordigenEulaW
 
     public async Task<NordigenEula> Upsert(NordigenEula eula)
     {
-        var response = await _container.UpsertItemAsync(eula);
+        var model = new CosmosDocument<NordigenEula>
+        {
+            Id = (eula.Id == default? Guid.NewGuid() : eula.Id),
+            Type = CosmosTypeConstants.NordigenEula,
+            Data = eula
+        };
         
-        _logger.LogInformation("Completed upsert of ({EulaId}) by user ({UserId}), with status {Status} and cost {RequestCharge}", eula.Id, eula.UserId, response.StatusCode, response.RequestCharge);
-        return response.Resource;
+        var response = await _container.UpsertItemAsync(model);
+        
+        _logger.LogInformation("Completed upsert of ({EulaId}) by user ({UserId}) in {ElapsedTime}, with status {Status} and cost {RequestCharge}", eula.Id, eula.UserId, response.Diagnostics.GetClientElapsedTime(), response.StatusCode, response.RequestCharge);
+        return response.Resource.Data;
     }
 }
