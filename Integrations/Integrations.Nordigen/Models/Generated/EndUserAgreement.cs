@@ -17,7 +17,7 @@ namespace Integrations.Nordigen.Models
     /// EndUserAgreement.
     /// </summary>
     [DataContract(Name = "EndUserAgreement")]
-    public partial class EndUserAgreement : IEquatable<EndUserAgreement>, IValidatableObject
+    public partial class EndUserAgreement : IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="EndUserAgreement" /> class.
@@ -134,108 +134,6 @@ namespace Integrations.Nordigen.Models
             sb.Append("  InstitutionId: ").Append(InstitutionId).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
-        }
-
-        /// <summary>
-        /// Returns the JSON string presentation of the object
-        /// </summary>
-        /// <returns>JSON string presentation of the object</returns>
-        public virtual string ToJson()
-        {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented);
-        }
-
-        /// <summary>
-        /// Returns true if objects are equal
-        /// </summary>
-        /// <param name="input">Object to be compared</param>
-        /// <returns>Boolean</returns>
-        public override bool Equals(object input)
-        {
-            return this.Equals(input as EndUserAgreement);
-        }
-
-        /// <summary>
-        /// Returns true if EndUserAgreement instances are equal
-        /// </summary>
-        /// <param name="input">Instance of EndUserAgreement to be compared</param>
-        /// <returns>Boolean</returns>
-        public bool Equals(EndUserAgreement input)
-        {
-            if (input == null)
-            {
-                return false;
-            }
-            return 
-                (
-                    this.Id == input.Id ||
-                    (this.Id != null &&
-                    this.Id.Equals(input.Id))
-                ) && 
-                (
-                    this.Created == input.Created ||
-                    (this.Created != null &&
-                    this.Created.Equals(input.Created))
-                ) && 
-                (
-                    this.MaxHistoricalDays == input.MaxHistoricalDays ||
-                    this.MaxHistoricalDays.Equals(input.MaxHistoricalDays)
-                ) && 
-                (
-                    this.AccessValidForDays == input.AccessValidForDays ||
-                    this.AccessValidForDays.Equals(input.AccessValidForDays)
-                ) && 
-                (
-                    this.AccessScope == input.AccessScope ||
-                    this.AccessScope != null &&
-                    input.AccessScope != null &&
-                    this.AccessScope.SequenceEqual(input.AccessScope)
-                ) && 
-                (
-                    this.Accepted == input.Accepted ||
-                    (this.Accepted != null &&
-                    this.Accepted.Equals(input.Accepted))
-                ) && 
-                (
-                    this.InstitutionId == input.InstitutionId ||
-                    (this.InstitutionId != null &&
-                    this.InstitutionId.Equals(input.InstitutionId))
-                );
-        }
-
-        /// <summary>
-        /// Gets the hash code
-        /// </summary>
-        /// <returns>Hash code</returns>
-        public override int GetHashCode()
-        {
-            unchecked // Overflow is fine, just wrap
-            {
-                int hashCode = 41;
-                if (this.Id != null)
-                {
-                    hashCode = (hashCode * 59) + this.Id.GetHashCode();
-                }
-                if (this.Created != null)
-                {
-                    hashCode = (hashCode * 59) + this.Created.GetHashCode();
-                }
-                hashCode = (hashCode * 59) + this.MaxHistoricalDays.GetHashCode();
-                hashCode = (hashCode * 59) + this.AccessValidForDays.GetHashCode();
-                if (this.AccessScope != null)
-                {
-                    hashCode = (hashCode * 59) + this.AccessScope.GetHashCode();
-                }
-                if (this.Accepted != null)
-                {
-                    hashCode = (hashCode * 59) + this.Accepted.GetHashCode();
-                }
-                if (this.InstitutionId != null)
-                {
-                    hashCode = (hashCode * 59) + this.InstitutionId.GetHashCode();
-                }
-                return hashCode;
-            }
         }
 
         /// <summary>

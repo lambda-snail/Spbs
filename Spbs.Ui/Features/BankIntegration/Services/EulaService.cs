@@ -13,6 +13,7 @@ namespace Spbs.Ui.Features.BankIntegration;
 /// </summary>
 public class EulaService : IEulaService
 {
+    private readonly INordigenApiClient _nordigenClient;
     private readonly INordigenEulaReaderRepository _eulaReader;
     private readonly INordigenEulaWriterRepository _eulaWriter;
     private readonly ILogger<EulaService> _logger;
@@ -23,6 +24,7 @@ public class EulaService : IEulaService
         INordigenEulaWriterRepository eulaWriter, 
         ILogger<EulaService> logger)
     {
+        _nordigenClient = nordigenClient;
         _eulaReader = eulaReader;
         _eulaWriter = eulaWriter;
         _logger = logger;
@@ -38,8 +40,10 @@ public class EulaService : IEulaService
         return _eulaReader.GetEulaById(eulaId, userId);
     }
 
-    // public Task SendEulaToNordigen(NordigenEula eula)
-    // {
-    //     
-    // }
+    public async Task SendEulaToNordigen(NordigenEula eula)
+    {
+        // TODO Add logic here and in the api service
+        
+        return;
+    }
 }

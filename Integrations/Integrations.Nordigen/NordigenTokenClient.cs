@@ -1,4 +1,5 @@
 using AutoMapper;
+using Integrations.Nordigen.Configuration;
 using Integrations.Nordigen.Extensions;
 using Integrations.Nordigen.Models;
 using Microsoft.Extensions.Options;

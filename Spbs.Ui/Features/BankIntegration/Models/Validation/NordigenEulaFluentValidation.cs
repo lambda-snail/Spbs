@@ -10,8 +10,8 @@ public class NordigenEulaFluentValidation : AbstractValidator<NordigenEula>
             .NotNull()
             .NotEmpty();
 
-        RuleFor(e => e.AccessValidForDays).GreaterThanOrEqualTo(0).LessThanOrEqualTo(180); // Arbitrary upper limit
-        RuleFor(e => e.MaxHistoricalDays).GreaterThanOrEqualTo(0).LessThanOrEqualTo(180); // Arbitrary upper limit
+        RuleFor(e => e.AccessValidForDays).GreaterThanOrEqualTo(1).LessThanOrEqualTo(90); // Values from Nordigen
+        RuleFor(e => e.MaxHistoricalDays).GreaterThanOrEqualTo(1).LessThanOrEqualTo(730);
         RuleFor(e => e.InstitutionId).NotEmpty();
         RuleFor(e => e.UserId).NotEmpty();
         RuleFor(e => e.Created).NotEmpty();

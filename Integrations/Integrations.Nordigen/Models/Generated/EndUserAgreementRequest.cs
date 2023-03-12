@@ -17,7 +17,7 @@ namespace Integrations.Nordigen.Models
     /// EndUserAgreement.
     /// </summary>
     [DataContract(Name = "EndUserAgreementRequest")]
-    public partial class EndUserAgreementRequest : IEquatable<EndUserAgreementRequest>, IValidatableObject
+    public partial class EndUserAgreementRequest : IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="EndUserAgreementRequest" /> class.
@@ -30,7 +30,7 @@ namespace Integrations.Nordigen.Models
         /// <param name="maxHistoricalDays">Maximum number of days of transaction data to retrieve. (default to 90).</param>
         /// <param name="accessValidForDays">Number of days from acceptance that the access can be used. (default to 90).</param>
         /// <param name="accessScope">Array containing one or several values of [&#39;balances&#39;, &#39;details&#39;, &#39;transactions&#39;].</param>
-        /// <param name="institutionId">an Institution ID for this EUA (required).</param>
+        /// <param name="institutionId">An Institution ID for this EUA (required).</param>
         public EndUserAgreementRequest(int maxHistoricalDays = 90, int accessValidForDays = 90, List<string> accessScope = default(List<string>), string institutionId = default(string))
         {
             // to ensure "institutionId" is required (not null)
@@ -87,82 +87,7 @@ namespace Integrations.Nordigen.Models
             sb.Append("}\n");
             return sb.ToString();
         }
-
-        /// <summary>
-        /// Returns the JSON string presentation of the object
-        /// </summary>
-        /// <returns>JSON string presentation of the object</returns>
-        public virtual string ToJson()
-        {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented);
-        }
-
-        /// <summary>
-        /// Returns true if objects are equal
-        /// </summary>
-        /// <param name="input">Object to be compared</param>
-        /// <returns>Boolean</returns>
-        public override bool Equals(object input)
-        {
-            return this.Equals(input as EndUserAgreementRequest);
-        }
-
-        /// <summary>
-        /// Returns true if EndUserAgreementRequest instances are equal
-        /// </summary>
-        /// <param name="input">Instance of EndUserAgreementRequest to be compared</param>
-        /// <returns>Boolean</returns>
-        public bool Equals(EndUserAgreementRequest input)
-        {
-            if (input == null)
-            {
-                return false;
-            }
-            return 
-                (
-                    this.MaxHistoricalDays == input.MaxHistoricalDays ||
-                    this.MaxHistoricalDays.Equals(input.MaxHistoricalDays)
-                ) && 
-                (
-                    this.AccessValidForDays == input.AccessValidForDays ||
-                    this.AccessValidForDays.Equals(input.AccessValidForDays)
-                ) && 
-                (
-                    this.AccessScope == input.AccessScope ||
-                    this.AccessScope != null &&
-                    input.AccessScope != null &&
-                    this.AccessScope.SequenceEqual(input.AccessScope)
-                ) && 
-                (
-                    this.InstitutionId == input.InstitutionId ||
-                    (this.InstitutionId != null &&
-                    this.InstitutionId.Equals(input.InstitutionId))
-                );
-        }
-
-        /// <summary>
-        /// Gets the hash code
-        /// </summary>
-        /// <returns>Hash code</returns>
-        public override int GetHashCode()
-        {
-            unchecked // Overflow is fine, just wrap
-            {
-                int hashCode = 41;
-                hashCode = (hashCode * 59) + this.MaxHistoricalDays.GetHashCode();
-                hashCode = (hashCode * 59) + this.AccessValidForDays.GetHashCode();
-                if (this.AccessScope != null)
-                {
-                    hashCode = (hashCode * 59) + this.AccessScope.GetHashCode();
-                }
-                if (this.InstitutionId != null)
-                {
-                    hashCode = (hashCode * 59) + this.InstitutionId.GetHashCode();
-                }
-                return hashCode;
-            }
-        }
-
+        
         /// <summary>
         /// To validate all properties of the instance
         /// </summary>

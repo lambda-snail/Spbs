@@ -1,7 +1,9 @@
 using System.Runtime.Loader;
+using Integrations.Nordigen.Configuration;
 using Integrations.Nordigen.Extensions;
 using Integrations.Nordigen.Models;
 using LazyCache;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace Integrations.Nordigen;
@@ -11,18 +13,20 @@ public class NordigenApiClient : INordigenApiClient
     private readonly HttpClient _client;
     private readonly IOptions<NordigenOptions> _options;
     private readonly NordigenTokenClient _tokenClient;
+    private readonly ILogger<NordigenApiClient> _logger;
 
     private IAppCache _cache;
     private readonly string _tokenCacheString = "__token";
     
-    public NordigenApiClient(HttpClient client, IOptions<NordigenOptions> options, NordigenTokenClient tokenClient, IAppCache cache)
+    public NordigenApiClient(HttpClient client, IOptions<NordigenOptions> options, NordigenTokenClient tokenClient, ILogger<NordigenApiClient> logger, IAppCache cache)
     {
         _client = client;
         _options = options;
         _tokenClient = tokenClient;
+        _logger = logger;
         _cache = cache;
 
-        _client.BaseAddress = new Uri(options.Value.ServiceUrl);
+        _client.BaseAddress = new Uri(options.Value.ServiceUrl!);
     }
 
     /// <summary>
@@ -74,6 +78,27 @@ public class NordigenApiClient : INordigenApiClient
         Aspsp? institution = await response.ParseResponseAsync<Aspsp>();
         return institution;
     }
-    
-    
+
+    public async Task<EndUserAgreement?> CreateEndUserAgreement(string institutionId, int maxHistoricalDays, int accessValidForDays, List<string> accessScope)
+    {
+        _logger.LogInformation("Create new agreement {InstitutionId} valid for {HistoricalDays} accessible for {ValidDays}", institutionId, maxHistoricalDays, accessValidForDays);
+        
+        var request = new EndUserAgreementRequest(maxHistoricalDays, accessValidForDays, accessScope, institutionId);
+        if(await GetTokenCached() is not { } token)
+        {
+            return null; // TODO: Add error handling, use OneOf
+        }
+
+        var endpoint = _options.Value.CreateAgreementEndpoint!;
+        var response = await _client.SendPostRequest(request, endpoint, token);
+        EndUserAgreement? agreement = await response.ParseResponseAsync<EndUserAgreement>();
+        if (agreement is null)
+        {
+            var message = await response.Content.ReadAsStringAsync();
+            _logger.LogWarning("Request to create agreement for {InstitutionId} failed with code {HttpCode} and message '{Message}'", institutionId, response.StatusCode, message);
+            return null;
+        }
+
+        return agreement;
+    }
 }
