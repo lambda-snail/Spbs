@@ -1,14 +1,13 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
-using Integrations.Nordigen;
 using Microsoft.AspNetCore.Components;
 using Shared.Utilities;
 using Spbs.Generators.UserExtensions;
 using Spbs.Ui.Features.BankIntegration.Models;
 using Spbs.Ui.Features.BankIntegration.Services;
 
-namespace Spbs.Ui.Features.BankIntegration;
+namespace Spbs.Ui.Features.BankIntegration.NewLink;
 
 [AuthenticationTaskExtension()]
 public partial class EulaCreationComponent : ComponentBase
@@ -20,6 +19,15 @@ public partial class EulaCreationComponent : ComponentBase
 
     [Parameter, Required] public Func<Institution> SetInstitution { get; set; }
     private Institution? _institution = null;
+
+    [Parameter, Required] public Func<Task> OnEulaCreatedCallbackAsync { get; set; }
+
+    private bool _isSubmitted = false;
+
+    public NordigenEula? GetEula()
+    {
+        return _isSubmitted ? _eula : null;
+    }
     
     protected override async Task OnInitializedAsync()
     {
@@ -39,7 +47,9 @@ public partial class EulaCreationComponent : ComponentBase
 
     private async Task HandleValidSubmit()
     {
-        await _eulaService.UpsertEula(_eula);
+        //await _eulaService.UpsertEula(_eula);
+        _isSubmitted = true;
+        await OnEulaCreatedCallbackAsync.Invoke()!;
     }
 
     private async Task HandleInvalidSubmit()

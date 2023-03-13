@@ -1,25 +1,22 @@
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using AutoMapper;
-using Integrations.Nordigen;
-using Integrations.Nordigen.Models;
 using Microsoft.AspNetCore.Components;
 using Spbs.Ui.ComponentServices;
 using Spbs.Ui.Features.BankIntegration.Models;
 
-namespace Spbs.Ui.Features.BankIntegration;
+namespace Spbs.Ui.Features.BankIntegration.NewLink;
 
 enum SelectionState
 {
     SelectInstitution,
-    CreateEula
+    CreateEula,
+    CreateLink
 }
 
 internal class SelectionViewModel
 {
     public SelectionState State { get; set; }
     public Institution Institution { get; set; }
+    public NordigenEula Eula { get; set; }
 }
 
 public partial class BankLinkCreationPage
@@ -42,6 +39,9 @@ public partial class BankLinkCreationPage
             case SelectionState.SelectInstitution:
                 TrySetState_CreateEula();
                 break;
+            case SelectionState.CreateEula:
+                TrySetState_CreateLink();
+                break;
         }
         
         StateHasChanged();
@@ -58,5 +58,17 @@ public partial class BankLinkCreationPage
 
         _selectionData.Institution = institution!;
         _selectionData.State = SelectionState.CreateEula;
+    }
+
+    public void TrySetState_CreateLink()
+    {
+        var maybeEula = _eulaCreator.GetEula();
+        if(maybeEula is not { } eula )
+        {
+            return;
+        }
+
+        _selectionData.Eula = eula;
+        _selectionData.State = SelectionState.CreateLink;
     }
 }

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -7,7 +6,7 @@ using Microsoft.AspNetCore.Components;
 using Spbs.Ui.Components;
 using Spbs.Ui.Features.BankIntegration.Models;
 
-namespace Spbs.Ui.Features.BankIntegration;
+namespace Spbs.Ui.Features.BankIntegration.NewLink;
 
 public partial class InstitutionSelectorComponent : SelectableListComponent<Institution>
 {

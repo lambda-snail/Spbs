@@ -17,7 +17,7 @@ namespace Integrations.Nordigen.Models
     /// RequisitionV2Serializer.
     /// </summary>
     [DataContract(Name = "RequisitionV2Request")]
-    public partial class RequisitionV2Request : IEquatable<RequisitionV2Request>, IValidatableObject
+    public partial class RequisitionV2Request : IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="RequisitionV2Request" /> class.
@@ -134,116 +134,6 @@ namespace Integrations.Nordigen.Models
         }
 
         /// <summary>
-        /// Returns the JSON string presentation of the object
-        /// </summary>
-        /// <returns>JSON string presentation of the object</returns>
-        public virtual string ToJson()
-        {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented);
-        }
-
-        /// <summary>
-        /// Returns true if objects are equal
-        /// </summary>
-        /// <param name="input">Object to be compared</param>
-        /// <returns>Boolean</returns>
-        public override bool Equals(object input)
-        {
-            return this.Equals(input as RequisitionV2Request);
-        }
-
-        /// <summary>
-        /// Returns true if RequisitionV2Request instances are equal
-        /// </summary>
-        /// <param name="input">Instance of RequisitionV2Request to be compared</param>
-        /// <returns>Boolean</returns>
-        public bool Equals(RequisitionV2Request input)
-        {
-            if (input == null)
-            {
-                return false;
-            }
-            return 
-                (
-                    this.Redirect == input.Redirect ||
-                    (this.Redirect != null &&
-                    this.Redirect.Equals(input.Redirect))
-                ) && 
-                (
-                    this.InstitutionId == input.InstitutionId ||
-                    (this.InstitutionId != null &&
-                    this.InstitutionId.Equals(input.InstitutionId))
-                ) && 
-                (
-                    this.Agreement == input.Agreement ||
-                    (this.Agreement != null &&
-                    this.Agreement.Equals(input.Agreement))
-                ) && 
-                (
-                    this.Reference == input.Reference ||
-                    (this.Reference != null &&
-                    this.Reference.Equals(input.Reference))
-                ) && 
-                (
-                    this.UserLanguage == input.UserLanguage ||
-                    (this.UserLanguage != null &&
-                    this.UserLanguage.Equals(input.UserLanguage))
-                ) && 
-                (
-                    this.Ssn == input.Ssn ||
-                    (this.Ssn != null &&
-                    this.Ssn.Equals(input.Ssn))
-                ) && 
-                (
-                    this.AccountSelection == input.AccountSelection ||
-                    this.AccountSelection.Equals(input.AccountSelection)
-                ) && 
-                (
-                    this.RedirectImmediate == input.RedirectImmediate ||
-                    this.RedirectImmediate.Equals(input.RedirectImmediate)
-                );
-        }
-
-        /// <summary>
-        /// Gets the hash code
-        /// </summary>
-        /// <returns>Hash code</returns>
-        public override int GetHashCode()
-        {
-            unchecked // Overflow is fine, just wrap
-            {
-                int hashCode = 41;
-                if (this.Redirect != null)
-                {
-                    hashCode = (hashCode * 59) + this.Redirect.GetHashCode();
-                }
-                if (this.InstitutionId != null)
-                {
-                    hashCode = (hashCode * 59) + this.InstitutionId.GetHashCode();
-                }
-                if (this.Agreement != null)
-                {
-                    hashCode = (hashCode * 59) + this.Agreement.GetHashCode();
-                }
-                if (this.Reference != null)
-                {
-                    hashCode = (hashCode * 59) + this.Reference.GetHashCode();
-                }
-                if (this.UserLanguage != null)
-                {
-                    hashCode = (hashCode * 59) + this.UserLanguage.GetHashCode();
-                }
-                if (this.Ssn != null)
-                {
-                    hashCode = (hashCode * 59) + this.Ssn.GetHashCode();
-                }
-                hashCode = (hashCode * 59) + this.AccountSelection.GetHashCode();
-                hashCode = (hashCode * 59) + this.RedirectImmediate.GetHashCode();
-                return hashCode;
-            }
-        }
-
-        /// <summary>
         /// To validate all properties of the instance
         /// </summary>
         /// <param name="validationContext">Validation context</param>
@@ -251,25 +141,25 @@ namespace Integrations.Nordigen.Models
         public IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> Validate(ValidationContext validationContext)
         {
             // Redirect (string) maxLength
-            if (this.Redirect != null && this.Redirect.Length > 1024)
+            if (this.Redirect.Length > 1024)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Redirect, length must be less than 1024.", new [] { "Redirect" });
             }
 
             // Reference (string) maxLength
-            if (this.Reference != null && this.Reference.Length > 256)
+            if (this.Reference.Length > 256)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Reference, length must be less than 256.", new [] { "Reference" });
             }
 
             // UserLanguage (string) maxLength
-            if (this.UserLanguage != null && this.UserLanguage.Length > 5)
+            if (this.UserLanguage.Length > 5)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for UserLanguage, length must be less than 5.", new [] { "UserLanguage" });
             }
 
             // Ssn (string) maxLength
-            if (this.Ssn != null && this.Ssn.Length > 64)
+            if (this.Ssn.Length > 64)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Ssn, length must be less than 64.", new [] { "Ssn" });
             }

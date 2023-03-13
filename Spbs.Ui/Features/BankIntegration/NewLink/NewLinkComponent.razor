@@ -1,0 +1,30 @@
+﻿<h3>NewLinkComponent</h3>
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">Selected Institution</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">@_institution.Name</h6>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">BIC: @_institution.Bic</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">Agreement</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">By proceeding you agree to giving us this access</h6>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Access validity: @_eula.AccessValidForDays days</li>
+                        <li class="list-group-item">Access max: @_eula.MaxHistoricalDays historical days</li>
+                        <li class="list-group-item">Access to: @string.Join(", ", _eula.AccessScope)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

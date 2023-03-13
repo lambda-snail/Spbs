@@ -11,6 +11,9 @@
                 case SelectionState.CreateEula:
                     <span>Create and accept a license agreement for @_selectionData.Institution.Name</span>
                     break;
+                case SelectionState.CreateLink:
+                    <span>Review the Details</span>
+                    break;
                 default:
                     <p>Oops, something went wrong :(</p>
                     break;
@@ -35,7 +38,10 @@
                 <InstitutionSelectorComponent @ref="_institutionSelector"/>
                 break;
             case SelectionState.CreateEula:
-                <EulaCreationComponent SetInstitution="() => _selectionData.Institution" @ref="_eulaCreator"/>
+                <EulaCreationComponent OnEulaCreatedCallbackAsync="OnContinueButtonClicked" SetInstitution="() => _selectionData.Institution" @ref="_eulaCreator"/>
+                break;
+            case SelectionState.CreateLink:
+                <NewLinkComponent SetInstitution="() => _selectionData.Institution" SetEula="() => _selectionData.Eula" />
                 break;
             default:
                 <p>Oops, something went wrong :(</p>
