@@ -6,6 +6,7 @@ namespace Spbs.Ui.Features.BankIntegration.Services;
 
 public interface IEulaService
 {
-    Task<NordigenEula> UpsertEula(NordigenEula eula);
-    Task<NordigenEula?> GetEula(Guid eulaId, Guid userId);
+    Task<NordigenEula> UpsertEulaToDatabase(NordigenEula eula);
+    Task<NordigenEula?> GetEulaFromDatabase(Guid eulaId, Guid userId);
+    Task<NordigenEula> CreateEulaWithNordigen(NordigenEula eula);
 }

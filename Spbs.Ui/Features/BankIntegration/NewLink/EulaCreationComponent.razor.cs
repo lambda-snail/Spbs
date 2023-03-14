@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Shared.Utilities;
 using Spbs.Generators.UserExtensions;
+using Spbs.Ui.ComponentServices;
 using Spbs.Ui.Features.BankIntegration.Models;
 using Spbs.Ui.Features.BankIntegration.Services;
 
@@ -16,6 +17,7 @@ public partial class EulaCreationComponent : ComponentBase
     
     [Inject] private IEulaService _eulaService { get; set; }
     [Inject] private IDateTimeProvider _dateTime { get; set; }
+    [Inject] private NotificationService _notificationService { get; set; } 
 
     [Parameter, Required] public Func<Institution> SetInstitution { get; set; }
     private Institution? _institution = null;
@@ -49,6 +51,9 @@ public partial class EulaCreationComponent : ComponentBase
     {
         //await _eulaService.UpsertEula(_eula);
         _isSubmitted = true;
+
+        _eula = await _eulaService.CreateEulaWithNordigen(_eula);
+        _notificationService.ShowToast("Eula Created", "An agreement has been created. You must accept this in the authentication step to proceed.", NotificationLevel.Success);
         await OnEulaCreatedCallbackAsync.Invoke()!;
     }
 

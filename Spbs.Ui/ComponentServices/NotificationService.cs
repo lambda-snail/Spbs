@@ -24,7 +24,7 @@ public struct ToastMessage
     public TimeOnly Created { get; init; }
 }
 
-public class NotificationService
+public class NotificationService : INotificationService
 {
     public event Action? OnToastAdded;
     public event Action? OnToastRemoved;

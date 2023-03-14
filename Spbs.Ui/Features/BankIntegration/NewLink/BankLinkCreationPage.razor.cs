@@ -21,7 +21,7 @@ internal class SelectionViewModel
 
 public partial class BankLinkCreationPage
 {
-    [Inject] private NotificationService NotificationService { get; set; }
+    [Inject] private INotificationService NotificationService { get; set; }
     
     private InstitutionSelectorComponent _institutionSelector;
     private EulaCreationComponent _eulaCreator;
