@@ -1,0 +1,20 @@
+2023-03-18 10:49:08.922 +01:00 [WRN] No XML encryptor configured. Key {321ef363-30cf-43cc-b52c-35a3cc4a0449} may be persisted to storage in unencrypted form.
+2023-03-18 10:49:09.673 +01:00 [WRN] The ASP.NET Core developer certificate is not trusted. For information about trusting the ASP.NET Core developer certificate, see https://aka.ms/aspnet/https-trust-dev-cert.
+2023-03-18 10:49:09.702 +01:00 [INF] Now listening on: https://localhost:5001
+2023-03-18 10:49:09.702 +01:00 [INF] Now listening on: http://localhost:5000
+2023-03-18 10:49:09.710 +01:00 [INF] Application started. Press Ctrl+C to shut down.
+2023-03-18 10:49:09.710 +01:00 [INF] Hosting environment: Development
+2023-03-18 10:49:09.710 +01:00 [INF] Content root path: /home/niclas/projects/spbs-3/Spbs/Spbs.Ui
+2023-03-18 10:49:14.841 +01:00 [INF] HTTP GET / response was: 200 in 940.979534 ms, from userid: "15ab8245-037c-4239-9732-cb26ba40be6a"
+2023-03-18 10:49:15.830 +01:00 [INF] HTTP GET /_blazor/initializers response was: 200 in 27.051104 ms, from userid: "15ab8245-037c-4239-9732-cb26ba40be6a"
+2023-03-18 10:49:15.941 +01:00 [INF] HTTP POST /_blazor/negotiate response was: 200 in 33.981106 ms, from userid: "15ab8245-037c-4239-9732-cb26ba40be6a"
+2023-03-18 10:49:19.344 +01:00 [INF] Start processing HTTP request POST https://ob.nordigen.com/api/v2/token/new/
+2023-03-18 10:49:19.348 +01:00 [INF] Sending HTTP request POST https://ob.nordigen.com/api/v2/token/new/
+2023-03-18 10:49:19.699 +01:00 [INF] Received HTTP response headers after 337.8458ms - 200
+2023-03-18 10:49:19.704 +01:00 [INF] End processing HTTP request after 370.1085ms - 200
+2023-03-18 10:49:19.762 +01:00 [INF] Start processing HTTP request GET https://ob.nordigen.com/api/v2/institutions/?country=se
+2023-03-18 10:49:19.762 +01:00 [INF] Sending HTTP request GET https://ob.nordigen.com/api/v2/institutions/?country=se
+2023-03-18 10:49:20.010 +01:00 [INF] Received HTTP response headers after 248.0716ms - 200
+2023-03-18 10:49:20.010 +01:00 [INF] End processing HTTP request after 248.7058ms - 200
+2023-03-18 10:50:18.083 +01:00 [INF] Application is shutting down...
+2023-03-18 10:50:18.086 +01:00 [INF] HTTP CONNECT /_blazor response was: 200 in 62109.194805 ms, from userid: "15ab8245-037c-4239-9732-cb26ba40be6a"

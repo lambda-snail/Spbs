@@ -8,14 +8,11 @@ namespace Spbs.Ui.Features.BankIntegration.Models;
 /// <summary>
 /// A representation of what Nordigen calls a 'link' - i.e. a connection to an institution for a specific user.
 /// </summary>
-public class NordigenRequisition 
+public class NordigenLink 
 {
     [JsonProperty("id")]
     public Guid Id { get; set; }
 
-    [JsonProperty("nordigenId")]
-    public Guid NordigenId { get; set; }
-    
     [JsonProperty("userId")]
     public Guid UserId { get; set; }
     

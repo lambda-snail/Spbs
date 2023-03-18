@@ -6,4 +6,6 @@
 public static class CosmosTypeConstants
 {
     public static readonly string NordigenEula = "eula";
+    public static readonly string NordigenUserLinks = "userLinks";
+    public static readonly string NordigenLink = "requisition";
 }

@@ -101,4 +101,38 @@ public class NordigenApiClient : INordigenApiClient
 
         return agreement;
     }
+
+    /// <summary>
+    /// Creates new link.
+    /// </summary>
+    /// <param name="redirect">Redirect URL to your application after end-user authorization with ASPSP (required).</param>
+    /// <param name="institutionId">An Institution ID for this Requisition (required).</param>
+    /// <param name="agreement">EUA associated with this requisition.</param>
+    /// <param name="reference">Additional ID to identify the end user.</param>
+    /// <param name="userLanguage">A two-letter country code (ISO 639-1).</param>
+    /// <param name="ssn">Optional SSN field to verify ownership of the account.</param>
+    /// <param name="accountSelection">Option to enable account selection view for the end user (default to false).</param>
+    /// <param name="redirectImmediate">Enable redirect back to the client after account list received (default to false).</param>
+    public async Task<RequisitionV2?> CreateRequisition(string redirect, string institutionId, Guid agreement, string reference, bool accountSelection, string userLanguage = "EN", bool redirectImmediate = false, string ssn = "")
+    {
+        _logger.LogInformation("Create new requisition for {InstitutionId}, {AgreementId}, with reference {Reference}", institutionId, agreement, reference);
+
+        var request = new RequisitionV2Request(redirect, institutionId, agreement, reference, userLanguage, ssn,
+            accountSelection, redirectImmediate);
+        if(await GetTokenCached() is not { } token)
+        {
+            return null; // TODO: Add error handling, use OneOf
+        }
+        
+        var endpoint = _options.Value.CreateRequisitionEndpoint!;
+        var response = await _client.SendPostRequest(request, endpoint, token);
+        var requisition = await response.ParseResponseAsync<RequisitionV2>();
+        if (requisition is null)
+        {
+            _logger.LogWarning("Failed to create link for {InstitutionId} with status {HttpCode}", institutionId, response.StatusCode);
+            return null;
+        }
+
+        return requisition;
+    }
 }

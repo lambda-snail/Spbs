@@ -21,4 +21,24 @@ public interface INordigenApiClient
         int accessValidForDays,
         List<string> accessScope);
 
+    /// <summary>
+    /// Creates new link.
+    /// </summary>
+    /// <param name="redirect">Redirect URL to your application after end-user authorization with ASPSP (required).</param>
+    /// <param name="institutionId">An Institution ID for this Requisition (required).</param>
+    /// <param name="agreement">EUA associated with this requisition.</param>
+    /// <param name="reference">Additional ID to identify the end user.</param>
+    /// <param name="userLanguage">A two-letter country code (ISO 639-1).</param>
+    /// <param name="ssn">Optional SSN field to verify ownership of the account.</param>
+    /// <param name="accountSelection">Option to enable account selection view for the end user (default to false).</param>
+    /// <param name="redirectImmediate">Enable redirect back to the client after account list received (default to false).</param>
+    Task<RequisitionV2?> CreateRequisition(
+        string redirect,
+        string institutionId,
+        Guid agreement,
+        string reference,
+        bool accountSelection,
+        string userLanguage = "EN",
+        bool redirectImmediate = false,
+        string ssn = "");
 }

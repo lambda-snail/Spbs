@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Spbs.Ui.ComponentServices;
@@ -9,7 +10,8 @@ enum SelectionState
 {
     SelectInstitution,
     CreateEula,
-    CreateLink
+    CreateLink,
+    Done
 }
 
 internal class SelectionViewModel
@@ -21,10 +23,12 @@ internal class SelectionViewModel
 
 public partial class BankLinkCreationPage
 {
-    [Inject] private INotificationService NotificationService { get; set; }
+    [Inject] private INotificationService _notificationService { get; set; }
+    [Inject] private NavigationManager _navigationManager { get; set; }
     
     private InstitutionSelectorComponent _institutionSelector;
     private EulaCreationComponent _eulaCreator;
+    private NewLinkComponent _newLink;
     
     private SelectionViewModel _selectionData = new() { State = SelectionState.SelectInstitution };
     
@@ -42,6 +46,9 @@ public partial class BankLinkCreationPage
             case SelectionState.CreateEula:
                 TrySetState_CreateLink();
                 break;
+            case SelectionState.CreateLink:
+                await TrySetState_Done();
+                break;
         }
         
         StateHasChanged();
@@ -52,7 +59,7 @@ public partial class BankLinkCreationPage
         var institution = _institutionSelector.GetSelectedInstitution();
         if (!_institutionSelector.HasSelection() || institution is null)
         {
-            NotificationService.ShowToast("No Institution Selected", "Please select an institution before proceeding.", NotificationLevel.Warning);            
+            _notificationService.ShowToast("No Institution Selected", "Please select an institution before proceeding.", NotificationLevel.Warning);            
             return;
         }
 
@@ -70,5 +77,17 @@ public partial class BankLinkCreationPage
 
         _selectionData.Eula = eula;
         _selectionData.State = SelectionState.CreateLink;
+    }
+
+    public async Task TrySetState_Done()
+    {
+        var redirect = await _newLink.CreateLink();
+        if (redirect is null)
+        {
+            _notificationService.ShowToast("Error", "Unable to link to your bank.", NotificationLevel.Error);
+            return;
+        }
+        
+        _navigationManager.NavigateTo(redirect.Value.Url);
     }
 }
