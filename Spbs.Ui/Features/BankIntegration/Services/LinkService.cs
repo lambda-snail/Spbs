@@ -47,6 +47,6 @@ public class LinkService : ILinkService
             return null;
         }
 
-        return new RedirectUrl(requisition!.Redirect);
+        return new RedirectUrl(requisition!.Link);
     }
 }

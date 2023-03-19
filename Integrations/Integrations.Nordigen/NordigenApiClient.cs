@@ -133,6 +133,9 @@ public class NordigenApiClient : INordigenApiClient
             return null;
         }
 
+        // Sometimes Nordigen sends back response with this field empty
+        requisition.Agreement ??= agreement;
+
         return requisition;
     }
 }

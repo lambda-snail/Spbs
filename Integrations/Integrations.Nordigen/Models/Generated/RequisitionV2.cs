@@ -121,7 +121,7 @@ namespace Integrations.Nordigen.Models
         /// </summary>
         /// <value>EUA associated with this requisition</value>
         [DataMember(Name = "agreement", EmitDefaultValue = false)]
-        public Guid Agreement { get; set; }
+        public Guid? Agreement { get; set; } // Sometimes comes back empty from Nordigen after creating requisition
 
         /// <summary>
         /// additional ID to identify the end user

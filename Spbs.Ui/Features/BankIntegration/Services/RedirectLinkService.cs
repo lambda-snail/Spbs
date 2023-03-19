@@ -21,6 +21,6 @@ public class RedirectLinkService : IRedirectLinkService
 
     public string GetUrlForAccountListing()
     {
-        return GetBaseUrl() + "account-links";
+        return GetBaseUrl() + "accounts/links/";
     }
 }
