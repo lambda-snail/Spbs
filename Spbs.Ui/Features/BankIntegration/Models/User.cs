@@ -8,9 +8,7 @@ public class User
 {
     [JsonProperty("id")] 
     public Guid Id { get; set; }
-    [JsonProperty("userId")] 
-    public Guid UserId { get; set; }
-    
+
     [JsonProperty("nordigenLinks")] 
     public List<Guid> NordigenLinks { get; set; } = new ();
 }

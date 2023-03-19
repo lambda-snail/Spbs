@@ -11,8 +11,8 @@ public class NordigenEula
     public Guid Id { get; set; }
     [JsonProperty("userId")]
     public Guid UserId { get; set; }
-    [JsonProperty("nordigenId")]
-    public Guid NordigenId { get; set; }
+    //[JsonProperty("nordigenId")]
+    //public Guid NordigenId { get; set; }
     
     /// <summary>
     /// The date &amp; time at which the end user agreement was created.

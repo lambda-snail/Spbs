@@ -6,5 +6,5 @@ namespace Spbs.Ui.Features.BankIntegration.Services;
 
 public interface ILinkService
 {
-    Task<LinkService.RedirectUrl?> CreateLink(Institution institution, NordigenEula eula, Guid userId);
+    Task<LinkService.RedirectUrl?> CreateLink(Institution institution, NordigenEula eula, Guid userId, bool accountSelection);
 }

@@ -28,6 +28,6 @@ public partial class NewLinkComponent : ComponentBase
     public async Task<LinkService.RedirectUrl?> CreateLink()
     {
         Guid? userId = await UserId();
-        return await _linkService.CreateLink(_institution!, _eula!, userId!.Value);
+        return await _linkService.CreateLink(_institution!, _eula!, userId!.Value, false);
     }
 }

@@ -20,7 +20,7 @@ public class LinkService : ILinkService
         _linkService = linkService;
     }
     
-    public async Task<RedirectUrl?> CreateLink(Institution institution, NordigenEula eula, Guid userId)
+    public async Task<RedirectUrl?> CreateLink(Institution institution, NordigenEula eula, Guid userId, bool accountSelection)
     {
         NordigenLink? link = new NordigenLink
         {
@@ -40,7 +40,7 @@ public class LinkService : ILinkService
         string redirect = _linkService.GetUrlForAccountListing();
         string reference = link.Id.ToString(); //redirect-url?ref={reference} 
         
-        var requisition = await _nordigenCLient.CreateRequisition(redirect, institution.Id, eula.NordigenId, reference, true);
+        var requisition = await _nordigenCLient.CreateRequisition(redirect, institution.Id, eula.Id, reference, accountSelection);
         if (requisition is null)
         {
             // TODO: Handle error

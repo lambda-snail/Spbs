@@ -72,6 +72,10 @@ namespace Spbs.Ui
             services.AddTransient<IEulaService, EulaService>();
             services.AddScoped<NotificationService>();
             services.AddScoped<INotificationService, NotificationService>();
+            services.AddScoped<INordigenLinkWriterRepository, NordigenLinkWriterRepository>();
+            services.AddScoped<ILinkService, LinkService>();
+            services.AddScoped<IRedirectLinkService, RedirectLinkService>();
+            
             services.RegisterNordigenIntegration(Configuration, "Spbs:NordigenOptions");
         }
 

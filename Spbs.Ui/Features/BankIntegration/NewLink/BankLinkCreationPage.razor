@@ -41,7 +41,7 @@
                 <EulaCreationComponent OnEulaCreatedCallbackAsync="OnContinueButtonClicked" SetInstitution="() => _selectionData.Institution" @ref="_eulaCreator"/>
                 break;
             case SelectionState.CreateLink:
-                <NewLinkComponent SetInstitution="() => _selectionData.Institution" SetEula="() => _selectionData.Eula" />
+                <NewLinkComponent SetInstitution="() => _selectionData.Institution" SetEula="() => _selectionData.Eula" @ref="_newLink" />
                 break;
             default:
                 <p>Oops, something went wrong :(</p>

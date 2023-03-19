@@ -44,34 +44,30 @@ public class NordigenLinkWriterRepository : CosmosRepositoryBase, INordigenLinkW
     private async Task LinkToUserDocument(NordigenLink link)
     {
         var queryResult = _container.GetItemLinqQueryable<CosmosDocument<User>>()
-            .Where(l => l.Data.UserId == link.UserId)
+            .Where(l => l.Data.Id == link.UserId)
             .ToFeedIterator();
 
         var result = await queryResult.ReadNextAsync();
-        if (result is { Count: > 0 })
+        if (result is { Count: > 1 })
         {
             _logger.LogError("Found more than one user lnk documents for {UserId}", link.UserId);
             return;
         }
-
-        CosmosDocument<User>? links = result.FirstOrDefault();
-        if (links is null)
+        
+        CosmosDocument<User>? user = result.FirstOrDefault();
+        if (user is null)
         {
-            links = new()
-            {
-                Id = Guid.NewGuid(),
-                Type = CosmosTypeConstants.NordigenUserLinks,
-                Data = new()
-            };
+            // TODO: Log user not found
+            return;
         }
 
-        if (links.Data.NordigenLinks.Any(l => l == link.Id))
+        if (user.Data.NordigenLinks.Any(l => l == link.Id))
         {
             return;
         }
 
-        links.Data.NordigenLinks.Add(link.Id);
-        await _container.UpsertItemAsync(links);
+        user.Data.NordigenLinks.Add(link.Id);
+        await _container.UpsertItemAsync(user);
     }
 
     private Task<ItemResponse<CosmosDocument<NordigenLink>>> UpsertLinkDocument(NordigenLink link)
