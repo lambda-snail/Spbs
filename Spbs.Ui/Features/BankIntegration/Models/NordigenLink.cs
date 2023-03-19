@@ -16,6 +16,9 @@ public class NordigenLink
     [JsonProperty("userId")]
     public Guid UserId { get; set; }
     
+    [JsonProperty("nordigenId")]
+    public Guid? NordigenId { get; set; }
+    
     [JsonProperty("created")]
     public DateTime? Created { get; set; }
 

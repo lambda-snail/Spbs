@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using AutoMapper;
 using Integrations.Nordigen;
 using Spbs.Ui.Features.BankIntegration.Models;
 
@@ -10,14 +11,16 @@ public class NordigenAccountLinkService : INordigenAccountLinkService
     private readonly INordigenLinkWriterRepository _linkWriterRepository;
     private readonly INordigenApiClient _nordigenCLient;
     private readonly IRedirectLinkService _linkService;
+    private readonly IMapper _mapper;
 
     public record struct RedirectUrl(string Url);
 
-    public NordigenAccountLinkService(INordigenLinkWriterRepository linkWriterRepository, INordigenApiClient nordigenCLient, IRedirectLinkService linkService)
+    public NordigenAccountLinkService(INordigenLinkWriterRepository linkWriterRepository, INordigenApiClient nordigenCLient, IRedirectLinkService linkService, IMapper mapper)
     {
         _linkWriterRepository = linkWriterRepository;
         _nordigenCLient = nordigenCLient;
         _linkService = linkService;
+        _mapper = mapper;
     }
     
     public async Task<RedirectUrl?> CreateLink(Institution institution, NordigenEula eula, Guid userId, bool accountSelection)
@@ -47,6 +50,9 @@ public class NordigenAccountLinkService : INordigenAccountLinkService
             return null;
         }
 
+        link = _mapper.Map<NordigenLink>(requisition);
+        await _linkWriterRepository.Upsert(link);
+        
         return new RedirectUrl(requisition!.Link);
     }
 }

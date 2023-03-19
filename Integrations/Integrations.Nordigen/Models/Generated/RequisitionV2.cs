@@ -17,7 +17,7 @@ namespace Integrations.Nordigen.Models
     /// RequisitionV2Serializer.
     /// </summary>
     [DataContract(Name = "RequisitionV2")]
-    public partial class RequisitionV2 : IValidatableObject
+    public partial class RequisitionV2
     {
 
         /// <summary>
@@ -187,65 +187,5 @@ namespace Integrations.Nordigen.Models
         /// <value>enable redirect back to the client after account list received</value>
         [DataMember(Name = "redirect_immediate", EmitDefaultValue = true)]
         public bool RedirectImmediate { get; set; }
-
-        /// <summary>
-        /// Returns the string presentation of the object
-        /// </summary>
-        /// <returns>String presentation of the object</returns>
-        public override string ToString()
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append("class RequisitionV2 {\n");
-            sb.Append("  Id: ").Append(Id).Append("\n");
-            sb.Append("  Created: ").Append(Created).Append("\n");
-            sb.Append("  Redirect: ").Append(Redirect).Append("\n");
-            sb.Append("  Status: ").Append(Status).Append("\n");
-            sb.Append("  InstitutionId: ").Append(InstitutionId).Append("\n");
-            sb.Append("  Agreement: ").Append(Agreement).Append("\n");
-            sb.Append("  Reference: ").Append(Reference).Append("\n");
-            sb.Append("  Accounts: ").Append(Accounts).Append("\n");
-            sb.Append("  UserLanguage: ").Append(UserLanguage).Append("\n");
-            sb.Append("  Link: ").Append(Link).Append("\n");
-            sb.Append("  Ssn: ").Append(Ssn).Append("\n");
-            sb.Append("  AccountSelection: ").Append(AccountSelection).Append("\n");
-            sb.Append("  RedirectImmediate: ").Append(RedirectImmediate).Append("\n");
-            sb.Append("}\n");
-            return sb.ToString();
-        }
-
-        /// <summary>
-        /// To validate all properties of the instance
-        /// </summary>
-        /// <param name="validationContext">Validation context</param>
-        /// <returns>Validation Result</returns>
-        public IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> Validate(ValidationContext validationContext)
-        {
-            // Redirect (string) maxLength
-            if (this.Redirect.Length > 1024)
-            {
-                yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Redirect, length must be less than 1024.", new [] { "Redirect" });
-            }
-
-            // Reference (string) maxLength
-            if (this.Reference.Length > 256)
-            {
-                yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Reference, length must be less than 256.", new [] { "Reference" });
-            }
-
-            // UserLanguage (string) maxLength
-            if (this.UserLanguage.Length > 5)
-            {
-                yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for UserLanguage, length must be less than 5.", new [] { "UserLanguage" });
-            }
-
-            // Ssn (string) maxLength
-            if (this.Ssn.Length > 64)
-            {
-                yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Ssn, length must be less than 64.", new [] { "Ssn" });
-            }
-
-            yield break;
-        }
     }
-
 }

@@ -30,7 +30,7 @@ public class NordigenLinkWriterRepository : CosmosRepositoryBase, INordigenLinkW
     public async Task<NordigenLink?> Upsert(NordigenLink link)
     {
         var response = await UpsertLinkDocument(link);
-        if (response is { StatusCode: >= HttpStatusCode.OK and <HttpStatusCode.MultipleChoices })
+        if (response is { StatusCode: HttpStatusCode.Created }) // Only link to user if we created a new link
         {
             link.Id = response.Resource.Data.Id;
             await LinkToUserDocument(link);
@@ -44,13 +44,13 @@ public class NordigenLinkWriterRepository : CosmosRepositoryBase, INordigenLinkW
     private async Task LinkToUserDocument(NordigenLink link)
     {
         var queryResult = _container.GetItemLinqQueryable<CosmosDocument<User>>()
-            .Where(l => l.Data.Id == link.UserId)
+            .Where(l => l.Id == link.UserId)
             .ToFeedIterator();
 
         var result = await queryResult.ReadNextAsync();
         if (result is { Count: > 1 })
         {
-            _logger.LogError("Found more than one user lnk documents for {UserId}", link.UserId);
+            _logger.LogError("Found more than one user documents for {LinkId} and {UserId}", link.Id, link.UserId);
             return;
         }
         
