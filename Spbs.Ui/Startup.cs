@@ -73,7 +73,7 @@ namespace Spbs.Ui
             services.AddScoped<NotificationService>();
             services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<INordigenLinkWriterRepository, NordigenLinkWriterRepository>();
-            services.AddScoped<ILinkService, LinkService>();
+            services.AddScoped<INordigenAccountLinkService, NordigenAccountLinkService>();
             services.AddScoped<IRedirectLinkService, RedirectLinkService>();
             
             services.RegisterNordigenIntegration(Configuration, "Spbs:NordigenOptions");

@@ -17,7 +17,7 @@ public partial class NewLinkComponent : ComponentBase
     [Parameter, Required] public Func<NordigenEula> SetEula { get; set; }
     private NordigenEula? _eula = null;
 
-    [Inject] private ILinkService _linkService { get; set; }
+    [Inject] private INordigenAccountLinkService _linkService { get; set; }
 
     protected override void OnInitialized()
     {
@@ -25,7 +25,7 @@ public partial class NewLinkComponent : ComponentBase
         _eula = SetEula();
     }
 
-    public async Task<LinkService.RedirectUrl?> CreateLink()
+    public async Task<NordigenAccountLinkService.RedirectUrl?> CreateLink()
     {
         Guid? userId = await UserId();
         return await _linkService.CreateLink(_institution!, _eula!, userId!.Value, false);

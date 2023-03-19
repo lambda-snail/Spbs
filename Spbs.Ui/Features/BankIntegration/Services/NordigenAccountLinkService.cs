@@ -5,7 +5,7 @@ using Spbs.Ui.Features.BankIntegration.Models;
 
 namespace Spbs.Ui.Features.BankIntegration.Services;
 
-public class LinkService : ILinkService
+public class NordigenAccountLinkService : INordigenAccountLinkService
 {
     private readonly INordigenLinkWriterRepository _linkWriterRepository;
     private readonly INordigenApiClient _nordigenCLient;
@@ -13,7 +13,7 @@ public class LinkService : ILinkService
 
     public record struct RedirectUrl(string Url);
 
-    public LinkService(INordigenLinkWriterRepository linkWriterRepository, INordigenApiClient nordigenCLient, IRedirectLinkService linkService)
+    public NordigenAccountLinkService(INordigenLinkWriterRepository linkWriterRepository, INordigenApiClient nordigenCLient, IRedirectLinkService linkService)
     {
         _linkWriterRepository = linkWriterRepository;
         _nordigenCLient = nordigenCLient;
