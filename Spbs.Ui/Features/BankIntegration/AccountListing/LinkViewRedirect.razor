@@ -1,6 +1,8 @@
-@page "/accounts/links"
+@page "/accounts/redirect"
 @using Microsoft.AspNetCore.WebUtilities
+@using Spbs.Ui.Features.BankIntegration.Services
 @inject NavigationManager navigationManager
+@inject IRedirectLinkService linkService;
 
 @code {
     protected override void OnAfterRender(bool firstRender)
@@ -15,7 +17,8 @@
         var uri = navigationManager.ToAbsoluteUri(navigationManager.Uri);
         if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("ref", out var linkId))
         {
-            navigationManager.NavigateTo($"/accounts/links/{linkId}");
+            var url = linkService.GetUrlForAccountListing();
+            navigationManager.NavigateTo(url + linkId);
         }
     }
 }

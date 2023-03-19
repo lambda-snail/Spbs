@@ -23,4 +23,9 @@ public class RedirectLinkService : IRedirectLinkService
     {
         return GetBaseUrl() + "accounts/links/";
     }
+
+    public string GetUrlForNordigenRedirect()
+    {
+        return GetBaseUrl() + "accounts/redirect/";
+    }
 }
