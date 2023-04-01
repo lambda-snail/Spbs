@@ -2,3 +2,18 @@
 
 <h3>Current Active Bank Links</h3>
 
+@if (_userLinks is null or { Count: >0 })
+{
+    <div>No links added yet. You can connect to your bank from the Bank Integration menu!</div>
+}
+else
+{
+    <div class="container">
+        @foreach (var link in _userLinks)
+        {
+            <div class="row">
+                
+            </div>
+        }
+    </div>    
+}
