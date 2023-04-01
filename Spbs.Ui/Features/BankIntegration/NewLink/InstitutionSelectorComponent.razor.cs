@@ -42,10 +42,6 @@ public partial class InstitutionSelectorComponent : SelectableListComponent<Inst
     {
         var aspsps = await Client.GetListOfInstitutionsAsync(_country);
         _institutions = Mapper.Map<List<Institution>>(aspsps);
-     
-#if DEBUG
-        _institutions.Add(new Institution { Name = "Sandbox", Id = "SANDBOXFINANCE_SFIN0000", Bic = string.Empty});
-#endif
 
         _allInstitutionsBackup = _institutions;
         StateHasChanged();
