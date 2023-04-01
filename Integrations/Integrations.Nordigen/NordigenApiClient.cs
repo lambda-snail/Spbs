@@ -50,10 +50,6 @@ public class NordigenApiClient : INordigenApiClient
                 List<Aspsp>? institutions = await response.ParseResponseAsync<List<Aspsp>>();
                 institutions ??= new();
 
-                #if DEBUG
-                institutions.Add(new Aspsp { Name = "Sandbox", Id = "SANDBOXFINANCE_SFIN0000", Bic = string.Empty});
-                #endif
-                
                 return institutions;
             }
         );
