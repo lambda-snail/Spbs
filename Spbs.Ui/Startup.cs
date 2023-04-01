@@ -112,6 +112,9 @@ namespace Spbs.Ui
 
             services.AddTransient<INordigenEulaWriterRepository, NordigenEulaWriterRepository>();
             services.AddTransient<INordigenEulaReaderRepository, NordigenEulaReaderRepository>();
+            
+            services.AddTransient<INordigenLinkWriterRepository, NordigenLinkWriterRepository>();
+            services.AddTransient<INordigenLinkReaderRepository, NordigenLinkReaderRepository>();
         }
 
         private void RegisterDatabaseConnections(IServiceCollection services)
