@@ -39,8 +39,8 @@ public class NordigenAccountLinkService : INordigenAccountLinkService
             // Todo: handle errors
             return null;
         }
-
-        string redirect = _linkService.GetUrlForAccountListing();
+        
+        string redirect = _linkService.GetUrlForNordigenRedirect();
         string reference = link.Id.ToString(); //redirect-url?ref={reference} 
         
         var requisition = await _nordigenCLient.CreateRequisition(redirect, institution.Id, eula.Id, reference, accountSelection);

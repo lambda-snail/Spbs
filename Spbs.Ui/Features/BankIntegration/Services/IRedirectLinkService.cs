@@ -10,4 +10,6 @@ public interface IRedirectLinkService
     string GetBaseUrl();
 
     string GetUrlForAccountListing();
+
+    string GetUrlForNordigenRedirect();
 }
