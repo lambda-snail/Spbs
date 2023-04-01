@@ -2,18 +2,21 @@
 
 <h3>Current Active Bank Links</h3>
 
-@if (_userLinks is null or { Count: >0 })
+@if (_userLinks is null or { Count: 0 })
 {
     <div>No links added yet. You can connect to your bank from the Bank Integration menu!</div>
 }
 else
 {
     <div class="container">
+        <div>Hello!</div>
         @foreach (var link in _userLinks)
         {
+            var _institution = @_institutions!.FirstOrDefault(i => i.Id == link.InstitutionId);
             <div class="row">
-                
+                @_institution?.Name
             </div>
+            <div>Hello!</div>
         }
     </div>    
 }
