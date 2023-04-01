@@ -16,7 +16,8 @@ public class NordigenApiClient : INordigenApiClient
     private readonly ILogger<NordigenApiClient> _logger;
 
     private IAppCache _cache;
-    private readonly string _tokenCacheString = "__token";
+    private static readonly string _tokenCacheString = "__token";
+    private static readonly string _institutionListCacheString = "__institutions";
     
     public NordigenApiClient(HttpClient client, IOptions<NordigenOptions> options, NordigenTokenClient tokenClient, ILogger<NordigenApiClient> logger, IAppCache cache)
     {
@@ -34,18 +35,25 @@ public class NordigenApiClient : INordigenApiClient
     /// </summary>
     public async Task<List<Aspsp>> GetListOfInstitutionsAsync(string country)
     {
-        var token = await GetTokenCached();
-        if (token is null)
-        {
-            return new();
-        }
+        List<Aspsp> institutions = await _cache.GetOrAddAsync(_institutionListCacheString,
+            async () =>
+            {
+                var token = await GetTokenCached();
+                if (token is null)
+                {
+                    return new List<Aspsp>();
+                }
 
-        string queryString = _options.Value.ListOfInstitutionsEndpoint + "?country=" + country;
-        var response = await _client.SendGetRequest( queryString, token);
-        
-        List<Aspsp>? institutions = await response.ParseResponseAsync<List<Aspsp>>();
-        institutions ??= new();
-        
+                string queryString = _options.Value.ListOfInstitutionsEndpoint + "?country=" + country;
+                var response = await _client.SendGetRequest( queryString, token);
+            
+                List<Aspsp>? institutions = await response.ParseResponseAsync<List<Aspsp>>();
+                institutions ??= new();
+
+                return institutions;
+            }
+        );
+
         return institutions;
     }
 
