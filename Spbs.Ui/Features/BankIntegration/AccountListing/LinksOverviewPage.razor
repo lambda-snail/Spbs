@@ -3,16 +3,19 @@
 
 <h3>Current Active Bank Links</h3>
 
-@if (_userLinks is null or { Count: 0 })
-{
-    <div>No links added yet. You can connect to your bank from the Bank Integration menu!</div>
-}
-else
-{
-    <div class="container">
-        <div class="card col-6">
-            <div class="card-body row">
-                @for(int i = 0; i < _userLinks.Count; ++i)
+<div class="container">
+    <div class="card col-6">
+        <div class="card-header row">
+
+        </div>
+        <div class="card-body row">
+            @if (_userLinks is null or { Count: 0 })
+            {
+                <div>No links added yet. You can connect to your bank from the Bank Integration menu!</div>
+            }
+            else
+            {
+                @for (int i = 0; i < _userLinks.Count; ++i)
                 {
                     int row = i;
                     var link = _userLinks[i];
@@ -52,7 +55,7 @@ else
                         </div>
                     </div>
                 }
-            </div>
+            }
         </div>
     </div>
-}
+</div>
