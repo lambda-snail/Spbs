@@ -1,4 +1,5 @@
 @page "/accounts/links"
+@inherits Spbs.Ui.Components.SelectableListComponent<Spbs.Ui.Features.BankIntegration.Models.NordigenLink>
 
 <h3>Current Active Bank Links</h3>
 
@@ -9,14 +10,49 @@
 else
 {
     <div class="container">
-        <div>Hello!</div>
-        @foreach (var link in _userLinks)
-        {
-            var _institution = @_institutions!.FirstOrDefault(i => i.Id == link.InstitutionId);
-            <div class="row">
-                @_institution?.Name
+        <div class="card col-6">
+            <div class="card-body row">
+                @for(int i = 0; i < _userLinks.Count; ++i)
+                {
+                    int row = i;
+                    var link = _userLinks[i];
+                    var institution = @_institutions!.FirstOrDefault(i => i.Id == link.InstitutionId);
+                    <div class="row">
+                        <div class="card @GetRowClass(row)" onclick="@(() => SetSelected(row))">
+                            <img src="@institution?.Logo" class="card-img-top" alt="The logo of @institution?.Name">
+                            <div class="card-body container">
+                                <div class="row card-title">
+                                    @institution?.Name
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        Bic:
+                                    </div>
+                                    <div class="col card-text">
+                                        @institution?.Bic
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        Created On:
+                                    </div>
+                                    <div class="col card-text">
+                                        @link.Created
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        Linked Accounts:
+                                    </div>
+                                    <div class="col card-text">
+                                        @string.Join(", ", link.Accounts)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
             </div>
-            <div>Hello!</div>
-        }
-    </div>    
+        </div>
+    </div>
 }
