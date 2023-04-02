@@ -55,4 +55,14 @@ public class NordigenAccountLinkService : INordigenAccountLinkService
         
         return new RedirectUrl(requisition!.Link);
     }
+
+    public async Task DeleteLink(NordigenLink link)
+    {
+        if (link.NordigenId is { } nordigenId)
+        {
+            await _nordigenCLient.DeleteRequisition(link.NordigenId.Value);
+        }
+
+        await _linkWriterRepository.Delete(link);
+    }
 }

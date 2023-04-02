@@ -41,4 +41,9 @@ public interface INordigenApiClient
         string userLanguage = "EN",
         bool redirectImmediate = false,
         string ssn = "");
+
+    /// <summary>
+    /// Deletes a requisition.
+    /// </summary>
+    Task DeleteRequisition(Guid requisitionId);
 }

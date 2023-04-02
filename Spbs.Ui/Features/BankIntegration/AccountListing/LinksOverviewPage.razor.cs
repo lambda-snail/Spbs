@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Components;
 using Spbs.Generators.UserExtensions;
 using Spbs.Ui.Components;
 using Spbs.Ui.Features.BankIntegration.Models;
+using Spbs.Ui.Features.BankIntegration.Services;
 
 namespace Spbs.Ui.Features.BankIntegration.AccountListing;
 
@@ -18,6 +19,7 @@ namespace Spbs.Ui.Features.BankIntegration.AccountListing;
 public partial class LinksOverviewPage : SelectableListComponent<NordigenLink>
 {
     [Inject] private INordigenLinkReaderRepository _linkReader { get; set; }
+    [Inject] private INordigenLinkWriterRepository _linkWriter { get; set; }
     [Inject] private INordigenApiClient _nordigenCLient { get; set; }
     [Inject] private IMapper _mapper { get; set; }
     
@@ -55,5 +57,16 @@ public partial class LinksOverviewPage : SelectableListComponent<NordigenLink>
 #endif
         
         _institutions = new(institutions);
+    }
+
+    private void DeleteSelectedLink()
+    {
+        int? selectedLink = GetSelected();
+        if (_userLinks is null || selectedLink is null)
+        {
+            return;
+        }
+
+        _linkWriter.Delete(_userLinks[selectedLink.Value]);
     }
 }

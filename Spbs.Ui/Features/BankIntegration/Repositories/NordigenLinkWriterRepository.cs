@@ -41,6 +41,13 @@ public class NordigenLinkWriterRepository : CosmosRepositoryBase, INordigenLinkW
         return null;
     }
 
+    // TODO: Remove from user document
+    public Task Delete(NordigenLink link)
+    {
+        string idString = link.Id.ToString();
+        return _container.DeleteItemAsync<CosmosDocument<NordigenLink>>(idString, new PartitionKey(idString));
+    }
+
     private async Task LinkToUserDocument(NordigenLink link)
     {
         var queryResult = _container.GetItemLinqQueryable<CosmosDocument<User>>()

@@ -6,4 +6,5 @@ namespace Spbs.Ui.Features.BankIntegration;
 public interface INordigenLinkWriterRepository
 {
     Task<NordigenLink?> Upsert(NordigenLink link);
+    Task Delete(NordigenLink link);
 }

@@ -146,4 +146,20 @@ public class NordigenApiClient : INordigenApiClient
 
         return requisition;
     }
+
+    public async Task DeleteRequisition(Guid requisitionId)
+    {
+        _logger.LogInformation("Delete requisition for {RequisitionId}", requisitionId);
+        if(await GetTokenCached() is not { } token)
+        {
+            return; // TODO: Add error handling
+        }
+        
+        var endpoint = _options.Value.CreateRequisitionEndpoint!;
+        endpoint += requisitionId.ToString() + '/';
+        var response = await _client.SendDeleteRequest(endpoint, token);
+        
+        _logger.LogInformation("Request to delete requisition {RequisitionId} returned with status code {StatusCode}", requisitionId, response.StatusCode);
+        return; // TODO: Error response
+    }
 }
