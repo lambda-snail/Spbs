@@ -33,7 +33,7 @@
                 {
                     int row = i;
                     var link = _userLinks[i];
-                    var institution = @_institutions!.FirstOrDefault(i => i.Id == link.InstitutionId);
+                    var institution = @_institutions!.FirstOrDefault(inst => inst.Id == link.InstitutionId);
                     <div class="row">
                         <div class="card @GetRowClass(row)" onclick="@(() => SetSelected(row))">
                             <img src="@institution?.Logo" class="card-img-top" alt="The logo of @institution?.Name">
