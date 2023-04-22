@@ -46,6 +46,9 @@ public partial class LinksOverviewPage : SelectableListComponent<NordigenLink>
         _userLinks = await _linkReader!.GetLinksForUser(userId!.Value);
     }
 
+    /// <summary>
+    /// Institutions are needed to populate certain properties of the link items.
+    /// </summary>
     private async Task InitInstitutionList()
     {
         // TODO: Remove hard coded country
