@@ -49,8 +49,8 @@ public class NordigenAccountLinkService : INordigenAccountLinkService
             // TODO: Handle error
             return null;
         }
-
-        link = _mapper.Map<NordigenLink>(requisition);
+        
+        _mapper.Map(requisition, link);
         await _linkWriterRepository.Upsert(link);
         
         return new RedirectUrl(requisition!.Link);
