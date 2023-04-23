@@ -11,6 +11,7 @@ using Integrations.Nordigen;
 using Microsoft.AspNetCore.Components;
 using Spbs.Generators.UserExtensions;
 using Spbs.Ui.Components;
+using Spbs.Ui.ComponentServices;
 using Spbs.Ui.Features.BankIntegration.Models;
 
 namespace Spbs.Ui.Features.BankIntegration.AccountListing;
@@ -21,6 +22,7 @@ public partial class LinksOverviewPage : SelectableListComponent<NordigenLink>
     [Inject, MaybeNull] private INordigenLinkReaderRepository _linkReader { get; set; }
     [Inject, MaybeNull] private INordigenLinkWriterRepository _linkWriter { get; set; }
     [Inject, MaybeNull] private INordigenApiClient _nordigenCLient { get; set; }
+    [Inject, MaybeNull] private INotificationService _notificationService { get; set; }
     [Inject, MaybeNull] private IMapper _mapper { get; set; }
     
     protected override List<NordigenLink>? GetList() => _userLinks?.ToList();
@@ -70,6 +72,11 @@ public partial class LinksOverviewPage : SelectableListComponent<NordigenLink>
             return;
         }
 
-        _linkWriter!.Delete(_userLinks[selectedLink.Value]);
+        var link = _userLinks[selectedLink.Value];
+        _linkWriter!.Delete(link);
+        
+        // TODO: Error handling
+        _notificationService?.ShowToast("Link Deleted", $"Link to {link.InstitutionId} was successfully deleted!", NotificationLevel.Success);
+        StateHasChanged();
     }
 }
