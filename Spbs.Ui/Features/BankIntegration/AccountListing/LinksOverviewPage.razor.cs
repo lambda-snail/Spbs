@@ -64,7 +64,7 @@ public partial class LinksOverviewPage : SelectableListComponent<NordigenLink>
         _institutions = new(institutions);
     }
 
-    private void DeleteSelectedLink()
+    private async Task DeleteSelectedLink()
     {
         int? selectedLink = GetSelected();
         if (_userLinks is null or { Count: 0 } || selectedLink is null)
@@ -73,8 +73,8 @@ public partial class LinksOverviewPage : SelectableListComponent<NordigenLink>
         }
 
         var link = _userLinks[selectedLink.Value];
-        _linkWriter!.Delete(link);
-        
+        await _linkWriter!.Delete(link);
+
         // TODO: Error handling
         _notificationService?.ShowToast("Link Deleted", $"Link to {link.InstitutionId} was successfully deleted!", NotificationLevel.Success);
         StateHasChanged();
