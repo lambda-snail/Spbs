@@ -75,6 +75,17 @@ public partial class LinksOverviewPage : SelectableListComponent<NordigenLink>
         var link = _userLinks[selectedLink.Value];
         await _linkWriter!.Delete(link);
 
+        var left = _userLinks.Take(selectedLink.Value).ToList();
+        var right = _userLinks.Skip(selectedLink.Value + 1);
+        
+        left.AddRange(right as NordigenLink[] ?? right.ToArray());
+        _userLinks = new(left);
+
+        if (link is { NordigenId: not null })
+        {
+            _nordigenCLient?.DeleteRequisition(link.NordigenId.Value);            
+        }
+        
         // TODO: Error handling
         _notificationService?.ShowToast("Link Deleted", $"Link to {link.InstitutionId} was successfully deleted!", NotificationLevel.Success);
         StateHasChanged();
