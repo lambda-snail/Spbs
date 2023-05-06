@@ -1,12 +1,13 @@
-﻿<h3>EulaCreationComponent</h3>
+﻿@using Blazored.FluentValidation
 
 <div class="container">
     <EditForm Model="@_eula"
               OnValidSubmit="@HandleValidSubmit"
               OnInvalidSubmit="@HandleInvalidSubmit">
 
-        <DataAnnotationsValidator/>
-        <ValidationSummary></ValidationSummary>
+        <!--DataAnnotationsValidator/-->
+        <FluentValidationValidator/>
+        <ValidationSummary/>
 
         <div class="form-group col-md-10">
             <label for="historical-days">Max Historical Days</label>

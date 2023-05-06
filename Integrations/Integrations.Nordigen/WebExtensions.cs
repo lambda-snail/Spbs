@@ -17,7 +17,13 @@ public static class WebExtensions
     {
         HttpRequestMessage request = new(HttpMethod.Get, endpoint);
         ConfigureDefaultHeaders(authToken, request);
+        return client.SendAsync(request);
+    }
 
+    public static Task<HttpResponseMessage> SendDeleteRequest(this HttpClient client, string endpoint, string? authToken)
+    {
+        HttpRequestMessage request = new(HttpMethod.Delete, endpoint);
+        ConfigureDefaultHeaders(authToken, request);
         return client.SendAsync(request);
     }
 

@@ -17,7 +17,7 @@ namespace Integrations.Nordigen.Models
     /// RequisitionV2Serializer.
     /// </summary>
     [DataContract(Name = "RequisitionV2Request")]
-    public partial class RequisitionV2Request : IEquatable<RequisitionV2Request>, IValidatableObject
+    public partial class RequisitionV2Request
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="RequisitionV2Request" /> class.
@@ -27,14 +27,14 @@ namespace Integrations.Nordigen.Models
         /// <summary>
         /// Initializes a new instance of the <see cref="RequisitionV2Request" /> class.
         /// </summary>
-        /// <param name="redirect">redirect URL to your application after end-user authorization with ASPSP (required).</param>
-        /// <param name="institutionId">an Institution ID for this Requisition (required).</param>
+        /// <param name="redirect">Redirect URL to your application after end-user authorization with ASPSP (required).</param>
+        /// <param name="institutionId">An Institution ID for this Requisition (required).</param>
         /// <param name="agreement">EUA associated with this requisition.</param>
-        /// <param name="reference">additional ID to identify the end user.</param>
+        /// <param name="reference">Additional ID to identify the end user.</param>
         /// <param name="userLanguage">A two-letter country code (ISO 639-1).</param>
-        /// <param name="ssn">optional SSN field to verify ownership of the account.</param>
-        /// <param name="accountSelection">option to enable account selection view for the end user (default to false).</param>
-        /// <param name="redirectImmediate">enable redirect back to the client after account list received (default to false).</param>
+        /// <param name="ssn">Optional SSN field to verify ownership of the account.</param>
+        /// <param name="accountSelection">Option to enable account selection view for the end user (default to false).</param>
+        /// <param name="redirectImmediate">Enable redirect back to the client after account list received (default to false).</param>
         public RequisitionV2Request(string redirect = default(string), string institutionId = default(string), Guid agreement = default(Guid), string reference = default(string), string userLanguage = default(string), string ssn = default(string), bool accountSelection = false, bool redirectImmediate = false)
         {
             // to ensure "redirect" is required (not null)
@@ -58,16 +58,16 @@ namespace Integrations.Nordigen.Models
         }
 
         /// <summary>
-        /// redirect URL to your application after end-user authorization with ASPSP
+        /// Redirect URL to your application after end-user authorization with ASPSP
         /// </summary>
-        /// <value>redirect URL to your application after end-user authorization with ASPSP</value>
+        /// <value>Redirect URL to your application after end-user authorization with ASPSP</value>
         [DataMember(Name = "redirect", IsRequired = true, EmitDefaultValue = true)]
         public string Redirect { get; set; }
 
         /// <summary>
-        /// an Institution ID for this Requisition
+        /// An Institution ID for this Requisition
         /// </summary>
-        /// <value>an Institution ID for this Requisition</value>
+        /// <value>An Institution ID for this Requisition</value>
         [DataMember(Name = "institution_id", IsRequired = true, EmitDefaultValue = true)]
         public string InstitutionId { get; set; }
 
@@ -79,7 +79,7 @@ namespace Integrations.Nordigen.Models
         public Guid Agreement { get; set; }
 
         /// <summary>
-        /// additional ID to identify the end user
+        /// Additional ID to identify the end user
         /// </summary>
         /// <value>additional ID to identify the end user</value>
         [DataMember(Name = "reference", EmitDefaultValue = false)]
@@ -93,189 +93,24 @@ namespace Integrations.Nordigen.Models
         public string UserLanguage { get; set; }
 
         /// <summary>
-        /// optional SSN field to verify ownership of the account
+        /// Pptional SSN field to verify ownership of the account
         /// </summary>
-        /// <value>optional SSN field to verify ownership of the account</value>
+        /// <value>Optional SSN field to verify ownership of the account</value>
         [DataMember(Name = "ssn", EmitDefaultValue = false)]
         public string Ssn { get; set; }
 
         /// <summary>
-        /// option to enable account selection view for the end user
+        /// Option to enable account selection view for the end user
         /// </summary>
-        /// <value>option to enable account selection view for the end user</value>
+        /// <value>Option to enable account selection view for the end user</value>
         [DataMember(Name = "account_selection", EmitDefaultValue = true)]
         public bool AccountSelection { get; set; }
 
         /// <summary>
-        /// enable redirect back to the client after account list received
+        /// Enable redirect back to the client after account list received
         /// </summary>
-        /// <value>enable redirect back to the client after account list received</value>
+        /// <value>Enable redirect back to the client after account list received</value>
         [DataMember(Name = "redirect_immediate", EmitDefaultValue = true)]
         public bool RedirectImmediate { get; set; }
-
-        /// <summary>
-        /// Returns the string presentation of the object
-        /// </summary>
-        /// <returns>String presentation of the object</returns>
-        public override string ToString()
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append("class RequisitionV2Request {\n");
-            sb.Append("  Redirect: ").Append(Redirect).Append("\n");
-            sb.Append("  InstitutionId: ").Append(InstitutionId).Append("\n");
-            sb.Append("  Agreement: ").Append(Agreement).Append("\n");
-            sb.Append("  Reference: ").Append(Reference).Append("\n");
-            sb.Append("  UserLanguage: ").Append(UserLanguage).Append("\n");
-            sb.Append("  Ssn: ").Append(Ssn).Append("\n");
-            sb.Append("  AccountSelection: ").Append(AccountSelection).Append("\n");
-            sb.Append("  RedirectImmediate: ").Append(RedirectImmediate).Append("\n");
-            sb.Append("}\n");
-            return sb.ToString();
-        }
-
-        /// <summary>
-        /// Returns the JSON string presentation of the object
-        /// </summary>
-        /// <returns>JSON string presentation of the object</returns>
-        public virtual string ToJson()
-        {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented);
-        }
-
-        /// <summary>
-        /// Returns true if objects are equal
-        /// </summary>
-        /// <param name="input">Object to be compared</param>
-        /// <returns>Boolean</returns>
-        public override bool Equals(object input)
-        {
-            return this.Equals(input as RequisitionV2Request);
-        }
-
-        /// <summary>
-        /// Returns true if RequisitionV2Request instances are equal
-        /// </summary>
-        /// <param name="input">Instance of RequisitionV2Request to be compared</param>
-        /// <returns>Boolean</returns>
-        public bool Equals(RequisitionV2Request input)
-        {
-            if (input == null)
-            {
-                return false;
-            }
-            return 
-                (
-                    this.Redirect == input.Redirect ||
-                    (this.Redirect != null &&
-                    this.Redirect.Equals(input.Redirect))
-                ) && 
-                (
-                    this.InstitutionId == input.InstitutionId ||
-                    (this.InstitutionId != null &&
-                    this.InstitutionId.Equals(input.InstitutionId))
-                ) && 
-                (
-                    this.Agreement == input.Agreement ||
-                    (this.Agreement != null &&
-                    this.Agreement.Equals(input.Agreement))
-                ) && 
-                (
-                    this.Reference == input.Reference ||
-                    (this.Reference != null &&
-                    this.Reference.Equals(input.Reference))
-                ) && 
-                (
-                    this.UserLanguage == input.UserLanguage ||
-                    (this.UserLanguage != null &&
-                    this.UserLanguage.Equals(input.UserLanguage))
-                ) && 
-                (
-                    this.Ssn == input.Ssn ||
-                    (this.Ssn != null &&
-                    this.Ssn.Equals(input.Ssn))
-                ) && 
-                (
-                    this.AccountSelection == input.AccountSelection ||
-                    this.AccountSelection.Equals(input.AccountSelection)
-                ) && 
-                (
-                    this.RedirectImmediate == input.RedirectImmediate ||
-                    this.RedirectImmediate.Equals(input.RedirectImmediate)
-                );
-        }
-
-        /// <summary>
-        /// Gets the hash code
-        /// </summary>
-        /// <returns>Hash code</returns>
-        public override int GetHashCode()
-        {
-            unchecked // Overflow is fine, just wrap
-            {
-                int hashCode = 41;
-                if (this.Redirect != null)
-                {
-                    hashCode = (hashCode * 59) + this.Redirect.GetHashCode();
-                }
-                if (this.InstitutionId != null)
-                {
-                    hashCode = (hashCode * 59) + this.InstitutionId.GetHashCode();
-                }
-                if (this.Agreement != null)
-                {
-                    hashCode = (hashCode * 59) + this.Agreement.GetHashCode();
-                }
-                if (this.Reference != null)
-                {
-                    hashCode = (hashCode * 59) + this.Reference.GetHashCode();
-                }
-                if (this.UserLanguage != null)
-                {
-                    hashCode = (hashCode * 59) + this.UserLanguage.GetHashCode();
-                }
-                if (this.Ssn != null)
-                {
-                    hashCode = (hashCode * 59) + this.Ssn.GetHashCode();
-                }
-                hashCode = (hashCode * 59) + this.AccountSelection.GetHashCode();
-                hashCode = (hashCode * 59) + this.RedirectImmediate.GetHashCode();
-                return hashCode;
-            }
-        }
-
-        /// <summary>
-        /// To validate all properties of the instance
-        /// </summary>
-        /// <param name="validationContext">Validation context</param>
-        /// <returns>Validation Result</returns>
-        public IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> Validate(ValidationContext validationContext)
-        {
-            // Redirect (string) maxLength
-            if (this.Redirect != null && this.Redirect.Length > 1024)
-            {
-                yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Redirect, length must be less than 1024.", new [] { "Redirect" });
-            }
-
-            // Reference (string) maxLength
-            if (this.Reference != null && this.Reference.Length > 256)
-            {
-                yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Reference, length must be less than 256.", new [] { "Reference" });
-            }
-
-            // UserLanguage (string) maxLength
-            if (this.UserLanguage != null && this.UserLanguage.Length > 5)
-            {
-                yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for UserLanguage, length must be less than 5.", new [] { "UserLanguage" });
-            }
-
-            // Ssn (string) maxLength
-            if (this.Ssn != null && this.Ssn.Length > 64)
-            {
-                yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Ssn, length must be less than 64.", new [] { "Ssn" });
-            }
-
-            yield break;
-        }
     }
-
 }

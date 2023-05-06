@@ -59,7 +59,7 @@ public partial class ToastNotificationComponent : IDisposable
 
         return (backgroundCssClass, iconCssClass);
     }
-
+    
     void IDisposable.Dispose()
     {
         _notificationService.OnToastAdded -= ToastAddedToast;

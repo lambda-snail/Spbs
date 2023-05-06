@@ -1,4 +1,5 @@
 using FluentValidation;
+using Integrations.Nordigen.Configuration;
 
 namespace Integrations.Nordigen;
 

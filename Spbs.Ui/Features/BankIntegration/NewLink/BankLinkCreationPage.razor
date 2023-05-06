@@ -3,7 +3,22 @@
 <div class="container">
     <div class="row">
         <div class="col">
-            Select an institution
+            @switch (_selectionData.State)
+            {
+                case SelectionState.SelectInstitution:
+                    <span>Select an institution</span>
+                    break;
+                case SelectionState.CreateEula:
+                    <span>Create and accept a license agreement for @_selectionData.Institution.Name</span>
+                    break;
+                case SelectionState.CreateLink:
+                    <span>Review the Details</span>
+                    break;
+                default:
+                    <p>Oops, something went wrong :(</p>
+                    break;
+            }
+            
         </div>
         <div class="col">
             <a class="button button-primary" @onclick="OnContinueButtonClicked">
@@ -16,20 +31,22 @@
     </div>
     <hr/>
     <div class="row">
-        
-        @switch (_selectionState)
+
+        @switch (_selectionData.State)
         {
             case SelectionState.SelectInstitution:
                 <InstitutionSelectorComponent @ref="_institutionSelector"/>
                 break;
             case SelectionState.CreateEula:
-                <EulaCreationComponent />
+                <EulaCreationComponent OnEulaCreatedCallbackAsync="OnContinueButtonClicked" SetInstitution="() => _selectionData.Institution" @ref="_eulaCreator"/>
+                break;
+            case SelectionState.CreateLink:
+                <NewLinkComponent SetInstitution="() => _selectionData.Institution" SetEula="() => _selectionData.Eula" @ref="_newLink" />
                 break;
             default:
                 <p>Oops, something went wrong :(</p>
                 break;
-        };
-        
+        }
         
     </div>
 </div>
