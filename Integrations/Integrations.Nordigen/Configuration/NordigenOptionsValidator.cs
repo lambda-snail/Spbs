@@ -19,24 +19,27 @@ public class NordigenOptionsValidator : AbstractValidator<NordigenOptions>
         RuleFor(o => o.NewTokenEndpoint)
             .NotEmpty()
             .NotNull()
-            .Must(uri => uri.EndsWith('/')) // Post redirects to Get otherwise
+            .Must(uri => uri!.EndsWith('/')) // Post redirects to Get otherwise
             .Must(uri => Uri.IsWellFormedUriString(uri, UriKind.Relative));
         RuleFor(o => o.RefreshTokenEndpoint)
             .NotEmpty()
             .NotNull()
-            .Must(uri => uri.EndsWith('/'))
+            .Must(uri => uri!.EndsWith('/'))
             .Must(uri => Uri.IsWellFormedUriString(uri, UriKind.Relative));
         RuleFor(o => o.ListOfInstitutionsEndpoint)
             .NotEmpty()
             .NotNull()
-            .Must(uri => uri.EndsWith('/'))
+            .Must(uri => uri!.EndsWith('/'))
+            .Must(uri => Uri.IsWellFormedUriString(uri, UriKind.Relative));
+        RuleFor(o => o.AccountEndpoint)
+            .NotEmpty()
+            .NotNull()
+            .Must(uri => uri!.EndsWith('/'))
             .Must(uri => Uri.IsWellFormedUriString(uri, UriKind.Relative));
         
         RuleFor(o => o.DefaultMaxHistoricalDays)
-            .GreaterThan(0)
-            .When(o => o.DefaultMaxHistoricalDays is not null);
+            .GreaterThan(0);
         RuleFor(o => o.DefaultAccessValidForDays)
-            .GreaterThan(0)
-            .When(o => o.DefaultAccessValidForDays is not null);
+            .GreaterThan(0);
     }
 }

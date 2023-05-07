@@ -18,6 +18,7 @@ public class NordigenApiClient : INordigenApiClient
     private IAppCache _cache;
     private static readonly string _tokenCacheString = "__token";
     private static readonly string _institutionListCacheString = "__institutions";
+    private static readonly string _accountsPrefixCacheString = "__accounts_";
     
     public NordigenApiClient(HttpClient client, IOptions<NordigenOptions> options, NordigenTokenClient tokenClient, ILogger<NordigenApiClient> logger, IAppCache cache)
     {
@@ -161,5 +162,61 @@ public class NordigenApiClient : INordigenApiClient
         
         _logger.LogInformation("Request to delete requisition {RequisitionId} returned with status code {StatusCode}", requisitionId, response.StatusCode);
         return; // TODO: Error response
+    }
+
+    public Task<AccountV2?> GetAccountMetadata(Guid accountId)
+    {
+        return _cache.GetOrAddAsync(_accountsPrefixCacheString + accountId.ToString(),
+            () => GetAccountMetadataFromCacheOrApi(accountId));
+    }
+    
+    private async Task<AccountV2?> GetAccountMetadataFromCacheOrApi(Guid accountId)
+    {
+        _logger.LogInformation("Get metadata for account {AccountId}", accountId.ToString());
+        if(await GetTokenCached() is not { } token)
+        {
+            return null;
+        }
+        
+        var endpoint = _options.Value.AccountEndpoint!;
+        endpoint += accountId.ToString() + '/';
+        var response = await _client.SendGetRequest(endpoint, token);
+        
+        _logger.LogInformation("Request to get account metadata from {AccountId} returned with status code {StatusCode}", accountId, response.StatusCode);
+        if (response.IsSuccessStatusCode)
+        {
+            var account = await response.ParseResponseAsync<AccountV2>();
+            if (account is not null)
+            {
+                return account;
+            }
+        }
+
+        return null;
+    }
+
+    public async Task<ListTransactionsResponse?> GetAccountTransactions(Guid accountId, DateOnly? dateFrom = null, DateOnly? dateTo = null)
+    {
+        _logger.LogInformation("Get transactions for account {AccountId} from {DateFrom} to {DateTo}", accountId.ToString(), dateFrom, dateTo);
+        if(await GetTokenCached() is not { } token)
+        {
+            return null;
+        }
+        
+        var endpoint = _options.Value.AccountEndpoint!;
+        endpoint += accountId.ToString() + "/transactions";
+        var response = await _client.SendGetRequest(endpoint, token);
+        
+        _logger.LogInformation("Request to get transactions from {AccountId} returned with status code {StatusCode}", accountId, response.StatusCode);
+        if (response.IsSuccessStatusCode)
+        {
+            var transactions = await response.ParseResponseAsync<ListTransactionsResponse>();
+            if (transactions is not null)
+            {
+                return transactions;
+            }
+        }
+
+        return null;
     }
 }

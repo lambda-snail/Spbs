@@ -17,6 +17,8 @@ public class NordigenOptions
     [MaybeNull] public string CreateAgreementEndpoint { get; set; }
     [MaybeNull] public string CreateRequisitionEndpoint { get; set; }
     
+    [MaybeNull] public string AccountEndpoint { get; set; }
+
     [NotNull] public int? DefaultMaxHistoricalDays { get; set; }
     [NotNull] public int? DefaultAccessValidForDays { get; set; }
 }
