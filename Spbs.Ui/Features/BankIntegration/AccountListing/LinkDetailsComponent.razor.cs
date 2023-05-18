@@ -39,6 +39,11 @@ public partial class LinkDetailsComponent : SelectableListComponent<Guid>
             foreach (var accountId in _link.Accounts)
             {
                 var account = await _client.GetAccountMetadata(accountId);
+                if (account is null)
+                {
+                    continue;
+                }
+                
                 _accounts.Add(account);
                 StateHasChanged();
             }
