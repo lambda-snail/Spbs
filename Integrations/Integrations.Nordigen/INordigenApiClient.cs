@@ -43,6 +43,11 @@ public interface INordigenApiClient
         string ssn = "");
 
     /// <summary>
+    /// Retrieves a requisition by id.
+    /// </summary>
+    Task<RequisitionV2?> GetRequisition(Guid id);
+
+    /// <summary>
     /// Deletes a requisition.
     /// </summary>
     Task DeleteRequisition(Guid requisitionId);

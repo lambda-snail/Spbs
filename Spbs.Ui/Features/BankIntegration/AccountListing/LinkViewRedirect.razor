@@ -1,24 +1,10 @@
 @page "/accounts/redirect"
-@using Microsoft.AspNetCore.WebUtilities
 @using Spbs.Ui.Features.BankIntegration.Services
-@inject NavigationManager navigationManager
-@inject IRedirectLinkService linkService;
+@using AutoMapper
+@inject NavigationManager _navigationManager
+@inject IRedirectLinkService _redirectLinkService;
+@inject INordigenAccountLinkService _accountLinkService;
+@inject INordigenLinkReaderRepository _linkReaderRepository;
+@inject IMapper _mapper;
 
-@code {
-    protected override void OnAfterRender(bool firstRender)
-    {
-        if (!firstRender)
-        {
-            return;
-        }
-        
-        // Takes the 'ref' parameter from Nordigen and reroutes to a path parameter
-        // Do not place in OnInitialized; see https://stackoverflow.com/questions/58076758/navigationerror-on-navigateto
-        var uri = navigationManager.ToAbsoluteUri(navigationManager.Uri);
-        if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("ref", out var linkId))
-        {
-            var url = linkService.GetUrlForAccountListing();
-            navigationManager.NavigateTo(url + linkId);
-        }
-    }
-}
+<h3>Hang on while we are configuring your new link :)</h3>

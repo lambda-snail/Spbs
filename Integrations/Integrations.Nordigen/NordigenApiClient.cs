@@ -133,7 +133,7 @@ public class NordigenApiClient : INordigenApiClient
             return null; // TODO: Add error handling, use OneOf
         }
         
-        var endpoint = _options.Value.CreateRequisitionEndpoint!;
+        var endpoint = _options.Value.RequisitionEndpoint!;
         var response = await _client.SendPostRequest(request, endpoint, token);
         var requisition = await response.ParseResponseAsync<RequisitionV2>();
         if (requisition is null)
@@ -148,6 +148,31 @@ public class NordigenApiClient : INordigenApiClient
         return requisition;
     }
 
+    public async Task<RequisitionV2?> GetRequisition(Guid requisitionId)
+    {
+        _logger.LogInformation("Get requisition {RequisitionId}", requisitionId);
+        if(await GetTokenCached() is not { } token)
+        {
+            return null;
+        }
+        
+        var endpoint = _options.Value.RequisitionEndpoint!;
+        endpoint += requisitionId.ToString() + '/';
+        var response = await _client.SendGetRequest(endpoint, token);
+        
+        _logger.LogInformation("Request to get requisition {RequisitionId} returned with status code {StatusCode}", requisitionId, response.StatusCode);
+        if (response.IsSuccessStatusCode)
+        {
+            var req = await response.ParseResponseAsync<RequisitionV2>();
+            if (req is not null)
+            {
+                return req;
+            }
+        }
+
+        return null;
+    }
+    
     public async Task DeleteRequisition(Guid requisitionId)
     {
         _logger.LogInformation("Delete requisition for {RequisitionId}", requisitionId);
@@ -156,7 +181,7 @@ public class NordigenApiClient : INordigenApiClient
             return; // TODO: Add error handling
         }
         
-        var endpoint = _options.Value.CreateRequisitionEndpoint!;
+        var endpoint = _options.Value.RequisitionEndpoint!;
         endpoint += requisitionId.ToString() + '/';
         var response = await _client.SendDeleteRequest(endpoint, token);
         

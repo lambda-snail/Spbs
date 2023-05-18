@@ -15,7 +15,7 @@ public class NordigenOptions
     [MaybeNull] public string RefreshTokenEndpoint { get; set; }
     [MaybeNull] public string ListOfInstitutionsEndpoint { get; set; }
     [MaybeNull] public string CreateAgreementEndpoint { get; set; }
-    [MaybeNull] public string CreateRequisitionEndpoint { get; set; }
+    [MaybeNull] public string RequisitionEndpoint { get; set; }
     
     [MaybeNull] public string AccountEndpoint { get; set; }
 

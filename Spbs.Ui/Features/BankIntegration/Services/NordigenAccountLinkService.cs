@@ -51,9 +51,31 @@ public class NordigenAccountLinkService : INordigenAccountLinkService
         }
         
         _mapper.Map(requisition, link);
-        await _linkWriterRepository.Upsert(link);
+        await SaveLinkToDatabase(link);
         
         return new RedirectUrl(requisition!.Link);
+    }
+
+    public async Task<NordigenLink?> GetLink(Guid linkId)
+    {
+        if (linkId != Guid.Empty)
+        {
+            var requisition = await _nordigenCLient.GetRequisition(linkId);
+            if (requisition is null)
+            {
+                return null;
+            }
+            
+            var link = _mapper.Map<NordigenLink>(requisition);
+            return link;
+        }
+
+        return null;
+    }
+
+    public async Task<NordigenLink?> SaveLinkToDatabase(NordigenLink link)
+    {
+        return await _linkWriterRepository.Upsert(link);
     }
 
     public async Task DeleteLink(NordigenLink link)
@@ -65,4 +87,13 @@ public class NordigenAccountLinkService : INordigenAccountLinkService
 
         await _linkWriterRepository.Delete(link);
     }
+    //
+    // /// <summary>
+    // /// The first time we load a link, we need to fetch the latest updated data from Nordigen,
+    // /// which will hold the list of accounts connected.
+    // /// </summary>
+    // public async Task<NordigenLink> PerformFirstTimeLoad()
+    // {
+    //     
+    // }
 }

@@ -8,4 +8,6 @@ public interface INordigenAccountLinkService
 {
     Task<NordigenAccountLinkService.RedirectUrl?> CreateLink(Institution institution, NordigenEula eula, Guid userId, bool accountSelection);
     Task DeleteLink(NordigenLink link);
+    Task<NordigenLink?> GetLink(Guid linkId);
+    Task<NordigenLink?> SaveLinkToDatabase(NordigenLink link);
 }
