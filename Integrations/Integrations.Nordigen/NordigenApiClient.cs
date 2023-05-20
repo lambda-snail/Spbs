@@ -19,6 +19,8 @@ public class NordigenApiClient : INordigenApiClient
     private static readonly string _institutionListCacheString = "__institutions";
     private static readonly string _accountsPrefixCacheString = "__accounts_";
     
+    private static readonly string NordigenFormatString = "yyyy-MM-dd";
+    
     public NordigenApiClient(HttpClient client, IOptions<NordigenOptions> options, NordigenTokenClient tokenClient, ILogger<NordigenApiClient> logger, IAppCache cache)
     {
         _client = client;
@@ -228,11 +230,11 @@ public class NordigenApiClient : INordigenApiClient
         }
         
         var endpoint = _options.Value.AccountEndpoint!;
-        endpoint += accountId.ToString() + "/transactions";
+        endpoint += accountId.ToString() + "/transactions/";
         if (dateFrom is not null) // TODO: Error handling when only dateTo is set
         {
-            endpoint += "?date_from=" + dateFrom.ToString();
-            endpoint += dateTo is null ? string.Empty : "&date_to=" + dateTo.ToString();
+            endpoint += "?date_from=" + dateFrom.Value.ToString(NordigenFormatString);
+            endpoint += dateTo is null ? string.Empty : "&date_to=" + dateTo.Value.ToString(NordigenFormatString);
         }
         
         var response = await _client.SendGetRequest(endpoint, token);
