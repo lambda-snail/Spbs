@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using AutoMapper;
 using Integrations.Nordigen;
+using Integrations.Nordigen.Models;
 using Spbs.Ui.Features.BankIntegration.Models;
 
 namespace Spbs.Ui.Features.BankIntegration.Services;
@@ -87,13 +88,9 @@ public class NordigenAccountLinkService : INordigenAccountLinkService
 
         await _linkWriterRepository.Delete(link);
     }
-    //
-    // /// <summary>
-    // /// The first time we load a link, we need to fetch the latest updated data from Nordigen,
-    // /// which will hold the list of accounts connected.
-    // /// </summary>
-    // public async Task<NordigenLink> PerformFirstTimeLoad()
-    // {
-    //     
-    // }
+
+    public Task<ListTransactionsResponse?> GetAccountTransactions(Guid accountId, DateOnly? dateFrom = null, DateOnly? dateTo = null)
+    {
+        return _nordigenCLient.GetAccountTransactions(accountId, dateFrom, dateTo);
+    }
 }
