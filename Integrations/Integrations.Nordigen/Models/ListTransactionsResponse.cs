@@ -1,4 +1,3 @@
-using System.Transactions;
 using Newtonsoft.Json;
 
 namespace Integrations.Nordigen.Models;
@@ -42,10 +41,10 @@ public class NordigenTransaction
 public class TransactionsPair
 {
     [JsonProperty("booked")]
-    public List<Transaction> Booked { get; set; } = new();
+    public List<NordigenTransaction> Booked { get; set; } = new();
 
     [JsonProperty("pending")]
-    public List<Transaction> Pending { get; set; } = new();
+    public List<NordigenTransaction> Pending { get; set; } = new();
 }
 
 public class ListTransactionsResponse
