@@ -22,6 +22,8 @@ public partial class LinkDetailsComponent : SelectableListComponent<Guid>
 
     private NordigenLink? _link;
     private List<AccountV2> _accounts = new();
+
+    private TransactionsRequestParameters _transactionsRequestParameters = new();
     
     protected override async Task OnInitializedAsync()
     {
@@ -65,5 +67,15 @@ public partial class LinkDetailsComponent : SelectableListComponent<Guid>
     protected override List<Guid>? GetList()
     {
         return _link?.Accounts;
+    }
+
+    private void HandleValidSubmit()
+    {
+        Console.WriteLine("VALID");
+    }
+
+    private void HandleInvalidSubmit()
+    {
+        Console.WriteLine("INVALID");
     }
 }

@@ -15,7 +15,7 @@ public class NordigenAccountLinkService : INordigenAccountLinkService
     private readonly IMapper _mapper;
 
     public record struct RedirectUrl(string Url);
-
+    
     public NordigenAccountLinkService(INordigenLinkWriterRepository linkWriterRepository, INordigenApiClient nordigenCLient, IRedirectLinkService linkService, IMapper mapper)
     {
         _linkWriterRepository = linkWriterRepository;
@@ -89,8 +89,8 @@ public class NordigenAccountLinkService : INordigenAccountLinkService
         await _linkWriterRepository.Delete(link);
     }
 
-    public Task<ListTransactionsResponse?> GetAccountTransactions(Guid accountId, DateOnly? dateFrom = null, DateOnly? dateTo = null)
+    public Task<ListTransactionsResponse?> GetAccountTransactions(Guid accountId, TransactionsRequestParameters requestParameters)
     {
-        return _nordigenCLient.GetAccountTransactions(accountId, dateFrom, dateTo);
+        return _nordigenCLient.GetAccountTransactions(accountId, requestParameters.DateFrom, requestParameters.DateTo);
     }
 }

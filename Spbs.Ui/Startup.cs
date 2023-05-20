@@ -87,6 +87,7 @@ namespace Spbs.Ui
         {
             services.AddSingleton<IValidator<DataConfigurationOptions>, DataConfigurationOptionsValidator>();
             services.AddSingleton<IValidator<NordigenEula>, NordigenEulaFluentValidation>();
+            services.AddSingleton<IValidator<TransactionsRequestParameters>, TransactionsParametersRequestFluentValidation>();
         }
 
         private void RegisterConfigurations(IServiceCollection services)
