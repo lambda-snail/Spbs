@@ -19,12 +19,14 @@ public partial class LinkDetailsComponent : SelectableListComponent<Guid>
 
     [Inject] private INordigenApiClient _client { get; set; }
     [Inject] private INordigenLinkReaderRepository _linkReader { get; set; }
+    [Inject] private INordigenAccountLinkService _accountService { get; set; }
 
     private NordigenLink? _link;
     private List<AccountV2> _accounts = new();
 
     private TransactionsRequestParameters _transactionsRequestParameters = new();
-    
+    private TransactionsPair? _loadedTransactions;
+
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
@@ -69,9 +71,18 @@ public partial class LinkDetailsComponent : SelectableListComponent<Guid>
         return _link?.Accounts;
     }
 
-    private void HandleValidSubmit()
+    private async Task HandleValidSubmit()
     {
-        Console.WriteLine("VALID");
+        var accountIndex = GetSelected();
+        if (accountIndex is not null && accountIndex >= 0)
+        {
+            var accountId = _link?.Accounts[accountIndex.Value];
+            var response = await _accountService.GetAccountTransactions(accountId!.Value, _transactionsRequestParameters);
+            if (response is not null)
+            {
+                _loadedTransactions = response.Transactions;
+            }
+        }
     }
 
     private void HandleInvalidSubmit()

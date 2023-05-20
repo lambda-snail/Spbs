@@ -88,7 +88,7 @@
                         <EditForm Model="@_transactionsRequestParameters"
                                   OnValidSubmit="@HandleValidSubmit"
                                   OnInvalidSubmit="@HandleInvalidSubmit">
-                            
+
                             <FluentValidationValidator/>
                             <ValidationSummary/>
 
@@ -122,7 +122,56 @@
                 }
             </div>
             <div class="card-body row">
-
+                @if (_loadedTransactions is not null)
+                {
+                    @for (int i = 0; i < _loadedTransactions.Booked.Count; ++i)
+                    {
+                        int row = i;
+                        var transaction = _loadedTransactions.Booked[i];
+                        <div class="row">
+                            <div class="card">
+                                <div class="card-body container">
+                                    <div class="row">
+                                        <div class="col">
+                                            Amount:
+                                        </div>
+                                        <div class="col card-text">
+                                            @transaction.TransactionAmount.Amount @transaction.TransactionAmount.Currency
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            Date:
+                                        </div>
+                                        <div class="col card-text">
+                                            @transaction.BookingDate.ToString()
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            Debtor:
+                                        </div>
+                                        <div class="col card-text">
+                                            @transaction.DebtorName
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            Transaction Id:
+                                        </div>
+                                        <div class="col card-text">
+                                            @transaction.TransactionId
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p>No transactions loaded yet!</p>
+                }
             </div>
         </div>
     </div>
