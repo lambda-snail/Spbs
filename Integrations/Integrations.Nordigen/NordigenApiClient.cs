@@ -1,4 +1,3 @@
-using System.Runtime.Loader;
 using Integrations.Nordigen.Configuration;
 using Integrations.Nordigen.Extensions;
 using Integrations.Nordigen.Models;
@@ -230,6 +229,12 @@ public class NordigenApiClient : INordigenApiClient
         
         var endpoint = _options.Value.AccountEndpoint!;
         endpoint += accountId.ToString() + "/transactions";
+        if (dateFrom is not null) // TODO: Error handling when only dateTo is set
+        {
+            endpoint += "?date_from=" + dateFrom.ToString();
+            endpoint += dateTo is null ? string.Empty : "&date_to=" + dateTo.ToString();
+        }
+        
         var response = await _client.SendGetRequest(endpoint, token);
         
         _logger.LogInformation("Request to get transactions from {AccountId} returned with status code {StatusCode}", accountId, response.StatusCode);
