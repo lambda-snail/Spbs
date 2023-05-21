@@ -1,6 +1,8 @@
 @page "/accounts/links/{RequisitionId}"
 @inherits SelectableListComponent<Guid>
 
+@using Blazored.FluentValidation
+
 <h3>Details for link to @_link?.InstitutionId</h3>
 
 <div class="container">
