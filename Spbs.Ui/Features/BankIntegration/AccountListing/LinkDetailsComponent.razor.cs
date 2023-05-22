@@ -2,15 +2,23 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Integrations.Nordigen;
 using Integrations.Nordigen.Models;
 using Microsoft.AspNetCore.Components;
 using Spbs.Generators.UserExtensions;
 using Spbs.Ui.Components;
+using Spbs.Ui.Features.BankIntegration.ImportExpenses;
 using Spbs.Ui.Features.BankIntegration.Models;
 using Spbs.Ui.Features.BankIntegration.Services;
 
 namespace Spbs.Ui.Features.BankIntegration.AccountListing;
+
+public class LoadAccountsParameters
+{
+    public bool IncludePending { get; set; }
+    public bool IncludeAll { get; set; }
+}
 
 [AuthenticationTaskExtension]
 public partial class LinkDetailsComponent : SelectableListComponent<Guid>
@@ -20,12 +28,15 @@ public partial class LinkDetailsComponent : SelectableListComponent<Guid>
     [Inject] private INordigenApiClient _client { get; set; }
     [Inject] private INordigenLinkReaderRepository _linkReader { get; set; }
     [Inject] private INordigenAccountLinkService _accountService { get; set; }
-
+    [Inject] private IMapper _mapper { get; set; }
+    
     private NordigenLink? _link;
     private List<AccountV2> _accounts = new();
 
     private TransactionsRequestParameters _transactionsRequestParameters = new();
-    private TransactionsPair? _loadedTransactions;
+    private List<ImportExpensesViewModel> _loadedTransactions = new();
+
+    private LoadAccountsParameters _loadAccountsParameters = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -52,13 +63,6 @@ public partial class LinkDetailsComponent : SelectableListComponent<Guid>
                 StateHasChanged();
             }
         }
-        
-        // if (_link is { Accounts: not null and { Count: > 0 } })
-        // {
-        //     var accountMetadataTasks = _link!.Accounts.Select(accountId => _client.GetAccountMetadata(accountId)).ToArray();
-        //     var results = await Task.WhenAll(accountMetadataTasks);
-        //     _accounts = results.Where(account => account is not null).Select(a => a).ToList();
-        // }
     }
 
     private string GetRowClass(int i)
@@ -71,7 +75,7 @@ public partial class LinkDetailsComponent : SelectableListComponent<Guid>
         return _link?.Accounts;
     }
 
-    private async Task HandleValidSubmit()
+    private async Task HandleValidSubmit_LoadTransactionsFromNordigen()
     {
         var accountIndex = GetSelected();
         if (accountIndex is not null && accountIndex >= 0)
@@ -80,7 +84,22 @@ public partial class LinkDetailsComponent : SelectableListComponent<Guid>
             var response = await _accountService.GetAccountTransactions(accountId!.Value, _transactionsRequestParameters);
             if (response is not null)
             {
-                _loadedTransactions = response.Transactions;
+                var completedTransactions = _mapper.Map<List<ImportExpensesViewModel>>(response.Transactions.Booked);
+                var pendingTransactions = _mapper.Map<List<ImportExpensesViewModel>>(response.Transactions.Pending);
+
+                foreach (var transaction in completedTransactions)
+                {
+                    transaction.IsPending = false;
+                }
+                
+                foreach (var transaction in pendingTransactions)
+                {
+                    transaction.IsPending = true;
+                }
+
+                _loadedTransactions = new();
+                _loadedTransactions.AddRange(completedTransactions);
+                _loadedTransactions.AddRange(pendingTransactions);
             }
         }
     }

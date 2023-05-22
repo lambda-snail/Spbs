@@ -6,175 +6,220 @@
 <h3>Details for link to @_link?.InstitutionId</h3>
 
 <div class="container">
-    <div class="row g-2 justify-content-evenly">
-        <div class="card mx-2 col">
+<div class="row g-2 justify-content-evenly">
+<div class="card mx-2 col">
 
-            <div class="card-header row">
-                <div id="content-link-info" class="col-12">
-                    @if (_link is not null)
-                    {
-                        <div class="row">
-                            <div class="col-6">Institution:</div>
-                            <div class="col-6">@_link.InstitutionId</div>
-                        </div>
-                        <div class="row">
-                            <div class="col-6">Created On:</div>
-                            <div class="col-6">@_link.Created.ToString()</div>
-                        </div>
-                        <div class="row">
-                            <div class="col-6">Linked Accounts:</div>
-                            <div class="col-6">@_link.Accounts.Count.ToString()</div>
-                        </div>
-                    }
+    <div class="card-header row">
+        <div id="content-link-info" class="col-12">
+            @if (_link is not null)
+            {
+                <div class="row">
+                    <div class="col-6">Institution:</div>
+                    <div class="col-6">@_link.InstitutionId</div>
                 </div>
-            </div>
-            <div class="card-body row">
-                @if (_link is null or { Accounts: null or { Count: 0 } })
-                {
-                    <div>No accounts are associated with this link. If you expect accounts to be listed here, please try to recreate the link again.</div>
-                }
-                else
-                {
-                    @for (int i = 0; i < _accounts.Count; ++i)
-                    {
-                        int row = i;
-                        var account = _accounts[i];
-                        <div class="row">
-                            <div class="card @GetRowClass(row)" onclick="@(() => SetSelected(row))">
-                                <div class="card-body container">
-                                    <div class="row">
-                                        <div class="col">
-                                            Iban:
-                                        </div>
-                                        <div class="col card-text">
-                                            @account.Iban
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col">
-                                            Account Status:
-                                        </div>
-                                        <div class="col card-text">
-                                            @account.Status
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col">
-                                            Created On:
-                                        </div>
-                                        <div class="col card-text">
-                                            @account.Created
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col">
-                                            Last Access:
-                                        </div>
-                                        <div class="col card-text">
-                                            @account.LastAccessed
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    }
-                }
-            </div>
-        </div>
-        <div class="card mx-2 col">
-
-            <div class="card-header row">
-                @if (HasSelection())
-                {
-                    <div class="col">
-                        <EditForm Model="@_transactionsRequestParameters"
-                                  OnValidSubmit="@HandleValidSubmit"
-                                  OnInvalidSubmit="@HandleInvalidSubmit">
-
-                            <FluentValidationValidator/>
-                            <ValidationSummary/>
-
-                            <div class="form-group col-md-10">
-                                <label for="from-date">From Date</label>
-                                <InputDate id="from-date"
-                                           class="form-control"
-                                           @bind-Value="@_transactionsRequestParameters.DateFrom">
-                                </InputDate>
-                                <small id="from-date-small" class="form-text text-muted">Load transactions from this date only.</small>
-                                <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => _transactionsRequestParameters.DateFrom)"/>
-                            </div>
-
-                            <div class="form-group col-md-10">
-                                <label for="to-date">To Date</label>
-                                <InputDate id="to-date"
-                                           class="form-control"
-                                           @bind-Value="@_transactionsRequestParameters.DateTo">
-                                </InputDate>
-                                <small id="to-date-small" class="form-text text-muted">Load transactions until this date only.</small>
-                                <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => _transactionsRequestParameters.DateTo)"/>
-                            </div>
-
-                            <button type="submit" class="btn btn-primary edit-btn">Load Transactions</button>
-                        </EditForm>
-                    </div>
-                }
-                else
-                {
-                    <p>Nothing here!</p>
-                }
-            </div>
-            <div class="card-body row">
-                @if (_loadedTransactions is not null)
-                {
-                    @for (int i = 0; i < _loadedTransactions.Booked.Count; ++i)
-                    {
-                        int row = i;
-                        var transaction = _loadedTransactions.Booked[i];
-                        <div class="row">
-                            <div class="card">
-                                <div class="card-body container">
-                                    <div class="row">
-                                        <div class="col">
-                                            Amount:
-                                        </div>
-                                        <div class="col card-text">
-                                            @transaction.TransactionAmount.Amount @transaction.TransactionAmount.Currency
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col">
-                                            Date:
-                                        </div>
-                                        <div class="col card-text">
-                                            @transaction.BookingDate.ToString()
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col">
-                                            Debtor:
-                                        </div>
-                                        <div class="col card-text">
-                                            @transaction.DebtorName
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col">
-                                            Transaction Id:
-                                        </div>
-                                        <div class="col card-text">
-                                            @transaction.TransactionId
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    }
-                }
-                else
-                {
-                    <p>No transactions loaded yet!</p>
-                }
-            </div>
+                <div class="row">
+                    <div class="col-6">Created On:</div>
+                    <div class="col-6">@_link.Created.ToString()</div>
+                </div>
+                <div class="row">
+                    <div class="col-6">Linked Accounts:</div>
+                    <div class="col-6">@_link.Accounts.Count.ToString()</div>
+                </div>
+            }
         </div>
     </div>
+    <div class="card-body row">
+        @if (_link is null or { Accounts: null or { Count: 0 } })
+        {
+            <div>No accounts are associated with this link. If you expect accounts to be listed here, please try to recreate the link again.</div>
+        }
+        else
+        {
+            @for (int i = 0; i < _accounts.Count; ++i)
+            {
+                int row = i;
+                var account = _accounts[i];
+                <div class="row">
+                    <div class="card @GetRowClass(row)" onclick="@(() => SetSelected(row))">
+                        <div class="card-body container">
+                            <div class="row">
+                                <div class="col">
+                                    Iban:
+                                </div>
+                                <div class="col card-text">
+                                    @account.Iban
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    Account Status:
+                                </div>
+                                <div class="col card-text">
+                                    @account.Status
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    Created On:
+                                </div>
+                                <div class="col card-text">
+                                    @account.Created
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    Last Access:
+                                </div>
+                                <div class="col card-text">
+                                    @account.LastAccessed
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+<div class="card mx-2 col">
+
+    <div class="card-header row">
+        @if (IsAccountSelected() && _loadedTransactions is { Count: 0 })
+        {
+            <div class="col">
+                <EditForm Model="@_transactionsRequestParameters"
+                          OnValidSubmit="@HandleValidSubmit_LoadTransactionsFromNordigen"
+                          OnInvalidSubmit="@HandleInvalidSubmit">
+
+                    <FluentValidationValidator/>
+                    <ValidationSummary/>
+
+                    <div class="form-group col-md-10">
+                        <label for="from-date">From Date</label>
+                        <InputDate id="from-date"
+                                   class="form-control"
+                                   @bind-Value="@_transactionsRequestParameters.DateFrom">
+                        </InputDate>
+                        <small id="from-date-small" class="form-text text-muted">Load transactions from this date only.</small>
+                        <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => _transactionsRequestParameters.DateFrom)"/>
+                    </div>
+
+                    <div class="form-group col-md-10">
+                        <label for="to-date">To Date</label>
+                        <InputDate id="to-date"
+                                   class="form-control"
+                                   @bind-Value="@_transactionsRequestParameters.DateTo">
+                        </InputDate>
+                        <small id="to-date-small" class="form-text text-muted">Load transactions until this date only.</small>
+                        <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => _transactionsRequestParameters.DateTo)"/>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary edit-btn">Load Transactions</button>
+                </EditForm>
+            </div>
+        }
+        else if (_loadedTransactions is { Count: >0 })
+        {
+            <div class="col">
+                <EditForm Model="@_loadAccountsParameters"
+                          OnValidSubmit="@HandleValidSubmit_LoadTransactionsFromNordigen"
+                          OnInvalidSubmit="@HandleInvalidSubmit">
+
+                    <div class="form-group col-md-10">
+                        <label for="include-pending">From Date</label>
+                        <InputCheckbox id="include-pending"
+                                       class="form-control"
+                                       @bind-Value="@_loadAccountsParameters.IncludePending">
+                        </InputCheckbox>
+                        <small id="from-date-small" class="form-text text-muted">Import transactions that are pending? Ignored if Include All is checked.</small>
+                    </div>
+
+                    <div class="form-group col-md-10">
+                        <label for="include-all">From Date</label>
+                        <InputCheckbox id="include-all"
+                                       class="form-control"
+                                       @bind-Value="@_loadAccountsParameters.IncludeAll">
+                        </InputCheckbox>
+                        <small id="from-date-small" class="form-text text-muted">Import all transactions that are loaded right now?</small>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary edit-btn">To Import Configuration</button>
+                </EditForm>
+            </div>
+        }
+        else
+        {
+            <p>Nothing here!</p>
+        }
+    </div>
+    <div class="card-body row">
+        @if (_loadedTransactions is not null)
+        {
+            @for (int i = 0; i < _loadedTransactions.Count; ++i)
+            {
+                int row = i;
+                var transaction = _loadedTransactions[i];
+                <div class="row">
+                    <div class="card">
+                        <div class="card-body container">
+                            <div class="row">
+                                <div class="col">
+                                    Amount:
+                                </div>
+                                <div class="col card-text">
+                                    @transaction.TransactionAmount.Amount.ToString() @transaction.TransactionAmount.Currency
+                                </div>
+                            </div>
+                            @if (transaction.IsPending)
+                            {
+                                <div class="row">
+                                    <div class="col">
+                                        Transaction is pending
+                                    </div>
+                                </div>
+                            }
+                            <div class="row">
+                                <div class="col">
+                                    Booking Date:
+                                </div>
+                                <div class="col card-text">
+                                    @transaction.BookingDate.ToString()
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    Value Date:
+                                </div>
+                                <div class="col card-text">
+                                    @transaction.ValueDate.ToString()
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    Debtor:
+                                </div>
+                                <div class="col card-text">
+                                    @transaction.DebtorName
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    Transaction Id:
+                                </div>
+                                <div class="col card-text">
+                                    @transaction.TransactionId
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <p>No transactions loaded yet!</p>
+        }
+    </div>
+</div>
+</div>
 </div>
