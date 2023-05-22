@@ -84,7 +84,7 @@
 <div class="card mx-2 col">
 
     <div class="card-header row">
-        @if (IsAccountSelected() && _loadedTransactions is { Count: 0 })
+        @if (HasSelection() && _loadedTransactions is { Count: 0 })
         {
             <div class="col">
                 <EditForm Model="@_transactionsRequestParameters"
