@@ -25,6 +25,11 @@ public class RedirectLinkService : IRedirectLinkService
         return GetBaseUrl() + "accounts/links/";
     }
 
+    public string GetUrlForImportExpenses()
+    {
+        return "/accounts/import-expenses";
+    }
+
     public string GetUrlForAccountListing(Guid linkId)
     {
         return GetUrlForAccountListing() + linkId;

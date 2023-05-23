@@ -11,6 +11,7 @@ public interface IRedirectLinkService
     string GetBaseUrl();
 
     string GetUrlForAccountListing();
+    public string GetUrlForImportExpenses();
     string GetUrlForAccountListing(Guid linkId);
 
     string GetUrlForNordigenRedirect();
