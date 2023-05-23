@@ -1,0 +1,123 @@
+@page "/accounts/import-expenses"
+
+<h3>Import Expenses</h3>
+
+@if (_filteredExpenseModels is { Count:0 })
+{
+    <p>There are no expenses to load. Please go back to the bank integration page to perform an import.</p>
+}
+else
+{
+    <div class="card mx-2 col">
+        <div class="card-header row">
+            <div class="col">
+                <EditForm Model="@_loadAccountsParameters"
+                          OnValidSubmit="@HandleValidSubmit"
+                          OnInvalidSubmit="@HandleInvalidSubmit">
+
+                    <div class="form-group col-md-10">
+                        <label for="include-pending">Include Pending</label>
+                        <InputCheckbox id="include-pending"
+                                       class="form-control"
+                                       @bind-Value="@_loadAccountsParameters.IncludePending">
+                        </InputCheckbox>
+                        <small id="from-date-small" class="form-text text-muted">Import transactions that are pending? Ignored if Include All is checked.</small>
+                    </div>
+
+                    <div class="form-group col-md-10">
+                        <label for="include-all">Include All</label>
+                        <InputCheckbox id="include-all"
+                                       class="form-control"
+                                       @bind-Value="@_loadAccountsParameters.IncludeAll">
+                        </InputCheckbox>
+                        <small id="from-date-small" class="form-text text-muted">Import all transactions that are loaded right now?</small>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary edit-btn">Filter</button>
+                </EditForm>
+            </div>
+        </div>
+        <div class="card-body row">
+            @for (int i = 0; i < _viewModelsWithGeneratedExpenses.Count; ++i)
+            {
+                int row = i;
+                var transaction = _viewModelsWithGeneratedExpenses[i].ViewModel;
+                var generatedExpense = _viewModelsWithGeneratedExpenses[i].ImportedExpense;
+                <div class="row">
+                    <div class="card col">
+                        <div class="card-body container">
+                            <div class="row">
+                                <div class="col">
+                                    Amount:
+                                </div>
+                                <div class="col card-text">
+                                    @transaction.TransactionAmount.Amount.ToString() @transaction.TransactionAmount.Currency
+                                </div>
+                            </div>
+                            @if (transaction.IsPending)
+                            {
+                                <div class="row">
+                                    <div class="col">
+                                        Transaction is pending
+                                    </div>
+                                </div>
+                            }
+                            <div class="row">
+                                <div class="col">
+                                    Booking Date:
+                                </div>
+                                <div class="col card-text">
+                                    @transaction.BookingDate.ToString()
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    Value Date:
+                                </div>
+                                <div class="col card-text">
+                                    @transaction.ValueDate.ToString()
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    Debtor:
+                                </div>
+                                <div class="col card-text">
+                                    @transaction.DebtorName
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    Remittance information:
+                                </div>
+                                <div class="col card-text">
+                                    @transaction.RemittanceInformationUnstructured
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    Transaction Id:
+                                </div>
+                                <div class="col card-text">
+                                    @transaction.TransactionId
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card col">
+                        <div class="card-body container">
+                            <div class="row">
+                                <div class="col">
+                                    Description
+                                </div>
+                                <div class="col card-text">
+                                    @generatedExpense.Description
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}

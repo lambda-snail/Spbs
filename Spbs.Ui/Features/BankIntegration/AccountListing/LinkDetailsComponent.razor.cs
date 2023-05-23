@@ -14,12 +14,6 @@ using Spbs.Ui.Features.BankIntegration.Services;
 
 namespace Spbs.Ui.Features.BankIntegration.AccountListing;
 
-public class LoadAccountsParameters
-{
-    public bool IncludePending { get; set; }
-    public bool IncludeAll { get; set; }
-}
-
 [AuthenticationTaskExtension]
 public partial class LinkDetailsComponent : SelectableListComponent<Guid>
 {
@@ -28,6 +22,9 @@ public partial class LinkDetailsComponent : SelectableListComponent<Guid>
     [Inject] private INordigenApiClient _client { get; set; }
     [Inject] private INordigenLinkReaderRepository _linkReader { get; set; }
     [Inject] private INordigenAccountLinkService _accountService { get; set; }
+    [Inject] private IRedirectLinkService _redirectService { get; set; }
+    [Inject] private ImportExpensesStateManager _importState { get; set; }
+    [Inject] private NavigationManager _navigationManager { get; set; }
     [Inject] private IMapper _mapper { get; set; }
     
     private NordigenLink? _link;
@@ -35,8 +32,6 @@ public partial class LinkDetailsComponent : SelectableListComponent<Guid>
 
     private TransactionsRequestParameters _transactionsRequestParameters = new();
     private List<ImportExpensesViewModel> _loadedTransactions = new();
-
-    private LoadAccountsParameters _loadAccountsParameters = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -107,5 +102,15 @@ public partial class LinkDetailsComponent : SelectableListComponent<Guid>
     private void HandleInvalidSubmit()
     {
         Console.WriteLine("INVALID");
+    }
+
+    private void HandleValidSubmit_ProceedToImportPage()
+    {
+        if (_loadedTransactions is { Count: > 0 })
+        {
+            _importState._expensesToImport = _loadedTransactions;
+            string importUrl = _redirectService.GetUrlForImportExpenses();
+            _navigationManager.NavigateTo(importUrl);
+        }
     }
 }
