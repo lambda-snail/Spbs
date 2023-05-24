@@ -1,5 +1,8 @@
 @page "/accounts/import-expenses"
 
+@using Spbs.Ui.Features.Expenses
+@using System.Transactions
+
 <h3>Import Expenses</h3>
 
 @if (_filteredExpenseModels is { Count:0 })
@@ -11,112 +14,188 @@ else
     <div class="card mx-2 col">
         <div class="card-header row">
             <div class="col">
-                <EditForm Model="@_loadAccountsParameters"
-                          OnValidSubmit="@HandleValidSubmit"
-                          OnInvalidSubmit="@HandleInvalidSubmit">
-
-                    <div class="form-group col-md-10">
-                        <label for="include-pending">Include Pending</label>
-                        <InputCheckbox id="include-pending"
-                                       class="form-control"
-                                       @bind-Value="@_loadAccountsParameters.IncludePending">
-                        </InputCheckbox>
-                        <small id="from-date-small" class="form-text text-muted">Import transactions that are pending? Ignored if Include All is checked.</small>
-                    </div>
-
-                    <div class="form-group col-md-10">
-                        <label for="include-all">Include All</label>
-                        <InputCheckbox id="include-all"
-                                       class="form-control"
-                                       @bind-Value="@_loadAccountsParameters.IncludeAll">
-                        </InputCheckbox>
-                        <small id="from-date-small" class="form-text text-muted">Import all transactions that are loaded right now?</small>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary edit-btn">Filter</button>
-                </EditForm>
+                <div class="form-check">
+                    <input id="include-all-in-selection" class="form-check-input" type="checkbox" checked="@_loadAccountsParameters.IncludeAll" @onclick:preventDefault @onclick="@ToggleIncludeAll">
+                    
+                    
+                    <input class="form-check-input" type="checkbox" @bind-value="_loadAccountsParameters.IncludeAll" id="flexCheckDefault" @onclick="ToggleIncludeAll">
+                    <label class="form-check-label" for="include-all-in-selection">
+                        Include All?
+                    </label>
+                </div>
             </div>
         </div>
         <div class="card-body row">
-            @for (int i = 0; i < _viewModelsWithGeneratedExpenses.Count; ++i)
+            @if (_expenseToEdit is null)
             {
-                int row = i;
-                var transaction = _viewModelsWithGeneratedExpenses[i].ViewModel;
-                var generatedExpense = _viewModelsWithGeneratedExpenses[i].ImportedExpense;
-                <div class="row">
-                    <div class="card col">
-                        <div class="card-body container">
-                            <div class="row">
-                                <div class="col">
-                                    Amount:
-                                </div>
-                                <div class="col card-text">
-                                    @transaction.TransactionAmount.Amount.ToString() @transaction.TransactionAmount.Currency
-                                </div>
-                            </div>
-                            @if (transaction.IsPending)
-                            {
+                @for (int i = 0; i < _viewModelsWithGeneratedExpenses.Count; ++i)
+                {
+                    int row = i;
+                    var transaction = _viewModelsWithGeneratedExpenses[i].ViewModel;
+                    var generatedExpense = _viewModelsWithGeneratedExpenses[i].ImportedExpense;
+                    <div class="row">
+                        <div class="card col">
+                            <div class="card-body container">
                                 <div class="row">
                                     <div class="col">
-                                        Transaction is pending
+                                        Amount:
+                                    </div>
+                                    <div class="col card-text">
+                                        @transaction.TransactionAmount.Amount.ToString() @transaction.TransactionAmount.Currency
                                     </div>
                                 </div>
-                            }
-                            <div class="row">
-                                <div class="col">
-                                    Booking Date:
+                                @if (transaction.IsPending)
+                                {
+                                    <div class="row">
+                                        <div class="col">
+                                            Transaction is pending
+                                        </div>
+                                    </div>
+                                }
+                                <div class="row">
+                                    <div class="col">
+                                        Booking Date:
+                                    </div>
+                                    <div class="col card-text">
+                                        @transaction.BookingDate.ToString()
+                                    </div>
                                 </div>
-                                <div class="col card-text">
-                                    @transaction.BookingDate.ToString()
+                                <div class="row">
+                                    <div class="col">
+                                        Value Date:
+                                    </div>
+                                    <div class="col card-text">
+                                        @transaction.ValueDate.ToString()
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        Debtor:
+                                    </div>
+                                    <div class="col card-text">
+                                        @transaction.DebtorName
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        Remittance information:
+                                    </div>
+                                    <div class="col card-text">
+                                        @transaction.RemittanceInformationUnstructured
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        Transaction Id:
+                                    </div>
+                                    <div class="col card-text">
+                                        @transaction.TransactionId
+                                    </div>
+                                </div>
+                                <div class="form-check">
+                                    <!--input @key="row" class="form-check-input" @bind-value="transaction.IncludeInImport" type="checkbox" id="include-in-selection"-->
+                                    <input @key="row" id="include-in-selection" class="form-check-input" type="checkbox" checked="@transaction.IncludeInImport" @onclick:preventDefault @onclick="@(() => transaction.IncludeInImport = !transaction.IncludeInImport)">
+                                    <label class="form-check-label" for="include-in-selection">
+                                        Include This? @transaction.IncludeInImport
+                                    </label>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col">
-                                    Value Date:
+                        </div>
+                        <div class="card col">
+                            <div class="card-body container">
+                                <div class="row">
+                                    <div class="col">
+                                        Name
+                                    </div>
+                                    <div class="col card-text">
+                                        @generatedExpense.Name
+                                    </div>
                                 </div>
-                                <div class="col card-text">
-                                    @transaction.ValueDate.ToString()
+                                <div class="row">
+                                    <div class="col">
+                                        Description
+                                    </div>
+                                    <div class="col card-text">
+                                        @generatedExpense.Description
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    Debtor:
-                                </div>
-                                <div class="col card-text">
-                                    @transaction.DebtorName
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    Remittance information:
-                                </div>
-                                <div class="col card-text">
-                                    @transaction.RemittanceInformationUnstructured
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    Transaction Id:
-                                </div>
-                                <div class="col card-text">
-                                    @transaction.TransactionId
+
+                                <div class="row">
+                                    @* Edit Expense *@
+                                    <button class="btn btn-outline-secondary" onclick="@(() => { _expenseToEdit = generatedExpense; StateHasChanged(); })" data-toggle="tooltip" data-placement="top" title="Edit Expense">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                                        </svg>
+                                    </button>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="card col">
-                        <div class="card-body container">
-                            <div class="row">
-                                <div class="col">
-                                    Description
-                                </div>
-                                <div class="col card-text">
-                                    @generatedExpense.Description
-                                </div>
-                            </div>
-                        </div>
+                }
+            }
+            else
+            {
+                <EditForm Model="@_expenseToEdit"
+                          OnValidSubmit="@HandleValidSubmit_EditExpense"
+                          OnInvalidSubmit="@HandleInvalidSubmit_EditExpense">
+
+                    <DataAnnotationsValidator/>
+                    <ValidationSummary></ValidationSummary>
+
+                    <div class="form-group col-md-10">
+                        <label for="expense-name">Name</label>
+                        <InputText id="expense-name"
+                                   class="form-control"
+                                   @bind-Value="@_expenseToEdit.Name">
+                        </InputText>
+                        <small id="expense-name-small" class="form-text text-muted">Choose a nifty title for your post!</small>
+                        <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => _expenseToEdit.Name)"/>
                     </div>
-                </div>
+
+                    <div class="form-group col-md-10">
+                        <label for="expense-description">Description</label>
+                        <InputTextArea id="expense-description"
+                                       class="form-control"
+                                       @bind-Value="@_expenseToEdit.Description">
+                        </InputTextArea>
+                        <small id="expense-description-small" class="form-text text-muted">Add a description for the expense.</small>
+                        <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => _expenseToEdit.Description)"/>
+                    </div>
+
+                    <div class="form-group col-md-10">
+                        <label for="expense-date">Date and Time</label>
+                        <InputDate id="expense-date"
+                                   class="form-control"
+                                   @bind-Value="@_expenseToEdit.Date">
+                        </InputDate>
+                        <small id="post-date-small" class="form-text text-muted">Add a description for the expense.</small>
+                        <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => _expenseToEdit.Date)"/>
+                    </div>
+
+                    <div class="form-group col-md-10">
+                        <label for="expense-venue">Venue</label>
+                        <InputText id="expense-venue"
+                                   class="form-control"
+                                   @bind-Value="@_expenseToEdit.Venue">
+                        </InputText>
+                        <small id="expense-venue-small" class="form-text text-muted">Where was the expense incurred?</small>
+                        <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => _expenseToEdit.Venue)"/>
+                    </div>
+
+                    <div class="form-group col-md-10">
+                        <label for="expense-currency">Currency</label>
+                        <InputText id="expense-currency"
+                                   class="form-control"
+                                   @bind-Value="@_expenseToEdit.Currency">
+                        </InputText>
+                        <small id="expense-currency-small" class="form-text text-muted">The currency that the purchase was made in.</small>
+                        <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => _expenseToEdit.Currency)"/>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary edit-btn">Submit</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" @onclick="() => { _expenseToEdit = null; StateHasChanged(); }">Close</button>
+                </EditForm>
             }
         </div>
     </div>

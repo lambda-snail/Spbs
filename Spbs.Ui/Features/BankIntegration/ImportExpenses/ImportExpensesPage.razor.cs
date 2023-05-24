@@ -1,18 +1,19 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Components;
-using Spbs.Ui.Features.BankIntegration.ImportExpenses.Mapping;
+using Spbs.Generators.UserExtensions;
 using Spbs.Ui.Features.Expenses;
 
 namespace Spbs.Ui.Features.BankIntegration.ImportExpenses;
 
+[AuthenticationTaskExtension]
 public partial class ImportExpensesPage : ComponentBase
 {
     private class LoadAccountsParameters
     {
-        public bool IncludePending { get; set; }
-        public bool IncludeAll { get; set; }
+        public bool IncludeAll { get; set; } = false;
     }
 
     private struct ViewModelExpenseSuggestionPair
@@ -31,8 +32,12 @@ public partial class ImportExpensesPage : ComponentBase
     
     private LoadAccountsParameters _loadAccountsParameters = new();
     
-    protected override void OnInitialized()
+    private Expense? _expenseToEdit;
+
+    protected override async Task OnInitializedAsync()
     {
+        _userId = await UserId();
+        
         if (_importState._expensesToImport is { Count: >0 })
         {
             _filteredExpenseModels = _importState._expensesToImport.Where(vm => vm.TransactionAmount.Amount < 0d).ToList();
@@ -40,8 +45,7 @@ public partial class ImportExpensesPage : ComponentBase
             {
                 importExpensesViewModel.TransactionAmount.Amount *= -1d;
             }
-
-            _filteredExpenseModels = _filteredExpenseModels;
+            
             ReloadExpenseMappings();
         }
     }
@@ -59,13 +63,24 @@ public partial class ImportExpensesPage : ComponentBase
         }
     }
 
-    private void HandleInvalidSubmit()
+    private void ToggleIncludeAll()
+    {
+        _loadAccountsParameters.IncludeAll = !_loadAccountsParameters.IncludeAll;
+        foreach (var importExpensesViewModel in _filteredExpenseModels)
+        {
+            importExpensesViewModel.IncludeInImport = _loadAccountsParameters.IncludeAll;
+        }
+        
+        StateHasChanged();
+    }
+
+    private void HandleInvalidSubmit_EditExpense()
     {
         
     }
 
-    private void HandleValidSubmit()
+    private void HandleValidSubmit_EditExpense()
     {
-        
+        _expenseToEdit = null;
     }
 }
