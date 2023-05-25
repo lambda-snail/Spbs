@@ -33,34 +33,25 @@ public partial class ImportExpensesJobProgressPage : ComponentBase
             _isImportingExpenses = true;
             _isImportJobComplete = false;
 
-            if (! await AssignUserId(expenses))
+            _numExpensesToImport = expenses.Count;
+            _numExpensesImported = 0;
+
+            Guid? userId = await UserId();
+            if (userId is null)
             {
                 return;
             }
 
-            _numExpensesToImport = expenses.Count;
-            _numExpensesImported = 0;
-            for(int i = 0; i < _numExpensesToImport; ++i)
+            foreach (var expense in expenses)
             {
-                await Task.Delay(1000);
-                _importState.NotifyExpenseImported();                
+                expense.OwningUserId = userId.Value;
+                await _expenseRepository.InsertExpenseAsync(expense);
+                _importState.NotifyExpenseImported();
             }
 
             _isImportingExpenses = false;
             _isImportJobComplete = true;
             _importState.ImportJobComplete();
-
-            // foreach (var expense in expenses)
-            // {
-            //     expense.OwningUserId = userId.Value;
-            //     //await _expenseRepository.InsertExpenseAsync(expense);
-            //     Thread.Sleep(500);
-            //     ++_numExpensesImported;
-            //     //StateHasChanged();
-            // }
-            //
-            // _isImportingExpenses = false;
-            // _isImportJobComplete = true;
         }
     }
 

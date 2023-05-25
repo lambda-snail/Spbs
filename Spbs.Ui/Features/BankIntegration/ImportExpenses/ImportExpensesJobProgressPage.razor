@@ -2,11 +2,7 @@
 
 <h3>Import Job in Progress</h3>
 
-@if(_importState._expensesToImport is { Count: 0 })
-{
-<p>No import jobs could be found. Did you just complete a job and used the back button in the browser? To start a new job please go the the bank integration page.</p>
-} 
-else if (_isImportingExpenses)
+@if (_isImportingExpenses)
 {
     <div>
         <p>Import in progress, please wait ...</p>
@@ -18,8 +14,7 @@ else if (_isImportingExpenses)
 }
 else if (_isImportJobComplete)
 {
-    <p>@_numExpensesImported.ToString() have been successfully imported!</p>
+    <p>@_numExpensesImported.ToString() expenses have been successfully imported!</p>
     <p> Go to the <NavLink class="nav-link" href="expenses">expenses page</NavLink> to see and edit the new expenses.
     </p>
 }
-    
