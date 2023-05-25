@@ -25,9 +25,9 @@ public class RedirectLinkService : IRedirectLinkService
         return GetBaseUrl() + "accounts/links/";
     }
 
-    public string GetUrlForImportExpenses()
+    public string GetUrlForImportExpenses(bool isInProgressPage = false)
     {
-        return "/accounts/import-expenses";
+        return "/accounts/import-expenses" + (isInProgressPage ? "/in-progress" : string.Empty);
     }
 
     public string GetUrlForAccountListing(Guid linkId)

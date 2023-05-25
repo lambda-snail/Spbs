@@ -108,7 +108,7 @@ public partial class LinkDetailsComponent : SelectableListComponent<Guid>
     {
         if (_loadedTransactions is { Count: > 0 })
         {
-            _importState._expensesToImport = _loadedTransactions;
+            _importState._expensesToConfigure = _loadedTransactions;
             string importUrl = _redirectService.GetUrlForImportExpenses();
             _navigationManager.NavigateTo(importUrl);
         }

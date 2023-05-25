@@ -1,14 +1,15 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Components;
 using Spbs.Generators.UserExtensions;
+using Spbs.Ui.Features.BankIntegration.Services;
 using Spbs.Ui.Features.Expenses;
 
 namespace Spbs.Ui.Features.BankIntegration.ImportExpenses;
 
-[AuthenticationTaskExtension]
 public partial class ImportExpensesPage : ComponentBase
 {
     private class LoadAccountsParameters
@@ -24,6 +25,8 @@ public partial class ImportExpensesPage : ComponentBase
     
 #pragma warning disable CS8618
     [Inject] private ImportExpensesStateManager _importState { get; set; }
+    [Inject] private IRedirectLinkService _redirectService { get; set; }
+    [Inject] private NavigationManager _navigationManager { get; set; }
     [Inject] private IMapper _mapper { get; set; }
 #pragma warning restore CS8618
 
@@ -34,13 +37,11 @@ public partial class ImportExpensesPage : ComponentBase
     
     private Expense? _expenseToEdit;
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        _userId = await UserId();
-        
-        if (_importState._expensesToImport is { Count: >0 })
+        if (_importState._expensesToConfigure is { Count: >0 })
         {
-            _filteredExpenseModels = _importState._expensesToImport.Where(vm => vm.TransactionAmount.Amount < 0d).ToList();
+            _filteredExpenseModels = _importState._expensesToConfigure.Where(vm => vm.TransactionAmount.Amount < 0d).ToList();
             foreach (var importExpensesViewModel in _filteredExpenseModels)
             {
                 importExpensesViewModel.TransactionAmount.Amount *= -1d;
@@ -82,5 +83,17 @@ public partial class ImportExpensesPage : ComponentBase
     private void HandleValidSubmit_EditExpense()
     {
         _expenseToEdit = null;
+    }
+
+    private void ImportExpenses()
+    {
+        var expenses = _viewModelsWithGeneratedExpenses
+            .Where(vm => vm.ViewModel.IncludeInImport)
+            .Select(vm => vm.ImportedExpense)
+            .ToList();
+
+        _importState._expensesToImport = expenses;
+        
+        _navigationManager.NavigateTo(_redirectService.GetUrlForImportExpenses(isInProgressPage: true));
     }
 }

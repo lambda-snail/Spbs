@@ -1,6 +1,8 @@
 #nullable enable
 
+using System;
 using System.Collections.Generic;
+using Spbs.Ui.Features.Expenses;
 
 namespace Spbs.Ui.Features.BankIntegration.ImportExpenses;
 
@@ -10,15 +12,22 @@ namespace Spbs.Ui.Features.BankIntegration.ImportExpenses;
 /// </summary>
 public class ImportExpensesStateManager
 {
-    public enum ImportExpensesState
+    public event EventHandler? NumExpensesImportedChanged;
+    public void NotifyExpenseImported()
     {
-        NotStarted,
-        ExpensesLoadedFromApi,
-        ConfiguringImport,
-        Importing
+        NumExpensesImportedChanged?.Invoke(this, EventArgs.Empty);
     }
 
-    public List<ImportExpensesViewModel> _expensesToImport { get; set; } = new();
+    /// <summary>
+    /// Resets the state.
+    /// </summary>
+    public void ImportJobComplete()
+    {
+        _expensesToConfigure.Clear();
+        _expensesToImport.Clear();
+    }
     
-    
+    public List<ImportExpensesViewModel> _expensesToConfigure { get; set; } = new();
+
+    public List<Expense> _expensesToImport { get; set; } = new();
 }
