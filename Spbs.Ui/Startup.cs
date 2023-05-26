@@ -1,4 +1,5 @@
 using System;
+using BlazorBootstrap;
 using FluentValidation;
 using Integrations.Nordigen;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
@@ -61,6 +62,8 @@ namespace Spbs.Ui
             RegisterConfigurations(services);
 
             services.AddRazorPages();
+            services.AddBlazorBootstrap();
+            
             var blazorBuilder = services.AddServerSideBlazor()
                 .AddMicrosoftIdentityConsentHandler();
 
