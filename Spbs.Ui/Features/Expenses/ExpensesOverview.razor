@@ -1,6 +1,5 @@
 @page "/expenses"
-@using Spbs.Ui.Features.Expenses
-@inherits Spbs.Ui.Components.SelectableListComponent<Expense>
+@using System.Runtime.InteropServices.JavaScript
 
 <div>
     <div class="row">
@@ -13,7 +12,7 @@
               class="table table-hover table-bordered table-striped"
               DataProvider="FetchExpenses"
               AllowPaging="true"
-              PageSize="25"
+              PageSize="10"
               AllowFiltering="true"
               Responsive="true">
             <GridColumn TItem="Expense" HeaderText="Name" PropertyName="Name">
@@ -22,7 +21,12 @@
                 </button>
             </GridColumn>
 
-            <GridColumn TItem="Expense" HeaderText="Date" PropertyName="Date">@context.Date.ToString()</GridColumn>
+            <GridColumn TItem="Expense"
+                        HeaderText="Date" 
+                        PropertyName="Date" 
+                        FilterOperator="FilterOperator.GreaterThanOrEquals" FilterValue="@(DateTime.Now.AddMonths(-1).ToString())">
+                @context.Date.ToString()
+            </GridColumn>
             <GridColumn TItem="Expense" HeaderText="Total" PropertyName="Total">@context.Total.ToString() @context.Currency</GridColumn>
             <GridColumn TItem="Expense" HeaderText="Venue" PropertyName="Venue">@context.Venue</GridColumn>
         </Grid>
