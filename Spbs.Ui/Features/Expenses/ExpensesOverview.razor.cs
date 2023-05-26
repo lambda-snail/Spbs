@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using BlazorBootstrap;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Spbs.Generators.UserExtensions;
@@ -20,8 +22,8 @@ public partial class ExpensesOverview : SelectableListComponent<Expense>
 {
     private List<Expense>? _expenses = null;
     protected override List<Expense>? GetList() => _expenses;
-    
-    private bool _displayFilter = false;
+
+    private Grid<Expense> _expensesGrid;
     
     [Inject] public IExpenseReaderRepository ExpenseRepository { get; set; }
 
@@ -51,6 +53,27 @@ public partial class ExpensesOverview : SelectableListComponent<Expense>
         {
             _expenses = await ExpenseRepository.GetSingleExpensesByUser(userId.Value);
         }
+    }
+
+    private async Task<GridDataProviderResult<Expense>> FetchExpenses(GridDataProviderRequest<Expense> request)
+    {
+        var filters = _expensesGrid?.GetFilters();
+        if (filters is null)
+        {
+            return new() {Data = new List<Expense>()};
+        }
+        
+        foreach (var f in filters)
+        {
+            Console.WriteLine(f.PropertyName);
+            Console.WriteLine(f.Operator);
+            Console.WriteLine(f.Value);
+            Console.WriteLine();
+        }
+
+        await FetchExpenses();
+        
+        return new(){Data = _expenses!, TotalCount =_expenses!.Count };
     }
 
     public string GetExpenseDetailsUrl(Expense e)
