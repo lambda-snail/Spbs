@@ -1,0 +1,20 @@
+@page "/accounts/import-expenses/in-progress"
+
+<h3>Import Job in Progress</h3>
+
+@if (_isImportingExpenses)
+{
+    <div>
+        <p>Import in progress, please wait ...</p>
+        <div class="progress">
+            <div class="progress-bar" role="progressbar" style="@($"width: {GetImportProgressLabelPercentage()}%")" aria-valuenow="@_numExpensesImported" aria-valuemin="0" aria-valuemax="@_numExpensesToImport">@($"{GetImportProgressLabelPercentage()}%")</div>
+        </div>
+        <div>Loaded @_numExpensesImported.ToString() of @_numExpensesToImport.ToString() expenses</div>
+    </div>
+}
+else if (_isImportJobComplete)
+{
+    <p>@_numExpensesImported.ToString() expenses have been successfully imported!</p>
+    <p> Go to the <NavLink class="nav-link" href="expenses">expenses page</NavLink> to see and edit the new expenses.
+    </p>
+}

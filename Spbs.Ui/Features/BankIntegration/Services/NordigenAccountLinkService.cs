@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using AutoMapper;
 using Integrations.Nordigen;
+using Integrations.Nordigen.Models;
 using Spbs.Ui.Features.BankIntegration.Models;
 
 namespace Spbs.Ui.Features.BankIntegration.Services;
@@ -14,7 +15,7 @@ public class NordigenAccountLinkService : INordigenAccountLinkService
     private readonly IMapper _mapper;
 
     public record struct RedirectUrl(string Url);
-
+    
     public NordigenAccountLinkService(INordigenLinkWriterRepository linkWriterRepository, INordigenApiClient nordigenCLient, IRedirectLinkService linkService, IMapper mapper)
     {
         _linkWriterRepository = linkWriterRepository;
@@ -51,9 +52,31 @@ public class NordigenAccountLinkService : INordigenAccountLinkService
         }
         
         _mapper.Map(requisition, link);
-        await _linkWriterRepository.Upsert(link);
+        await SaveLinkToDatabase(link);
         
         return new RedirectUrl(requisition!.Link);
+    }
+
+    public async Task<NordigenLink?> GetLink(Guid linkId)
+    {
+        if (linkId != Guid.Empty)
+        {
+            var requisition = await _nordigenCLient.GetRequisition(linkId);
+            if (requisition is null)
+            {
+                return null;
+            }
+            
+            var link = _mapper.Map<NordigenLink>(requisition);
+            return link;
+        }
+
+        return null;
+    }
+
+    public async Task<NordigenLink?> SaveLinkToDatabase(NordigenLink link)
+    {
+        return await _linkWriterRepository.Upsert(link);
     }
 
     public async Task DeleteLink(NordigenLink link)
@@ -64,5 +87,10 @@ public class NordigenAccountLinkService : INordigenAccountLinkService
         }
 
         await _linkWriterRepository.Delete(link);
+    }
+
+    public Task<ListTransactionsResponse?> GetAccountTransactions(Guid accountId, TransactionsRequestParameters requestParameters)
+    {
+        return _nordigenCLient.GetAccountTransactions(accountId, requestParameters.DateFrom, requestParameters.DateTo);
     }
 }

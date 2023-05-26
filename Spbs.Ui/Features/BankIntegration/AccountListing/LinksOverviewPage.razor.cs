@@ -13,6 +13,7 @@ using Spbs.Generators.UserExtensions;
 using Spbs.Ui.Components;
 using Spbs.Ui.ComponentServices;
 using Spbs.Ui.Features.BankIntegration.Models;
+using Spbs.Ui.Features.BankIntegration.Services;
 
 namespace Spbs.Ui.Features.BankIntegration.AccountListing;
 
@@ -24,6 +25,7 @@ public partial class LinksOverviewPage : SelectableListComponent<NordigenLink>
     [Inject, MaybeNull] private INordigenApiClient _nordigenCLient { get; set; }
     [Inject, MaybeNull] private INotificationService _notificationService { get; set; }
     [Inject, MaybeNull] private IMapper _mapper { get; set; }
+    [Inject, MaybeNull] private IRedirectLinkService _redirectService { get; set; }
     
     protected override List<NordigenLink>? GetList() => _userLinks?.ToList();
     

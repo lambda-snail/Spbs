@@ -43,7 +43,22 @@ public interface INordigenApiClient
         string ssn = "");
 
     /// <summary>
+    /// Retrieves a requisition by id.
+    /// </summary>
+    Task<RequisitionV2?> GetRequisition(Guid id);
+
+    /// <summary>
     /// Deletes a requisition.
     /// </summary>
     Task DeleteRequisition(Guid requisitionId);
+
+    /// <summary>
+    /// Fetches metadata about an account from Nordigen.
+    /// </summary>
+    Task<ListTransactionsResponse?> GetAccountTransactions(Guid accountId, DateOnly? dateFrom = null, DateOnly? dateTo = null);
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    Task<AccountV2?> GetAccountMetadata(Guid accountId);
 }

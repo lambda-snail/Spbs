@@ -20,41 +20,40 @@ namespace Integrations.Nordigen.Models
     public enum AccountV2StatusEnum
     {
         /// <summary>
-        /// Enum DISCOVEREDUserHasSuccessfullyAuthenticatedAndAccountIsDiscovered for value: {\&quot;DISCOVERED\&quot;:\&quot;User has successfully authenticated and account is discovered\&quot;}
+        /// User has successfully authenticated and account is discovered
         /// </summary>
-        [EnumMember(Value = "{\"DISCOVERED\":\"User has successfully authenticated and account is discovered\"}")]
+        [EnumMember(Value = "DISCOVERED")]
         DISCOVEREDUserHasSuccessfullyAuthenticatedAndAccountIsDiscovered = 1,
 
         /// <summary>
-        /// Enum PROCESSINGAccountIsBeingProcessedByTheInstitution for value: {\&quot;PROCESSING\&quot;:\&quot;Account is being processed by the Institution\&quot;}
+        /// Account is being processed by the Institution
         /// </summary>
-        [EnumMember(Value = "{\"PROCESSING\":\"Account is being processed by the Institution\"}")]
+        [EnumMember(Value = "PROCESSING")]
         PROCESSINGAccountIsBeingProcessedByTheInstitution = 2,
 
         /// <summary>
-        /// Enum ERRORAnErrorWasEncounteredWhenProcessingAccount for value: {\&quot;ERROR\&quot;:\&quot;An error was encountered when processing account\&quot;}
+        /// An error was encountered when processing account
         /// </summary>
-        [EnumMember(Value = "{\"ERROR\":\"An error was encountered when processing account\"}")]
+        [EnumMember(Value = "ERROR")]
         ERRORAnErrorWasEncounteredWhenProcessingAccount = 3,
 
         /// <summary>
-        /// Enum EXPIREDAccessToAccountHasExpiredAsSetInEndUserAgreement for value: {\&quot;EXPIRED\&quot;:\&quot;Access to account has expired as set in End User Agreement\&quot;}
+        /// Access to account has expired as set in End User Agreement
         /// </summary>
-        [EnumMember(Value = "{\"EXPIRED\":\"Access to account has expired as set in End User Agreement\"}")]
+        [EnumMember(Value = "EXPIRED")]
         EXPIREDAccessToAccountHasExpiredAsSetInEndUserAgreement = 4,
 
         /// <summary>
-        /// Enum READYAccountHasBeenSuccessfullyProcessed for value: {\&quot;READY\&quot;:\&quot;Account has been successfully processed\&quot;}
+        /// Account has been successfully processed
         /// </summary>
-        [EnumMember(Value = "{\"READY\":\"Account has been successfully processed\"}")]
+        [EnumMember(Value = "READY")]
         READYAccountHasBeenSuccessfullyProcessed = 5,
 
         /// <summary>
-        /// Enum SUSPENDEDAccountHasBeenSuspendedmoreThan10ConsecutiveFailedAttemptsToAccessTheAccount for value: {\&quot;SUSPENDED\&quot;:\&quot;Account has been suspended (more than 10 consecutive failed attempts to access the account)\&quot;}
+        /// Account has been suspended (more than 10 consecutive failed attempts to access the account)
         /// </summary>
-        [EnumMember(Value = "{\"SUSPENDED\":\"Account has been suspended (more than 10 consecutive failed attempts to access the account)\"}")]
+        
+        [EnumMember(Value = "SUSPENDED")]
         SUSPENDEDAccountHasBeenSuspendedmoreThan10ConsecutiveFailedAttemptsToAccessTheAccount = 6
-
     }
-
 }

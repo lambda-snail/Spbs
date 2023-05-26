@@ -18,6 +18,7 @@ using Spbs.Shared.Data;
 using Spbs.Ui.ComponentServices;
 using Spbs.Ui.Data;
 using Spbs.Ui.Features.BankIntegration;
+using Spbs.Ui.Features.BankIntegration.ImportExpenses;
 using Spbs.Ui.Features.BankIntegration.Models;
 using Spbs.Ui.Features.BankIntegration.Models.Validation;
 using Spbs.Ui.Features.BankIntegration.Services;
@@ -87,6 +88,7 @@ namespace Spbs.Ui
         {
             services.AddSingleton<IValidator<DataConfigurationOptions>, DataConfigurationOptionsValidator>();
             services.AddSingleton<IValidator<NordigenEula>, NordigenEulaFluentValidation>();
+            services.AddSingleton<IValidator<TransactionsRequestParameters>, TransactionsParametersRequestFluentValidation>();
         }
 
         private void RegisterConfigurations(IServiceCollection services)
@@ -100,6 +102,7 @@ namespace Spbs.Ui
         private void RegisterUtilities(IServiceCollection services)
         {
             services.AddTransient<IDateTimeProvider, DateTimeProvider>();
+            services.AddScoped<ImportExpensesStateManager>();
         }
 
         private void RegisterRepositories(IServiceCollection services)

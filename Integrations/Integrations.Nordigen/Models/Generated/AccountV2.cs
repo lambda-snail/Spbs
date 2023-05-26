@@ -9,15 +9,10 @@
 using System.Runtime.Serialization;
 using System.Text;
 using Newtonsoft.Json;
-using System.ComponentModel.DataAnnotations;
 
 namespace Integrations.Nordigen.Models
 {
-    /// <summary>
-    /// AccountV2Serializer.
-    /// </summary>
-    [DataContract(Name = "AccountV2")]
-    public partial class AccountV2 : IEquatable<AccountV2>, IValidatableObject
+    public partial class AccountV2
     {
 
         /// <summary>
@@ -133,6 +128,7 @@ namespace Integrations.Nordigen.Models
         {
             return false;
         }
+        
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -151,121 +147,5 @@ namespace Integrations.Nordigen.Models
             sb.Append("}\n");
             return sb.ToString();
         }
-
-        /// <summary>
-        /// Returns the JSON string presentation of the object
-        /// </summary>
-        /// <returns>JSON string presentation of the object</returns>
-        public virtual string ToJson()
-        {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented);
-        }
-
-        /// <summary>
-        /// Returns true if objects are equal
-        /// </summary>
-        /// <param name="input">Object to be compared</param>
-        /// <returns>Boolean</returns>
-        public override bool Equals(object input)
-        {
-            return this.Equals(input as AccountV2);
-        }
-
-        /// <summary>
-        /// Returns true if AccountV2 instances are equal
-        /// </summary>
-        /// <param name="input">Instance of AccountV2 to be compared</param>
-        /// <returns>Boolean</returns>
-        public bool Equals(AccountV2 input)
-        {
-            if (input == null)
-            {
-                return false;
-            }
-            return 
-                (
-                    this.Id == input.Id ||
-                    (this.Id != null &&
-                    this.Id.Equals(input.Id))
-                ) && 
-                (
-                    this.Created == input.Created ||
-                    (this.Created != null &&
-                    this.Created.Equals(input.Created))
-                ) && 
-                (
-                    this.LastAccessed == input.LastAccessed ||
-                    (this.LastAccessed != null &&
-                    this.LastAccessed.Equals(input.LastAccessed))
-                ) && 
-                (
-                    this.Iban == input.Iban ||
-                    (this.Iban != null &&
-                    this.Iban.Equals(input.Iban))
-                ) && 
-                (
-                    this.InstitutionId == input.InstitutionId ||
-                    (this.InstitutionId != null &&
-                    this.InstitutionId.Equals(input.InstitutionId))
-                ) && 
-                (
-                    this.Status == input.Status ||
-                    this.Status.Equals(input.Status)
-                ) && 
-                (
-                    this.OwnerName == input.OwnerName ||
-                    (this.OwnerName != null &&
-                    this.OwnerName.Equals(input.OwnerName))
-                );
-        }
-
-        /// <summary>
-        /// Gets the hash code
-        /// </summary>
-        /// <returns>Hash code</returns>
-        public override int GetHashCode()
-        {
-            unchecked // Overflow is fine, just wrap
-            {
-                int hashCode = 41;
-                if (this.Id != null)
-                {
-                    hashCode = (hashCode * 59) + this.Id.GetHashCode();
-                }
-                if (this.Created != null)
-                {
-                    hashCode = (hashCode * 59) + this.Created.GetHashCode();
-                }
-                if (this.LastAccessed != null)
-                {
-                    hashCode = (hashCode * 59) + this.LastAccessed.GetHashCode();
-                }
-                if (this.Iban != null)
-                {
-                    hashCode = (hashCode * 59) + this.Iban.GetHashCode();
-                }
-                if (this.InstitutionId != null)
-                {
-                    hashCode = (hashCode * 59) + this.InstitutionId.GetHashCode();
-                }
-                hashCode = (hashCode * 59) + this.Status.GetHashCode();
-                if (this.OwnerName != null)
-                {
-                    hashCode = (hashCode * 59) + this.OwnerName.GetHashCode();
-                }
-                return hashCode;
-            }
-        }
-
-        /// <summary>
-        /// To validate all properties of the instance
-        /// </summary>
-        /// <param name="validationContext">Validation context</param>
-        /// <returns>Validation Result</returns>
-        public IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> Validate(ValidationContext validationContext)
-        {
-            yield break;
-        }
     }
-
 }

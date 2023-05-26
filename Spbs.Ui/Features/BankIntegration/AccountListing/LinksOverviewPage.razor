@@ -43,7 +43,9 @@
                             <img src="@institution?.Logo" class="card-img-top" alt="The logo of @institution?.Name">
                             <div class="card-body container">
                                 <div class="row card-title">
-                                    @institution?.Name
+                                    <NavLink class="nav-link" href="@_redirectService?.GetUrlForAccountListing(link.Id)">
+                                        @institution?.Name                
+                                    </NavLink>
                                 </div>
                                 <div class="row">
                                     <div class="col">

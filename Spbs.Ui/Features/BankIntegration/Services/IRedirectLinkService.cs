@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Components;
 
 namespace Spbs.Ui.Features.BankIntegration.Services;
@@ -10,6 +11,8 @@ public interface IRedirectLinkService
     string GetBaseUrl();
 
     string GetUrlForAccountListing();
+    public string GetUrlForImportExpenses(bool isInProgressPage = false);
+    string GetUrlForAccountListing(Guid linkId);
 
     string GetUrlForNordigenRedirect();
 }
