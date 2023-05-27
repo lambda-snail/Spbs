@@ -44,7 +44,7 @@ public partial class ImportExpensesJobProgressPage : ComponentBase
 
             foreach (var expense in expenses)
             {
-                expense.OwningUserId = userId.Value;
+                expense.UserId = userId.Value;
                 await _expenseRepository.InsertExpenseAsync(expense);
                 _importState.NotifyExpenseImported();
             }
@@ -71,7 +71,7 @@ public partial class ImportExpensesJobProgressPage : ComponentBase
 
         foreach (var expense in expenses)
         {
-            expense.OwningUserId = userId.Value;
+            expense.UserId = userId.Value;
         }
 
         return true;

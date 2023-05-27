@@ -19,28 +19,28 @@ public class ExpenseReaderRepository : ReaderRepositoryBase<Expense, ExpensesDbC
     {
         await using var db = await _contextFactory.CreateDbContextAsync();
         return await db.Expenses.Where(exp =>
-                exp.OwningUserId == userId)
+                exp.UserId == userId)
             .OrderByDescending(e => e.Date)
             .Take(take)
             .Skip(skip)
             .ToListAsync();
     }
     
-    public async Task<Expense?> GetUserExpenseById(Guid userId, Guid expenseId)
+    public async Task<Expense?> GetUserExpenseById(Guid expenseId, Guid userId)
     {
         await using var db = await _contextFactory.CreateDbContextAsync();
         return await db.Expenses.Where(exp =>
-                exp.OwningUserId == userId && exp.Id == expenseId)
+                exp.UserId == userId && exp.Id == expenseId)
             .Include(exp => exp.Items)
             .FirstOrDefaultAsync();
     }
 
-    public async Task<List<Expense>> GetSingleExpensesByUserAndMonth(
+    public async Task<List<Expense>> GetSingleExpensesByUserFromMonth(
         Guid userId, DateTime date, int take = 50, int skip = 0)
     {
         await using var db = await _contextFactory.CreateDbContextAsync();
         return await db.Expenses
-            .Where(exp => exp.OwningUserId == userId && exp.Date >= date)
+            .Where(exp => exp.UserId == userId && exp.Date >= date)
             .OrderByDescending(exp => exp.Date)
             .Skip(skip)
             .Take(take)

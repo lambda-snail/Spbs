@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
+using Spbs.Ui.Data.Cosmos;
 
 namespace Spbs.Ui.Features.Expenses;
 
-public class Expense
+public class Expense : ICosmosData
 {
     public Guid Id { get; set; }
     public string Name { get; set; }
@@ -11,7 +12,7 @@ public class Expense
 
     public bool Recurring { get; set; } = false;
 
-    public Guid OwningUserId { get; set; }
+    public Guid UserId { get; set; }
 
     public DateTime Date { get; set; }
     public DateTime CreatedOn { get; set; }

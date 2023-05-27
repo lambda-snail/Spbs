@@ -27,9 +27,9 @@ public class ExpensesDbContext : DbContext
 
             builder.Property(e => e.Name).IsRequired();
             builder.Property(e => e.Recurring).HasDefaultValue(false);
-            builder.Property(e => e.OwningUserId).IsRequired();
+            builder.Property(e => e.UserId).IsRequired();
 
-            builder.HasOne<User>().WithMany().HasPrincipalKey(u => u.AzureAdId).HasForeignKey(e => e.OwningUserId);
+            builder.HasOne<User>().WithMany().HasPrincipalKey(u => u.AzureAdId).HasForeignKey(e => e.UserId);
         });
 
         modelBuilder.Entity<Expense>().Ignore(x => x.Total);

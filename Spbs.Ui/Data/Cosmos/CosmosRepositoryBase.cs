@@ -25,14 +25,14 @@ public interface ICosmosReader<T>
 
 public class CosmosRepositoryBase<T> where T : class, ICosmosData
 {
-    private readonly ILogger<CosmosRepositoryBase<T>> _baseLogger;
+    protected readonly ILogger<CosmosRepositoryBase<T>> _logger;
     protected readonly Container _container;
     protected readonly Database _database;
 
     public CosmosRepositoryBase(CosmosClient client, IOptions<DataConfigurationOptions> options,
-        ILogger<CosmosRepositoryBase<T>> baseLogger)
+        ILogger<CosmosRepositoryBase<T>> logger)
     {
-        _baseLogger = baseLogger;
+        _logger = logger;
         _database = client.GetDatabase(options.Value.DatabaseName);
         _container = _database.GetContainer(options.Value.DataContainerName);
         ArgumentNullException.ThrowIfNull(_container);
@@ -43,12 +43,12 @@ public class CosmosRepositoryBase<T> where T : class, ICosmosData
     /// </summary>
     public async Task<T?> GetById(Guid id)
     {
-        _baseLogger.LogInformation("(Base Repository) Request to get {T} with id {Id}", id);
+        _logger.LogInformation("(Base Repository) Request to get {T} with id {Id}", id);
 
         string strId = id.ToString();
         var response = await _container.ReadItemAsync<CosmosDocument<T>>(strId, new PartitionKey(strId));
 
-        _baseLogger.LogInformation(
+        _logger.LogInformation(
             "(Base Repository) Response recieved in {ResponseTime} with status code {StatusCode}",
             response.Diagnostics.GetClientElapsedTime(), response.StatusCode);
         if (response.StatusCode.IsSuccessStatusCode())
@@ -64,7 +64,7 @@ public class CosmosRepositoryBase<T> where T : class, ICosmosData
     /// </summary>
     public async Task<ReadOnlyCollection<T>> GetAllForUser(Guid userId)
     {
-        _baseLogger.LogInformation("(Base Repository) Request to get links for {UserId}", userId);
+        _logger.LogInformation("(Base Repository) Request to get links for {UserId}", userId);
 
         List<T> items = new();
         var queryDefinition = _container.GetItemLinqQueryable<CosmosDocument<T>>()
@@ -90,7 +90,7 @@ public class CosmosRepositoryBase<T> where T : class, ICosmosData
         while (feedIterator.HasMoreResults)
         {
             var response = await feedIterator.ReadNextAsync();
-            _baseLogger.LogInformation(
+            _logger.LogInformation(
                 "(Base Repository) Response recieved in {ResponseTime} with status code {StatusCode}",
                 response.Diagnostics.GetClientElapsedTime(), response.StatusCode);
             

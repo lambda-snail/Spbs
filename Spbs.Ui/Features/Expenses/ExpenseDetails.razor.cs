@@ -34,7 +34,7 @@ public partial class ExpenseDetails : ComponentBase
     {
         Guid id = Guid.Parse(ExpenseId);
         Guid? userId = await UserId();
-        _expense = await ExpenseReaderRepository.GetUserExpenseById(userId!.Value, id);
+        _expense = await ExpenseReaderRepository.GetUserExpenseById(id, userId!.Value);
         StateHasChanged();
     }
 

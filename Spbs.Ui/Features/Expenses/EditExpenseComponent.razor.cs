@@ -53,7 +53,7 @@ public partial class EditExpenseComponent : ComponentBase
                 return;
             }
 
-            expense.OwningUserId = userId.Value;
+            expense.UserId = userId.Value;
             await ExpenseWriterRepository.InsertExpenseAsync(expense);
         }
         else

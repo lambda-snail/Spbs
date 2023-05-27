@@ -54,7 +54,7 @@ public partial class ExpensesOverview : ComponentBase
         if (_filterDateHasChanged)
         {
             Guid? userId = await UserId();
-            _cachedExpenses = await ExpenseRepository.GetSingleExpensesByUserAndMonth(userId!.Value, _filterLowerBound);
+            _cachedExpenses = await ExpenseRepository.GetSingleExpensesByUserFromMonth(userId!.Value, _filterLowerBound);
             _filterDateHasChanged = false;
         }
         

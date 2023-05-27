@@ -45,6 +45,6 @@ public class ImportExpensesViewModelMapper : Profile
             .ForMember(e => e.Tags, opt => opt.Ignore())
             .ForMember(e => e.CreatedOn, opt => opt.Ignore())
             .ForMember(e => e.ModifiedOn, opt => opt.Ignore())
-            .ForMember(e => e.OwningUserId, opt => opt.Ignore());
+            .ForMember(e => e.UserId, opt => opt.Ignore());
     }
 }
