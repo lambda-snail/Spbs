@@ -15,14 +15,10 @@ using User = Spbs.Ui.Features.BankIntegration.Models.User;
 
 namespace Spbs.Ui.Features.BankIntegration;
 
-public class NordigenLinkWriterRepository : CosmosRepositoryBase, INordigenLinkWriterRepository
+public class NordigenLinkWriterRepository : CosmosRepositoryBase<NordigenLink>, INordigenLinkWriterRepository
 {
-    private readonly ILogger<NordigenEulaWriterRepository> _logger;
-    
-    public NordigenLinkWriterRepository(CosmosClient client, IOptions<DataConfigurationOptions> options, ILogger<NordigenEulaWriterRepository> logger) : base(client, options)
-    {
-        _logger = logger;
-    }
+    public NordigenLinkWriterRepository(CosmosClient client, IOptions<DataConfigurationOptions> options, ILogger<NordigenLinkWriterRepository> logger) : base(client, options, logger)
+    { }
     
     /// <summary>
     /// Inserts a lnk into the database. If the link already exists then nothing happens.
