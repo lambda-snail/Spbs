@@ -58,19 +58,4 @@
       <ProjectReference Include="..\Shared\Shared.csproj" />
       <ProjectReference Include="..\Spbs.Generators\Spbs.Generators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     </ItemGroup>
-    <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-        <Exec Condition="$([MSBuild]::IsOSPlatform('Windows'))" Command="copy $(Pkgbootstrap)\contentFiles\any\any\wwwroot\css\bootstrap.min.css  $(ProjectDir)wwwroot\css\bootstrap" />
-        <Exec Condition="$([MSBuild]::IsOSPlatform('Windows'))" Command="copy $(Pkgbootstrap)\contentFiles\any\any\wwwroot\css\bootstrap.min.css.map  $(ProjectDir)wwwroot\css\bootstrap" />
-        <Exec Condition="$([MSBuild]::IsOSPlatform('Windows'))" Command="copy $(Pkgbootstrap)\contentFiles\any\any\wwwroot\js\bootstrap.bundle.min.js  $(ProjectDir)wwwroot\js\bootstrap" />
-        <Exec Condition="$([MSBuild]::IsOSPlatform('Windows'))" Command="copy $(Pkgbootstrap)\contentFiles\any\any\wwwroot\js\bootstrap.min.js  $(ProjectDir)wwwroot\js\bootstrap" />
-        
-        <Exec Condition="$([MSBuild]::IsOSPlatform('Linux'))" Command="cp $(Pkgbootstrap)/contentFiles/any/any/wwwroot/css/bootstrap.min.css  $(ProjectDir)wwwroot/css/bootstrap" />
-        <Exec Condition="$([MSBuild]::IsOSPlatform('Linux'))" Command="cp $(Pkgbootstrap)/contentFiles/any/any/wwwroot/css/bootstrap.min.css.map  $(ProjectDir)wwwroot/css/bootstrap" />
-        <Exec Condition="$([MSBuild]::IsOSPlatform('Linux'))" Command="cp $(Pkgbootstrap)/contentFiles/any/any/wwwroot/js/bootstrap.bundle.min.js  $(ProjectDir)wwwroot/js/bootstrap" />
-        <Exec Condition="$([MSBuild]::IsOSPlatform('Linux'))" Command="cp $(Pkgbootstrap)/contentFiles/any/any/wwwroot/js/bootstrap.min.js  $(ProjectDir)wwwroot/js/bootstrap" />
-    </Target>
-    <!--ItemGroup>
-      <_ContentIncludedByDefault Remove="wwwroot\css\bootstrap\bootstrap.min.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\css\bootstrap\bootstrap.min.css.map" />
-    </ItemGroup-->
 </Project>
