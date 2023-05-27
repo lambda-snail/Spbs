@@ -14,6 +14,7 @@ using Microsoft.Extensions.Options;
 using Shared.Utilities;
 using Spbs.Shared.Data;
 using Spbs.Ui.Data.Cosmos;
+using Spbs.Ui.Features.BankIntegration.Models;
 
 namespace Spbs.Ui.Features.BankIntegration;
 
@@ -106,5 +107,32 @@ public class CosmosRepositoryBase<T> where T : class, ICosmosData
         }
 
         return items;
+    }
+
+    public async Task<T?> Upsert(T item)
+    {
+        bool isCreate = false;
+        if (item.Id == Guid.Empty)
+        {
+            isCreate = true;
+            item.Id = Guid.NewGuid();
+        }
+        
+        _logger.LogInformation("(Repository Base) Upsert {T} with id {ItemId}, {IsCreate}", typeof(T), item.Id, isCreate);
+        var model = new CosmosDocument<T>
+        {
+            Id = item.Id,
+            Type = CosmosTypeConstants.NordigenLink,
+            Data = item
+        };
+        
+        var response = await _container.UpsertItemAsync(model);
+        if (response.StatusCode.IsSuccessStatusCode())
+        {
+            _logger.LogInformation("(Repository Base) Successfully upserted {T} with id {ItemId}", typeof(T), response.Resource.Id);
+            return response.Resource.Data;            
+        }
+
+        return null;
     }
 }
