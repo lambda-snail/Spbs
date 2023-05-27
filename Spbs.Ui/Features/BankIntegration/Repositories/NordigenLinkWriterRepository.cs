@@ -23,9 +23,9 @@ public class NordigenLinkWriterRepository : CosmosRepositoryBase<NordigenLink>, 
     /// <summary>
     /// Inserts a lnk into the database. If the link already exists then nothing happens.
     /// </summary>
-    public async Task<NordigenLink?> Upsert(NordigenLink link)
+    public async Task<NordigenLink?> UpsertLink(NordigenLink link)
     {
-        var response = await UpsertLinkDocument(link);
+        var response = await _UpsertLinkDocument(link);
         if (response is { StatusCode: HttpStatusCode.Created }) // Only link to user if we created a new link
         {
             link.Id = response.Resource.Data.Id;
@@ -38,7 +38,7 @@ public class NordigenLinkWriterRepository : CosmosRepositoryBase<NordigenLink>, 
     }
 
     // TODO: Remove from user document
-    public Task Delete(NordigenLink link)
+    public Task DeleteLink(NordigenLink link)
     {
         string idString = link.Id.ToString();
         return _container.DeleteItemAsync<CosmosDocument<NordigenLink>>(idString, new PartitionKey(idString));
@@ -73,7 +73,7 @@ public class NordigenLinkWriterRepository : CosmosRepositoryBase<NordigenLink>, 
         await _container.UpsertItemAsync(user);
     }
 
-    private Task<ItemResponse<CosmosDocument<NordigenLink>>> UpsertLinkDocument(NordigenLink link)
+    private Task<ItemResponse<CosmosDocument<NordigenLink>>> _UpsertLinkDocument(NordigenLink link)
     {
         if (link.Id == Guid.Empty)
         {

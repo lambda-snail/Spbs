@@ -75,7 +75,7 @@ public partial class LinksOverviewPage : SelectableListComponent<NordigenLink>
         }
 
         var link = _userLinks[selectedLink.Value];
-        await _linkWriter!.Delete(link);
+        await _linkWriter!.DeleteLink(link);
 
         var left = _userLinks.Take(selectedLink.Value).ToList();
         var right = _userLinks.Skip(selectedLink.Value + 1);
