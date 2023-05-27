@@ -11,5 +11,5 @@ public interface IExpenseReaderRepository
     
     Task<Expense?> GetUserExpenseById(Guid userId, Guid expenseId);
 
-    Task<List<Expense>> GetSingleExpensesByUserAndMonth(Guid userId, DateTime monthYear, int take = 50, int skip = 0);
+    Task<List<Expense>> GetSingleExpensesByUserAndMonth(Guid userId, DateTime date, int take = 50, int skip = 0);
 }

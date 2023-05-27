@@ -1,17 +1,49 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="sidebar">
-    <NavMenu/>
-</div>
+<Sidebar @ref="_sidebar"
+         IconName="IconName.BootstrapFill"
+         Title="Spbs"
+         BadgeText="v0.0.0"
+         DataProvider="SidebarDataProvider"/>
 
-<div class="main">
+<main class="main">
+        
+        <div class="bb-top-row px-4 d-flex justify-content-between">
+            <Icon Name="IconName.List" role="button" @onclick="ToggleSidebar"/>
+            <div><LoginDisplay/></div>
+        </div>
+        
+        <div class="px-4 py-2 col-12">@Body</div>
+    </main>
     <ToastNotificationComponent />
-    <div class="top-row px-4 auth">
-        <LoginDisplay/>
-        <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-    </div>
 
-    <div class="content px-4">
-        @Body
-    </div>
-</div>
+@code {
+    Sidebar _sidebar;
+    IEnumerable<NavItem> _navItems;
+
+    private async Task<SidebarDataProviderResult> SidebarDataProvider(SidebarDataProviderRequest request)
+    {
+        if (_navItems is null)
+            _navItems = GetNavItems();
+
+        return await Task.FromResult(request.ApplyTo(_navItems));
+    }
+
+    private IEnumerable<NavItem> GetNavItems()
+    {
+        _navItems = new List<NavItem>
+        {
+            new NavItem { Id = "1", Href = "/home", IconName = IconName.HouseDoorFill, Text = "Home" },
+            new NavItem { Id = "2", Href = "/expenses", IconName = IconName.CurrencyEuro, Text = "Expenses", IconColor = IconColor.Primary },
+            new NavItem { Id = "3", Href = "/recurring", IconName = IconName.Calendar, Text = "Recurring Expenses", IconColor = IconColor.Primary },
+            new NavItem { Id = "4", Href = "", IconName = IconName.PieChartFill, Text = "Visualize", IconColor = IconColor.Primary },
+            new NavItem { Id = "5", IconName = IconName.PiggyBankFill, Text = "Bank Integration", IconColor = IconColor.Success },
+            new NavItem { Id = "6", Href = "/accounts/links/", IconName = IconName.GearWideConnected, Text = "Import Expenses", ParentId = "5" },
+            new NavItem { Id = "7", Href = "/external/banks", IconName = IconName.BookmarkPlus, Text = "Link to Bank", ParentId = "5" },
+        };
+
+        return _navItems;
+    }
+
+    private void ToggleSidebar() => _sidebar.ToggleSidebar();
+}

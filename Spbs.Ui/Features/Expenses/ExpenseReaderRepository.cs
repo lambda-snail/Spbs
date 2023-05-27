@@ -35,18 +35,15 @@ public class ExpenseReaderRepository : ReaderRepositoryBase<Expense, ExpensesDbC
             .FirstOrDefaultAsync();
     }
 
-    public async Task<List<Expense>> GetSingleExpensesByUserAndMonth(Guid userId, DateTime monthYear,
-        int take = 50, int skip = 0)
+    public async Task<List<Expense>> GetSingleExpensesByUserAndMonth(
+        Guid userId, DateTime date, int take = 50, int skip = 0)
     {
-        DateTime firstDay = new DateTime(monthYear.Year, monthYear.Month, 1);
-        DateTime lastDay = new DateTime(monthYear.Year, monthYear.Month, DateTime.DaysInMonth(monthYear.Year, monthYear.Month));
-
         await using var db = await _contextFactory.CreateDbContextAsync();
         return await db.Expenses
-            .Where(exp => exp.OwningUserId == userId && exp.Date > firstDay && exp.Date < lastDay)
+            .Where(exp => exp.OwningUserId == userId && exp.Date >= date)
             .OrderByDescending(exp => exp.Date)
-            //.Take(take)
-            //.Skip(skip)
+            .Skip(skip)
+            .Take(take)
             .Include(exp => exp.Items)
             .ToListAsync();
     }
