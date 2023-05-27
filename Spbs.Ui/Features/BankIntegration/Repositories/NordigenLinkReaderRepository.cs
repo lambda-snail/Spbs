@@ -22,13 +22,8 @@ public interface INordigenLinkReaderRepository
 
 public class NordigenLinkReaderRepository : CosmosRepositoryBase<NordigenLink>, INordigenLinkReaderRepository
 {
-    private readonly ILogger<NordigenLinkReaderRepository> _logger;
-
     public NordigenLinkReaderRepository(CosmosClient client, IOptions<DataConfigurationOptions> options, ILogger<NordigenLinkReaderRepository> logger)
-        :base(client, options, logger)
-    {
-        _logger = logger;
-    }
+        :base(client, options, logger) { }
 
     public async Task<NordigenLink?> GetLinkById(Guid id, Guid userId)
     {

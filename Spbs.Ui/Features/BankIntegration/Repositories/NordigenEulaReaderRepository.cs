@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Linq;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Spbs.Shared.Data;
 using Spbs.Ui.Data.Cosmos;
@@ -11,18 +12,22 @@ using Spbs.Ui.Features.BankIntegration.Models;
 
 namespace Spbs.Ui.Features.BankIntegration;
 
-public class NordigenEulaReaderRepository : CosmosRepositoryBase, INordigenEulaReaderRepository
+public class NordigenEulaReaderRepository : CosmosRepositoryBase<NordigenEula>, INordigenEulaReaderRepository
 {
-    public NordigenEulaReaderRepository(CosmosClient client, IOptions<DataConfigurationOptions> options)
-        :base(client, options) {}
+    public NordigenEulaReaderRepository(CosmosClient client, IOptions<DataConfigurationOptions> options, ILogger<NordigenEulaReaderRepository> logger)
+        :base(client, options, logger) {}
 
     public async Task<NordigenEula?> GetEulaById(Guid id, Guid userId)
     {
-        // TODO: Add loggin and error handling
-        var feedIterator = _container.GetItemLinqQueryable<CosmosDocument<NordigenEula>>()
-                                     .Where(doc => doc.Id == id && doc.Data.UserId == userId)
-                                     .ToFeedIterator();
-        var response = await feedIterator.ReadNextAsync();
-        return response.FirstOrDefault()?.Data; // Should only be one
+        _logger.LogInformation("(Eula Reader) Request to get eula {EulaId} for {UserId}", id, userId);
+
+        var eula = await GetById(id);
+        if (eula?.UserId == userId)
+        {
+            _logger.LogError("(Eula Reader) Attempted to get eula {LinkId} for user {SoughtUserId}, but eula was actually for user {ActualUserId}", id, userId, eula.UserId);
+            return eula;
+        }
+
+        return null;
     }
 }

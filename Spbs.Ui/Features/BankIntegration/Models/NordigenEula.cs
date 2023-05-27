@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Spbs.Shared.Data;
+using Spbs.Ui.Data.Cosmos;
 
 namespace Spbs.Ui.Features.BankIntegration.Models;
 
-public class NordigenEula
+public class NordigenEula : ICosmosData
 {
     [JsonProperty("id")]
     public Guid Id { get; set; }
