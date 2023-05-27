@@ -20,12 +20,12 @@ public interface INordigenLinkReaderRepository
     Task<ReadOnlyCollection<NordigenLink>> GetLinksForUser(Guid userId);
 }
 
-public class NordigenLinkReaderRepository : CosmosRepositoryBase, INordigenLinkReaderRepository
+public class NordigenLinkReaderRepository : CosmosRepositoryBase<NordigenLink>, INordigenLinkReaderRepository
 {
     private readonly ILogger<NordigenLinkReaderRepository> _logger;
 
     public NordigenLinkReaderRepository(CosmosClient client, IOptions<DataConfigurationOptions> options, ILogger<NordigenLinkReaderRepository> logger)
-        :base(client, options)
+        :base(client, options, logger)
     {
         _logger = logger;
     }
@@ -33,42 +33,20 @@ public class NordigenLinkReaderRepository : CosmosRepositoryBase, INordigenLinkR
     public async Task<NordigenLink?> GetLinkById(Guid id, Guid userId)
     {
         _logger.LogInformation("(Link Reader) Request to get link {LinkId} for {UserId}", id, userId);
-        
-        var feedIterator = _container.GetItemLinqQueryable<CosmosDocument<NordigenLink>>()
-            .Where(doc => doc.Id == id && doc.Data.UserId == userId)
-            .ToFeedIterator();
-        
-        var response = await feedIterator.ReadNextAsync();
-        _logger.LogInformation("(Link Reader) Response recieved in {ResponseTime} with status code {StatusCode}", response.Diagnostics.GetClientElapsedTime(), response.StatusCode);
-        
-        return response.FirstOrDefault()?.Data; // Should be at most one
+
+        var link = await GetById(id);
+        if (link?.UserId == userId)
+        {
+            _logger.LogError("Attempted to get link {LinkId} for user {SoughtUserId}, but link was actually for user {ActualUserId}", id, userId, link.UserId);
+            return link;
+        }
+
+        return null;
     }
 
-    public async Task<ReadOnlyCollection<NordigenLink>> GetLinksForUser(Guid userId)
+    public Task<ReadOnlyCollection<NordigenLink>> GetLinksForUser(Guid userId)
     {
         _logger.LogInformation("(Link Reader) Request to get links for {UserId}", userId);
-        
-        List<NordigenLink> userLinks = new();
-        var feedIterator = _container.GetItemLinqQueryable<CosmosDocument<NordigenLink>>()
-            .Where(doc => doc.Data.UserId == userId)
-            .ToFeedIterator();
-
-        var response = await feedIterator.ReadNextAsync();
-        
-        _logger.LogInformation("(Link Reader) Response recieved in {ResponseTime} with status code {StatusCode}", response.Diagnostics.GetClientElapsedTime(), response.StatusCode);
-        if (response is not { StatusCode: >= HttpStatusCode.OK and <= (HttpStatusCode)299 })
-        {
-            return new ReadOnlyCollection<NordigenLink>(userLinks);
-        }
-        
-        foreach (var cosmosDocument in response)
-        {
-            if (cosmosDocument is not null)
-            {
-                userLinks.Add(cosmosDocument.Data);
-            }
-        }
-        
-        return new ReadOnlyCollection<NordigenLink>(userLinks);
+        return GetAllForUser(userId);
     }
 }
