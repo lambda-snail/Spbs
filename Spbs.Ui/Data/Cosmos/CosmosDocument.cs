@@ -3,7 +3,13 @@ using Newtonsoft.Json;
 
 namespace Spbs.Ui.Data.Cosmos;
 
-public class CosmosDocument<T>
+public interface ICosmosData
+{
+    Guid Id { get; set; }
+    Guid UserId { get; set; }
+}
+
+public class CosmosDocument<T> where T: ICosmosData
 {
     [JsonProperty("id")]
     public required Guid Id { get; set; }
