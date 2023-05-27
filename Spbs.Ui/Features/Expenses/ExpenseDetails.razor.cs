@@ -96,6 +96,12 @@ public partial class ExpenseDetails : ComponentBase
     
     #region ExpenseItems
 
+    private void EditOrCreateExpenseItem(ExpenseItem item)
+    {
+        _editExpenseItemComponent?.SetModalContent(item);
+        _editExpenseItemComponent?.ShowModal();
+    }
+    
     private void ToggleEditItemsMode()
     {
         if (_selectedRow is not null && _selectedRow >= 0)
