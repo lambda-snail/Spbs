@@ -27,7 +27,6 @@ using Spbs.Ui.Features.Expenses;
 using Spbs.Ui.Features.Expenses.Repositories;
 using Spbs.Ui.Features.RecurringExpenses;
 using Spbs.Ui.Middleware;
-using ExpenseWriter = Spbs.Ui.Features.Expenses.ExpenseWriter;
 
 namespace Spbs.Ui
 {
