@@ -57,7 +57,7 @@ public partial class ExpenseDetails : ComponentBase
     private async Task AddTagList()
     {
         string tagList = await _jsRuntime.InvokeAsync<string>("prompt", "Add a list of tags separated by space");
-        if (tagList is null || string.IsNullOrWhiteSpace(tagList))
+        if (string.IsNullOrWhiteSpace(tagList))
         {
             return;
         }
