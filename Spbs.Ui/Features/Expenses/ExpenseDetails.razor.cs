@@ -12,16 +12,18 @@ namespace Spbs.Ui.Features.Expenses;
 public partial class ExpenseDetails : ComponentBase
 {
     [Parameter] public string ExpenseId { get; set; }
-
-    [Inject] public IExpenseReaderRepository ExpenseReaderRepository { get; set; }
-    [Inject] public IExpenseWriterRepository ExpenseWriterRepository { get; set; }
-    [Inject] public IJSRuntime JsRuntime { get; set; }
-    [Inject] public IMapper Mapper { get; set; }
-
     private Expense? _expense = null;
+    
+#pragma warning disable CS8618
+    [Inject] private IExpenseReaderRepository _expenseReaderRepository { get; set; }
+    [Inject] private IExpenseWriterRepository _expenseWriterRepository { get; set; }
+    [Inject] private IJSRuntime _jsRuntime { get; set; }
+    [Inject] private IMapper _mapper { get; set; }
+    
     private EditExpenseComponent _editExpenseComponent;
     private EditExpenseItemComponent _editExpenseItemComponent;
-
+#pragma warning restore CS8618
+    
     protected override void OnInitialized()
     {
         FetchExpense();
@@ -31,7 +33,7 @@ public partial class ExpenseDetails : ComponentBase
     {
         Guid id = Guid.Parse(ExpenseId);
         Guid? userId = await UserId();
-        _expense = await ExpenseReaderRepository.GetUserExpenseById(id, userId!.Value);
+        _expense = await _expenseReaderRepository.GetUserExpenseById(id, userId!.Value);
         StateHasChanged();
     }
 
@@ -42,7 +44,7 @@ public partial class ExpenseDetails : ComponentBase
             return;
         }
 
-        await ExpenseWriterRepository.UpdateExpenseAsync(_expense!);
+        await _expenseWriterRepository.UpdateExpenseAsync(_expense!);
         StateHasChanged();
     }
 
@@ -54,7 +56,7 @@ public partial class ExpenseDetails : ComponentBase
 
     private async Task AddTagList()
     {
-        string tagList = await JsRuntime.InvokeAsync<string>("prompt", "Add a list of tags separated by space");
+        string tagList = await _jsRuntime.InvokeAsync<string>("prompt", "Add a list of tags separated by space");
         if (tagList is null || tagList == string.Empty)
         {
             return;
