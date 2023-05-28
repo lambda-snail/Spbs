@@ -24,15 +24,22 @@ public interface ICosmosReader<T>
     Task<ReadOnlyCollection<T>> GetAllForUser(Guid userId);
 }
 
-public class CosmosRepositoryBase<T> where T : class, ICosmosData
+public class CosmosRepositoryBase<T> : ICosmosReader<T> 
+    where T : class, ICosmosData
 {
     protected readonly ILogger<CosmosRepositoryBase<T>> _logger;
     protected readonly Container _container;
     protected readonly Database _database;
 
-    public CosmosRepositoryBase(CosmosClient client, IOptions<DataConfigurationOptions> options,
+    protected readonly string _cosmosType;
+    
+    public CosmosRepositoryBase(
+        CosmosClient client, 
+        IOptions<DataConfigurationOptions> options, 
+        string cosmosType,
         ILogger<CosmosRepositoryBase<T>> logger)
     {
+        _cosmosType = cosmosType;
         _logger = logger;
         _database = client.GetDatabase(options.Value.DatabaseName);
         _container = _database.GetContainer(options.Value.DataContainerName);
@@ -66,14 +73,12 @@ public class CosmosRepositoryBase<T> where T : class, ICosmosData
     public async Task<ReadOnlyCollection<T>> GetAllForUser(Guid userId)
     {
         _logger.LogInformation("(Base Repository) Request to get links for {UserId}", userId);
-
-        List<T> items = new();
+        
         var queryDefinition = _container.GetItemLinqQueryable<CosmosDocument<T>>()
             .Where(doc => doc.Data.UserId == userId)
             .ToQueryDefinition();
 
-        items = await GetAll(queryDefinition);
-
+        List<T> items = await GetAll(queryDefinition);
         return new ReadOnlyCollection<T>(items);
     }
 
@@ -122,7 +127,7 @@ public class CosmosRepositoryBase<T> where T : class, ICosmosData
         var model = new CosmosDocument<T>
         {
             Id = item.Id,
-            Type = CosmosTypeConstants.NordigenLink,
+            Type = _cosmosType,
             Data = item
         };
         

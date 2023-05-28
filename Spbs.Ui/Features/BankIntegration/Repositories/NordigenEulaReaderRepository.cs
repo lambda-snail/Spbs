@@ -15,7 +15,7 @@ namespace Spbs.Ui.Features.BankIntegration;
 public class NordigenEulaReaderRepository : CosmosRepositoryBase<NordigenEula>, INordigenEulaReaderRepository
 {
     public NordigenEulaReaderRepository(CosmosClient client, IOptions<DataConfigurationOptions> options, ILogger<NordigenEulaReaderRepository> logger)
-        :base(client, options, logger) {}
+        :base(client, options, CosmosTypeConstants.NordigenEula, logger) {}
 
     public async Task<NordigenEula?> GetEulaById(Guid id, Guid userId)
     {

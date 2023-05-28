@@ -23,7 +23,7 @@ public interface INordigenLinkReaderRepository
 public class NordigenLinkReaderRepository : CosmosRepositoryBase<NordigenLink>, INordigenLinkReaderRepository
 {
     public NordigenLinkReaderRepository(CosmosClient client, IOptions<DataConfigurationOptions> options, ILogger<NordigenLinkReaderRepository> logger)
-        :base(client, options, logger) { }
+        :base(client, options, CosmosTypeConstants.NordigenLink, logger) { }
 
     public async Task<NordigenLink?> GetLinkById(Guid id, Guid userId)
     {

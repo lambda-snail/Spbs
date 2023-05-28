@@ -15,7 +15,7 @@ public record struct EulaWritingError(string Message);
 public class NordigenEulaWriterRepository : CosmosRepositoryBase<NordigenEula>, INordigenEulaWriterRepository
 {
     public NordigenEulaWriterRepository(CosmosClient client, IOptions<DataConfigurationOptions> options, ILogger<NordigenEulaWriterRepository> logger)
-        :base(client, options, logger) { }
+        :base(client, options, CosmosTypeConstants.NordigenEula, logger) { }
 
     public async Task<NordigenEula> Upsert(NordigenEula eula)
     {

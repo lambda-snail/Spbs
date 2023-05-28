@@ -24,8 +24,10 @@ using Spbs.Ui.Features.BankIntegration.Models;
 using Spbs.Ui.Features.BankIntegration.Models.Validation;
 using Spbs.Ui.Features.BankIntegration.Services;
 using Spbs.Ui.Features.Expenses;
+using Spbs.Ui.Features.Expenses.Repositories;
 using Spbs.Ui.Features.RecurringExpenses;
 using Spbs.Ui.Middleware;
+using ExpenseWriter = Spbs.Ui.Features.Expenses.ExpenseWriter;
 
 namespace Spbs.Ui
 {
@@ -110,8 +112,8 @@ namespace Spbs.Ui
 
         private void RegisterRepositories(IServiceCollection services)
         {
-            services.AddTransient<IExpenseReaderRepository, ExpenseReaderRepository>();
-            services.AddTransient<IExpenseWriterRepository, ExpenseWriterRepository>();
+            services.AddTransient<IExpenseReaderRepository, ExpenseReader>();
+            services.AddTransient<IExpenseWriterRepository, ExpenseWriter>();
             
             services.AddTransient<IRecurringExpenseReaderRepository, RecurringExpenseReaderRepository>();
             services.AddTransient<IRecurringExpenseWriterRepository, RecurringExpenseWriterRepository>();

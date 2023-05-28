@@ -8,11 +8,11 @@ using Spbs.Ui.Data;
 
 namespace Spbs.Ui.Features.Expenses;
 
-public class ExpenseWriterRepository : WriterRepositoryBase<Expense, ExpensesDbContext>, IExpenseWriterRepository
+public class ExpenseWriter : WriterRepositoryBase<Expense, ExpensesDbContext>, IExpenseWriterRepository
 {
     private readonly IDateTimeProvider _dateTime;
 
-    public ExpenseWriterRepository(IDateTimeProvider dateTime, IDbContextFactory<ExpensesDbContext> contextFactory) :
+    public ExpenseWriter(IDateTimeProvider dateTime, IDbContextFactory<ExpensesDbContext> contextFactory) :
         base(contextFactory)
     {
         _dateTime = dateTime;

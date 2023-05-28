@@ -17,7 +17,7 @@ namespace Spbs.Ui.Features.BankIntegration;
 
 public class NordigenLinkWriterRepository : CosmosRepositoryBase<NordigenLink>, INordigenLinkWriterRepository
 {
-    public NordigenLinkWriterRepository(CosmosClient client, IOptions<DataConfigurationOptions> options, ILogger<NordigenLinkWriterRepository> logger) : base(client, options, logger)
+    public NordigenLinkWriterRepository(CosmosClient client, IOptions<DataConfigurationOptions> options, ILogger<NordigenLinkWriterRepository> logger) : base(client, options, CosmosTypeConstants.NordigenLink, logger)
     { }
     
     /// <summary>
@@ -83,7 +83,7 @@ public class NordigenLinkWriterRepository : CosmosRepositoryBase<NordigenLink>, 
         var model = new CosmosDocument<NordigenLink>
         {
             Id = link.Id,
-            Type = CosmosTypeConstants.NordigenLink,
+            Type = _cosmosType,
             Data = link
         };
         

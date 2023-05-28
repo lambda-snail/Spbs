@@ -14,7 +14,7 @@ namespace Spbs.Ui.Features.Expenses.Repositories;
 
 public class ExpenseReader : CosmosRepositoryBase<Expense>, IExpenseReaderRepository
 {
-    public ExpenseReader(CosmosClient client, IOptions<DataConfigurationOptions> options, ILogger<ExpenseReader> logger) : base(client, options, logger) { }
+    public ExpenseReader(CosmosClient client, IOptions<DataConfigurationOptions> options, ILogger<ExpenseReader> logger) : base(client, options, CosmosTypeConstants.SpbsExpenses, logger) { }
 
     public Task<List<Expense>> GetSingleExpensesByUser(Guid userId, int take = 25, int skip = 0)
     {
