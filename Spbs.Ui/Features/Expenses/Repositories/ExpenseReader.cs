@@ -51,6 +51,7 @@ public class ExpenseReader : CosmosRepositoryBase<Expense>, IExpenseReaderReposi
         List<Expense> items = new(take);
         var queryDefinition = _container.GetItemLinqQueryable<CosmosDocument<Expense>>()
             .Where(doc => doc.Data.UserId == userId)
+            .Where(doc => doc.Type == _cosmosType)
             .Where(doc => doc.Data.Date >= date)
             .OrderBy(doc => doc.Data.Date)
             .Skip(skip)

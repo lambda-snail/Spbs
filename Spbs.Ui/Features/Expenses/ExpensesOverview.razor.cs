@@ -68,20 +68,13 @@ public partial class ExpensesOverview : ComponentBase
 
     private async void ExpenseItemAdded()
     {
-        //await FetchExpenses();
-        //StateHasChanged();
+        await _expensesGrid.RefreshDataAsync();
+        StateHasChanged();
     }
     
     private void ToggleExpenseDialog()
     {
-        // Expense? e = null;
-        // int? selectedRow = GetSelected();
-        // if (selectedRow is not null && selectedRow >= 0 && selectedRow < _expenses?.Count)
-        // {
-        //     e = _expenses?[selectedRow.Value];
-        // }
-        //
-        // _editExpenseComponent?.SetModalContent(e);
-        // _editExpenseComponent?.ShowModal();
+        _editExpenseComponent?.SetModalContent(null);
+        _editExpenseComponent?.ShowModal();
     }
 }

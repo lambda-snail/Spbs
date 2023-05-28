@@ -44,16 +44,15 @@ public partial class EditExpenseComponent : ComponentBase
     private async Task HandleValidSubmit()
     {
         Expense expense = mapper.Map<Expense>(_editExpenseViewModel);
-        
+        Guid? userId = GetUserId();
+        if (userId is null)
+        {
+            return;
+        }
+
+        expense.UserId = userId.Value;
         if (_editExpenseViewModel.Id is null)
         {
-            Guid? userId = GetUserId();
-            if (userId is null)
-            {
-                return;
-            }
-
-            expense.UserId = userId.Value;
             await ExpenseWriterRepository.InsertExpenseAsync(expense);
         }
         else

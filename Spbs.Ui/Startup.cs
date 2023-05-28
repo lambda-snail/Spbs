@@ -12,6 +12,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using Serilog;
 using Shared.Utilities;
 using Shared.Utilities.OptionsExtensions;
@@ -107,6 +109,11 @@ namespace Spbs.Ui
         {
             services.AddTransient<IDateTimeProvider, DateTimeProvider>();
             services.AddScoped<ImportExpensesStateManager>();
+            
+            JsonConvert.DefaultSettings = () => new JsonSerializerSettings
+            {
+                DateTimeZoneHandling = DateTimeZoneHandling.Utc
+            };
         }
 
         private void RegisterRepositories(IServiceCollection services)
