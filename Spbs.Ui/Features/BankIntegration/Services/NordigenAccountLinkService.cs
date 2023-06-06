@@ -34,7 +34,7 @@ public class NordigenAccountLinkService : INordigenAccountLinkService
             UserLanguage = "EN"
         };
 
-        link = await _linkWriterRepository.Upsert(link);
+        link = await _linkWriterRepository.UpsertLink(link);
         if (link is null)
         {
             // Todo: handle errors
@@ -76,7 +76,7 @@ public class NordigenAccountLinkService : INordigenAccountLinkService
 
     public async Task<NordigenLink?> SaveLinkToDatabase(NordigenLink link)
     {
-        return await _linkWriterRepository.Upsert(link);
+        return await _linkWriterRepository.UpsertLink(link);
     }
 
     public async Task DeleteLink(NordigenLink link)
@@ -86,7 +86,7 @@ public class NordigenAccountLinkService : INordigenAccountLinkService
             await _nordigenCLient.DeleteRequisition(link.NordigenId.Value);
         }
 
-        await _linkWriterRepository.Delete(link);
+        await _linkWriterRepository.DeleteLink(link);
     }
 
     public Task<ListTransactionsResponse?> GetAccountTransactions(Guid accountId, TransactionsRequestParameters requestParameters)

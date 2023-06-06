@@ -12,15 +12,10 @@ namespace Spbs.Ui.Features.BankIntegration;
 
 public record struct EulaWritingError(string Message);
 
-public class NordigenEulaWriterRepository : CosmosRepositoryBase, INordigenEulaWriterRepository
+public class NordigenEulaWriterRepository : CosmosRepositoryBase<NordigenEula>, INordigenEulaWriterRepository
 {
-    private readonly ILogger<NordigenEulaWriterRepository> _logger;
-
     public NordigenEulaWriterRepository(CosmosClient client, IOptions<DataConfigurationOptions> options, ILogger<NordigenEulaWriterRepository> logger)
-        :base(client, options)
-    {
-        _logger = logger;
-    }
+        :base(client, options, CosmosTypeConstants.NordigenEula, logger) { }
 
     public async Task<NordigenEula> Upsert(NordigenEula eula)
     {

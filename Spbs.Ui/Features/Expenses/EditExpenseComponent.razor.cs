@@ -10,6 +10,7 @@ public partial class EditExpenseComponent : ComponentBase
 {
     private bool _doShowContent = false;
 
+    private Expense? _expense;
     private EditExpenseViewModel _editExpenseViewModel = new() { Date = DateTime.Now };
 
     [Inject] public IMapper mapper { get; set; }
@@ -37,23 +38,26 @@ public partial class EditExpenseComponent : ComponentBase
     {
         if (expense is not null)
         {
+            _expense = expense;
             _editExpenseViewModel = mapper.Map<EditExpenseViewModel>(expense);
         }
     }
 
     private async Task HandleValidSubmit()
     {
-        Expense expense = mapper.Map<Expense>(_editExpenseViewModel);
-        
+        Expense expense;
+        if (_expense is null)
+        {
+            expense = mapper.Map<Expense>(_editExpenseViewModel);
+        }
+        else
+        {
+            expense = mapper.Map(_editExpenseViewModel, _expense);
+        }
+
+        EnsureUseIdIsSet(expense);
         if (_editExpenseViewModel.Id is null)
         {
-            Guid? userId = GetUserId();
-            if (userId is null)
-            {
-                return;
-            }
-
-            expense.OwningUserId = userId.Value;
             await ExpenseWriterRepository.InsertExpenseAsync(expense);
         }
         else
@@ -61,10 +65,26 @@ public partial class EditExpenseComponent : ComponentBase
             await ExpenseWriterRepository.UpdateExpenseAsync(expense);
         }
         
+        _expense = null;
+        
         CloseDialog();
         ResetModel();
         OnUpdateCallback();
         StateHasChanged();
+    }
+
+    private void EnsureUseIdIsSet(Expense expense)
+    {
+        if (expense.UserId == Guid.Empty)
+        {
+            Guid? userId = GetUserId();
+            if (userId is null)
+            {
+                return;
+            }
+
+            expense.UserId = userId.Value;
+        }
     }
 
     private void HandleInvalidSubmit()

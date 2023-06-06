@@ -1,13 +1,10 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Http.Features;
 using Microsoft.JSInterop;
 using Spbs.Generators.UserExtensions;
-using Spbs.Ui.Auth;
-using Spbs.Ui.Features.Users;
 
 namespace Spbs.Ui.Features.Expenses;
 
@@ -15,16 +12,18 @@ namespace Spbs.Ui.Features.Expenses;
 public partial class ExpenseDetails : ComponentBase
 {
     [Parameter] public string ExpenseId { get; set; }
-
-    [Inject] public IExpenseReaderRepository ExpenseReaderRepository { get; set; }
-    [Inject] public IExpenseWriterRepository ExpenseWriterRepository { get; set; }
-    [Inject] public IJSRuntime JsRuntime { get; set; }
-    [Inject] public IMapper Mapper { get; set; }
-
     private Expense? _expense = null;
+    
+#pragma warning disable CS8618
+    [Inject] private IExpenseReaderRepository _expenseReaderRepository { get; set; }
+    [Inject] private IExpenseWriterRepository _expenseWriterRepository { get; set; }
+    [Inject] private IJSRuntime _jsRuntime { get; set; }
+    [Inject] private IMapper _mapper { get; set; }
+    
     private EditExpenseComponent _editExpenseComponent;
     private EditExpenseItemComponent _editExpenseItemComponent;
-
+#pragma warning restore CS8618
+    
     protected override void OnInitialized()
     {
         FetchExpense();
@@ -34,7 +33,7 @@ public partial class ExpenseDetails : ComponentBase
     {
         Guid id = Guid.Parse(ExpenseId);
         Guid? userId = await UserId();
-        _expense = await ExpenseReaderRepository.GetUserExpenseById(userId!.Value, id);
+        _expense = await _expenseReaderRepository.GetUserExpenseById(id, userId!.Value);
         StateHasChanged();
     }
 
@@ -45,7 +44,7 @@ public partial class ExpenseDetails : ComponentBase
             return;
         }
 
-        await ExpenseWriterRepository.UpdateExpenseAsync(_expense!);
+        await _expenseWriterRepository.UpdateExpenseAsync(_expense!);
         StateHasChanged();
     }
 
@@ -55,15 +54,10 @@ public partial class ExpenseDetails : ComponentBase
         _editExpenseComponent?.ShowModal();
     }
 
-    private void ExpenseUpdated()
-    {
-        FetchExpense();
-    }
-
     private async Task AddTagList()
     {
-        string tagList = await JsRuntime.InvokeAsync<string>("prompt", "Add a list of tags separated by space");
-        if (tagList is null || tagList == string.Empty)
+        string tagList = await _jsRuntime.InvokeAsync<string>("prompt", "Add a list of tags separated by space");
+        if (string.IsNullOrWhiteSpace(tagList))
         {
             return;
         }
@@ -74,6 +68,11 @@ public partial class ExpenseDetails : ComponentBase
         await SaveExpense();
     }
 
+    private void ExpenseUpdated()
+    {
+        FetchExpense();
+    }
+    
     private async Task ExpenseItemUpdated(ExpenseItem? item)
     {
         if (item is null)
@@ -81,68 +80,18 @@ public partial class ExpenseDetails : ComponentBase
             return;
         }
 
-        if (_selectedRow >= 0 && _expense?.Items[_selectedRow.Value].Id == item.Id)
+        ExpenseItem? existingItem = _expense!.Items.FirstOrDefault(i => i.Id == item.Id);
+        if (existingItem is null)
         {
-            Mapper.Map((ExpenseItem)item, _expense.Items[_selectedRow.Value]);
-        }
-        else
-        {
-            _expense?.Items?.Add(item);
+            _expense.Items.Add(item);
         }
         
         await SaveExpense();
-        //FetchExpense();
     }
     
-    #region ExpenseItems
-
     private void EditOrCreateExpenseItem(ExpenseItem item)
     {
         _editExpenseItemComponent?.SetModalContent(item);
         _editExpenseItemComponent?.ShowModal();
     }
-    
-    private void ToggleEditItemsMode()
-    {
-        if (_selectedRow is not null && _selectedRow >= 0)
-        {
-            ExpenseItem selected = _expense.Items[_selectedRow.Value];
-            _editExpenseItemComponent?.SetModalContent(selected);
-        }
-        else
-        {
-            _editExpenseItemComponent?.SetModalContent(null);            
-        }
-        
-        _editExpenseItemComponent?.ShowModal();
-    }
-    
-    #endregion
-    
-    #region Selection
-    
-    private int? _selectedRow = null;
-    private string GetRowClass(int i)
-    {
-        return _selectedRow == i ? "bg-secondary text-white" : String.Empty;
-    }
-    
-    private void SetSelected(int i)
-    {
-        if (i >= 0 && i < _expense?.Items.Count)
-        {
-            _selectedRow = i == _selectedRow ? null : i;
-            StateHasChanged();
-        }
-        else
-        {
-            if (_selectedRow is not null)
-            {
-                _selectedRow = null;
-                StateHasChanged();
-            }
-        }
-    }
-    
-    #endregion
 }

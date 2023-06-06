@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Spbs.Ui.Data.Cosmos;
 
 namespace Spbs.Ui.Features.BankIntegration.Models;
 
 /// <summary>
 /// A representation of what Nordigen calls a 'link' - i.e. a connection to an institution for a specific user.
 /// </summary>
-public class NordigenLink 
+public class NordigenLink : ICosmosData
 {
     [JsonProperty("id")]
     public Guid Id { get; set; }

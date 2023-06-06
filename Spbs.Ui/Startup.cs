@@ -8,22 +8,22 @@ using Microsoft.Identity.Web.UI;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Azure.Cosmos;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
 using Serilog;
 using Shared.Utilities;
 using Shared.Utilities.OptionsExtensions;
 using Spbs.Shared.Data;
 using Spbs.Ui.ComponentServices;
-using Spbs.Ui.Data;
 using Spbs.Ui.Features.BankIntegration;
 using Spbs.Ui.Features.BankIntegration.ImportExpenses;
 using Spbs.Ui.Features.BankIntegration.Models;
 using Spbs.Ui.Features.BankIntegration.Models.Validation;
 using Spbs.Ui.Features.BankIntegration.Services;
 using Spbs.Ui.Features.Expenses;
+using Spbs.Ui.Features.Expenses.Repositories;
 using Spbs.Ui.Features.RecurringExpenses;
 using Spbs.Ui.Middleware;
 
@@ -106,15 +106,20 @@ namespace Spbs.Ui
         {
             services.AddTransient<IDateTimeProvider, DateTimeProvider>();
             services.AddScoped<ImportExpensesStateManager>();
+            
+            JsonConvert.DefaultSettings = () => new JsonSerializerSettings
+            {
+                DateTimeZoneHandling = DateTimeZoneHandling.Utc
+            };
         }
 
         private void RegisterRepositories(IServiceCollection services)
         {
-            services.AddTransient<IExpenseReaderRepository, ExpenseReaderRepository>();
-            services.AddTransient<IExpenseWriterRepository, ExpenseWriterRepository>();
+            services.AddTransient<IExpenseReaderRepository, ExpenseReader>();
+            services.AddTransient<IExpenseWriterRepository, ExpenseWriter>();
             
-            services.AddTransient<IRecurringExpenseReaderRepository, RecurringExpenseReaderRepository>();
-            services.AddTransient<IRecurringExpenseWriterRepository, RecurringExpenseWriterRepository>();
+            services.AddTransient<IRecurringExpenseReaderRepository, RecurringExpenseReader>();
+            services.AddTransient<IRecurringExpenseWriterRepository, RecurringExpenseWriter>();
 
             services.AddTransient<INordigenEulaWriterRepository, NordigenEulaWriterRepository>();
             services.AddTransient<INordigenEulaReaderRepository, NordigenEulaReaderRepository>();
@@ -125,32 +130,6 @@ namespace Spbs.Ui
 
         private void RegisterDatabaseConnections(IServiceCollection services)
         {
-            var mysqlConnectionString = Configuration.GetSection("Spbs:ConnectionStrings").GetValue<string>("SpbsExpenses");
-            ArgumentNullException.ThrowIfNull(mysqlConnectionString); 
-
-            var serverVersion = MySqlServerVersion.AutoDetect(mysqlConnectionString);
-
-            services.AddDbContextFactory<ExpensesDbContext>(o => o
-                .UseMySql(mysqlConnectionString, serverVersion)
-                .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
-                
-                #if DEBUG
-                .EnableDetailedErrors()
-                .LogTo(Console.WriteLine)
-                #endif
-            ).AddDbContextFactory<RecurringExpensesDbContext>(o => o
-                .UseMySql(mysqlConnectionString, serverVersion, options =>
-                {
-                    options.EnableRetryOnFailure(3);
-                })
-                .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
-
-                #if DEBUG
-                .EnableDetailedErrors()
-                .LogTo(Console.WriteLine)
-                #endif
-            );
-
             var cosmosDbConnectionString =
                 Configuration.GetSection("Spbs:ConnectionStrings").GetValue<string>("CosmosDb");
             services.AddSingleton<CosmosClient>(

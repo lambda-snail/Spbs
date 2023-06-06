@@ -1,12 +1,18 @@
 @page "/expenses"
-@using System.Runtime.InteropServices.JavaScript
 
 <div>
-    <div class="row">
-        <h3>Expenses Overview</h3>
+    <div class="row flex-column justify-content-start">
+        <span class="col"><h3>Expenses Overview</h3></span> 
+        <span class="col">
+            <Button @onclick="ToggleExpenseDialog"
+                    Size="Size.Small"
+                    Color="ButtonColor.Primary">
+                New Expense
+            </Button>
+        </span>
     </div>
 
-    <div class="row">
+    <div class="row py-2">
         <Grid TItem="Expense"
               @ref="_expensesGrid"
               class="table table-hover table-bordered table-striped"

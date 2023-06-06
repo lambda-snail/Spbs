@@ -23,6 +23,7 @@ public class EditExpenseViewModel
 
     public string? Venue { get; set; }
     public string? Currency { get; set; }
+    public double? Total { get; set; }
 
     public string? Tags { get; set; }
 }

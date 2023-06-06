@@ -24,7 +24,13 @@ public partial class RecurringExpenseDetails
 
     protected override async Task OnInitializedAsync()
     {
-        _expense = (_expenseId is not null) ? await _expenseReaderRepository.GetByIdAsync(_expenseId.Value) : new();
+        Guid? userId = await UserId();
+        if (userId is null)
+        {
+            return;
+        }
+
+        _expense = (_expenseId is not null) ? await _expenseReaderRepository.GetByIdAsync(userId.Value, _expenseId.Value) : new();
         StateHasChanged();
     }
 }

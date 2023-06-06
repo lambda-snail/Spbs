@@ -13,7 +13,8 @@ public class EditRecurringExpenseViewModel
     public string? Description { get; set; }
     
     [Required]
-    public DateTime BillingDate { get; set; }
+    [Range(0,31)]
+    public int BillingDay { get; set; }
     [Required]
     public string BillingPrincipal { get; set; }
     [Required]

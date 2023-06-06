@@ -11,7 +11,8 @@ public partial class EditExpenseItemComponent : ComponentBase
     private bool _doShowContent = false;
     
     private EditExpenseItemViewModel _editExpenseItemViewModel = new();
-
+    private ExpenseItem? _item;
+    
     [Inject] public IMapper mapper { get; set; }
     [Inject] public IExpenseWriterRepository ExpenseWriterRepository { get; set; } 
     
@@ -41,6 +42,7 @@ public partial class EditExpenseItemComponent : ComponentBase
     {
         if (expenseItem is not null)
         {
+            _item = expenseItem;
             _editExpenseItemViewModel = mapper.Map<EditExpenseItemViewModel>(expenseItem);
         }
         else
@@ -52,8 +54,18 @@ public partial class EditExpenseItemComponent : ComponentBase
     private async Task HandleValidSubmit()
     {
         CloseDialog();
+
+        ExpenseItem item;
+        if (_item is null)
+        {
+            item = mapper.Map<ExpenseItem>(_editExpenseItemViewModel);
+            item.Id = Guid.NewGuid();
+        }
+        else
+        {
+            item = mapper.Map(_editExpenseItemViewModel, _item);
+        }
         
-        ExpenseItem item = mapper.Map<ExpenseItem>(_editExpenseItemViewModel);
         await OnUpdateCallback(item);
         
         ResetModel();
@@ -67,6 +79,7 @@ public partial class EditExpenseItemComponent : ComponentBase
 
     private void ResetModel()
     {
+        _item = null;
         _editExpenseItemViewModel = new();
     }
 }

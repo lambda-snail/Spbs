@@ -54,7 +54,7 @@ public partial class ExpensesOverview : ComponentBase
         if (_filterDateHasChanged)
         {
             Guid? userId = await UserId();
-            _cachedExpenses = await ExpenseRepository.GetSingleExpensesByUserAndMonth(userId!.Value, _filterLowerBound);
+            _cachedExpenses = await ExpenseRepository.GetSingleExpensesByUserFromMonth(userId!.Value, _filterLowerBound);
             _filterDateHasChanged = false;
         }
         
@@ -68,20 +68,13 @@ public partial class ExpensesOverview : ComponentBase
 
     private async void ExpenseItemAdded()
     {
-        //await FetchExpenses();
-        //StateHasChanged();
+        await _expensesGrid.RefreshDataAsync();
+        StateHasChanged();
     }
     
     private void ToggleExpenseDialog()
     {
-        // Expense? e = null;
-        // int? selectedRow = GetSelected();
-        // if (selectedRow is not null && selectedRow >= 0 && selectedRow < _expenses?.Count)
-        // {
-        //     e = _expenses?[selectedRow.Value];
-        // }
-        //
-        // _editExpenseComponent?.SetModalContent(e);
-        // _editExpenseComponent?.ShowModal();
+        _editExpenseComponent?.SetModalContent(null);
+        _editExpenseComponent?.ShowModal();
     }
 }

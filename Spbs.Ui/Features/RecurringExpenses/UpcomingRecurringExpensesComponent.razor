@@ -10,7 +10,7 @@ else
     <div class="card">
         <div class="card-body">
             <h5 class="card-title">@expense.Name</h5>
-            <h6 class="card-subtitle mb-2 text-muted">To be billed on the @(expense.BillingDate.Day):th.</h6>
+            <h6 class="card-subtitle mb-2 text-muted">To be billed on the @(expense.BillingDay):th.</h6>
             <NavLink class="card-link" href="@expense.GetDetailsUrl()">
                 Details
             </NavLink>
