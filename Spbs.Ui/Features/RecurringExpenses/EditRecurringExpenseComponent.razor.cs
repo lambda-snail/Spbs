@@ -11,8 +11,9 @@ public partial class EditRecurringExpenseComponent
 {
     private bool _doShowContent = false;
 
-    private EditRecurringExpenseViewModel _editRecurringExpenseViewModel = new() { BillingDate = DateTime.Now };
-            
+    private EditRecurringExpenseViewModel _editRecurringExpenseViewModel = new() { BillingDay = DateTime.Now.Day };
+    private RecurringExpense? _expense;
+
 
     [Inject] public IMapper Mapper { get; set; }
     [Inject] public IRecurringExpenseWriterRepository RecurringExpenseWriterRepository { get; set; } 
@@ -39,23 +40,26 @@ public partial class EditRecurringExpenseComponent
     {
         if (expense is not null)
         {
+            _expense = expense;
             _editRecurringExpenseViewModel = Mapper.Map<EditRecurringExpenseViewModel>(expense);
         }
     }
 
     private async Task HandleValidSubmit()
     {
-        RecurringExpense expense = Mapper.Map<RecurringExpense>(_editRecurringExpenseViewModel);
+        RecurringExpense expense;
+        if (_expense is null)
+        {
+            expense = Mapper.Map<RecurringExpense>(_editRecurringExpenseViewModel);
+        }
+        else
+        {
+            expense = Mapper.Map(_editRecurringExpenseViewModel, _expense);
+        }
         
+        EnsureUseIdIsSet(expense);
         if (_editRecurringExpenseViewModel.Id is null)
         {
-            Guid? userId = GetUserId();
-            if (userId is null)
-            {
-                return;
-            }
-
-            expense.UserId = userId.Value;
             await RecurringExpenseWriterRepository.InsertExpenseAsync(expense);
         }
         else
@@ -76,6 +80,20 @@ public partial class EditRecurringExpenseComponent
 
     private void ResetModel()
     {
-        _editRecurringExpenseViewModel = new() { BillingDate = DateTime.Now };
+        _editRecurringExpenseViewModel = new() { BillingDay = DateTime.Now.Day };
     }   
+    
+    private void EnsureUseIdIsSet(RecurringExpense expense)
+    {
+        if (expense.UserId == Guid.Empty)
+        {
+            Guid? userId = GetUserId();
+            if (userId is null)
+            {
+                return;
+            }
+
+            expense.UserId = userId.Value;
+        }
+    }
 }

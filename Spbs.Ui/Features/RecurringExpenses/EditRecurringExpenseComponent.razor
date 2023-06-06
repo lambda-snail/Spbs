@@ -41,12 +41,13 @@
 
                         <div class="form-group col-md-10">
                             <label for="expense-date">Billing Date</label>
-                            <InputDate id="expense-date"
-                                       class="form-control"
-                                       @bind-Value="@_editRecurringExpenseViewModel.BillingDate">
-                            </InputDate>
-                            <small id="post-date-small" class="form-text text-muted">Choose the day and month of the year when payment is due.</small>
-                            <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => _editRecurringExpenseViewModel.BillingDate)"/>
+                            <InputNumber id="expense-date"
+                                         class="form-control"
+                                         TValue="int"
+                                       @bind-Value="@_editRecurringExpenseViewModel.BillingDay">
+                            </InputNumber>
+                            <small id="post-date-small" class="form-text text-muted">Choose the day of the month when payment is due.</small>
+                            <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => _editRecurringExpenseViewModel.BillingDay)"/>
                         </div>
 
                         <div class="form-group col-md-10">
