@@ -94,8 +94,8 @@ public class CosmosRepositoryBase<T> : ICosmosReader<T>
         {
             var response = await feedIterator.ReadNextAsync();
             _logger.LogInformation(
-                "(Base Repository) Response recieved in {ResponseTime} with status code {StatusCode}",
-                response.Diagnostics.GetClientElapsedTime(), response.StatusCode);
+                "(Base Repository) Response recieved in {ResponseTime} with status code {StatusCode} and RU cost {RUCost}",
+                response.Diagnostics.GetClientElapsedTime(), response.StatusCode, response.RequestCharge);
             
             if (!response.StatusCode.IsSuccessStatusCode())
             {
