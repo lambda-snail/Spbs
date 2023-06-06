@@ -49,7 +49,7 @@
                                 <h5 class="card-title">@expense.Name</h5>
                                 @if (!IsSelected(row))
                                 {
-                                    <h6 class="card-subtitle mb-2 text-muted">Billed on the @(expense.BillingDate.Day):th every month</h6>
+                                    <h6 class="card-subtitle mb-2 text-muted">Billed on the @(expense.BillingDay):th every month</h6>
                                     <NavLink class="card-link" href="@expense.GetDetailsUrl()">
                                         Details
                                     </NavLink>

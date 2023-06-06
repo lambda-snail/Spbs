@@ -11,4 +11,5 @@ public static class CosmosTypeConstants
 
     public static readonly string SpbsUser = "users";
     public static readonly string SpbsExpenses = "expenses";
+    public static readonly string SpbsRecurringExpenses = "recurringExpenses";
 }

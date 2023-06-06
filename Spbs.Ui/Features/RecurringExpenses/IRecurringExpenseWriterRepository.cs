@@ -3,8 +3,8 @@ using Spbs.Shared.Data;
 
 namespace Spbs.Ui.Features.RecurringExpenses;
 
-public interface IRecurringExpenseWriterRepository : IWriterRepositoryBase<RecurringExpense>
+public interface IRecurringExpenseWriterRepository
 {
-    Task<RecurringExpense> InsertExpenseAsync(RecurringExpense expense);
+    Task<RecurringExpense?> InsertExpenseAsync(RecurringExpense expense);
     Task UpdateExpenseAsync(RecurringExpense expense);
 }

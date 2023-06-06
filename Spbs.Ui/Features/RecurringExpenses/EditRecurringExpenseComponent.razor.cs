@@ -55,7 +55,7 @@ public partial class EditRecurringExpenseComponent
                 return;
             }
 
-            expense.OwningUserId = userId.Value;
+            expense.UserId = userId.Value;
             await RecurringExpenseWriterRepository.InsertExpenseAsync(expense);
         }
         else
