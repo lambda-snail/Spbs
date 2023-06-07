@@ -3,10 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Mvc.Diagnostics;
 using Spbs.Generators.UserExtensions;
-using Spbs.Ui.Auth;
 using Spbs.Ui.Components;
 
 namespace Spbs.Ui.Features.RecurringExpenses;
@@ -49,7 +46,7 @@ public partial class RecurringExpensesListComponent : SelectableListComponent<Re
         return FetchRecurringExpenses();
     }
 
-    public Task ClearFitler()
+    public Task ClearFilter()
     {
         return SetFilter(null);
     }
@@ -63,7 +60,6 @@ public partial class RecurringExpensesListComponent : SelectableListComponent<Re
         }
 
         List<RecurringExpense>? recurringExpenses = null;
-        //if (_filter is not null && _filter.RecurrenceType is not null)
         if (_filter is { RecurrenceType: not null })
         {
             recurringExpenses = await RecurringExpenseReaderRepository.GetRecurringExpensesByUserId(_userId.Value, _filter.RecurrenceType.Value);
