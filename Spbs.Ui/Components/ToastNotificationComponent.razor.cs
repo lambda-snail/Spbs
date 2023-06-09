@@ -9,7 +9,7 @@ using Spbs.Ui.ComponentServices;
 
 namespace Spbs.Ui.Components;
 
-public partial class ToastNotificationComponent : IDisposable
+public partial class ToastNotificationComponent// : IDisposable
 {
     [Inject] private NotificationService _notificationService { get; set; }
 
@@ -60,11 +60,11 @@ public partial class ToastNotificationComponent : IDisposable
         return (backgroundCssClass, iconCssClass);
     }
     
-    void IDisposable.Dispose()
-    {
-        _notificationService.OnToastAdded -= ToastAddedToast;
-        _notificationService.OnToastRemoved -= ToastRemovedToast;
-    }
+    // void IDisposable.Dispose()
+    // {
+    //     _notificationService.OnToastAdded -= ToastAddedToast;
+    //     _notificationService.OnToastRemoved -= ToastRemovedToast;
+    // }
 
     private string GetTimeSinceCreatedText(TimeOnly time)
     {

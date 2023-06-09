@@ -68,7 +68,7 @@
                                         Linked Accounts:
                                     </div>
                                     <div class="col card-text">
-                                        @string.Join(", ", link.Accounts)
+                                        @(link.Accounts.Count > 0 ? string.Join(", ", link.Accounts) : "No accounts linked")
                                     </div>
                                 </div>
                             </div>

@@ -69,10 +69,8 @@ public class CosmosRepositoryBase<T> : ICosmosReader<T>
     /// </summary>
     public async Task<ReadOnlyCollection<T>> GetAllForUser(Guid userId)
     {
-        _logger.LogInformation("(Base Repository) Request to get links for {UserId}", userId);
-        
         var queryDefinition = _container.GetItemLinqQueryable<CosmosDocument<T>>()
-            .Where(doc => doc.Data.UserId == userId)
+            .Where(doc => doc.Type == _cosmosType && doc.Data.UserId == userId)
             .ToQueryDefinition();
 
         List<T> items = await GetAll(queryDefinition);
