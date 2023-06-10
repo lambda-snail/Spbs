@@ -1,7 +1,61 @@
-﻿<AuthorizeView>
+﻿@using BlazorBootstrap;
+
+<AuthorizeView>
     <Authorized>
-        Hello, @context.User.Identity.Name!
-        <a href="MicrosoftIdentity/Account/SignOut">Log out</a>
+        @*@context.User!.Identity!.Name!*@
+        <div>
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <Icon Name="IconName.PersonGear"></Icon>
+                </button>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a class="dropdown-item" href="#">
+                            <span>
+                                <Icon Name="IconName.PersonLinesFill"/>
+                            </span>
+                            <span class="col">Profile</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="#">
+                            <span>
+                                <Icon Name="IconName.Sliders2Vertical"/>
+                            </span>
+                            <span class="col">User Settings</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="#">
+                            <span>
+                                <Icon Name="IconName.GlobeEuropeAfrica"/>
+                            </span>
+                            <span>Time and Locale</span>
+                        </a>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="#">
+                            <span>
+                                <Icon Name="IconName.Toggles"/>
+                            </span>
+                            <span class="col">Experimental Features</span>
+                        </a>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="MicrosoftIdentity/Account/SignOut">
+                            <span/>
+                            <span>Log out</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </Authorized>
     <NotAuthorized>
         <a href="MicrosoftIdentity/Account/SignIn">Log in</a>
