@@ -21,13 +21,15 @@ namespace Spbs.Ui.Features.BankIntegration.AccountListing;
 [AuthenticationTaskExtension]
 public partial class LinksOverviewPage : ComponentBase
 {
-    [Inject, MaybeNull] private INordigenLinkReaderRepository _linkReader { get; set; }
-    [Inject, MaybeNull] private INordigenLinkWriterRepository _linkWriter { get; set; }
-    [Inject, MaybeNull] private INordigenApiClient _nordigenCLient { get; set; }
-    [Inject, MaybeNull] private INotificationService _notificationService { get; set; }
-    [Inject, MaybeNull] private IMapper _mapper { get; set; }
-    [Inject, MaybeNull] private IRedirectLinkService _redirectService { get; set; }
-
+#pragma warning disable CS8618
+    [Inject] private INordigenLinkReaderRepository _linkReader { get; set; }
+    [Inject] private INordigenLinkWriterRepository _linkWriter { get; set; }
+    [Inject] private INordigenApiClient _nordigenCLient { get; set; }
+    [Inject] private INotificationService _notificationService { get; set; }
+    [Inject] private IMapper _mapper { get; set; }
+    [Inject] private IRedirectLinkService _redirectService { get; set; }
+#pragma warning restore CS8618
+    
     private ReadOnlyCollection<NordigenLink>? _userLinks = new(new List<NordigenLink>());
     private ReadOnlyCollection<Institution>? _institutions;
     private HashSet<NordigenLink> _selectedLinks = new();
