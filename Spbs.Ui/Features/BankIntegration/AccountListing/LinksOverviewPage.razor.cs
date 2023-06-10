@@ -31,7 +31,6 @@ public partial class LinksOverviewPage : ComponentBase
 #pragma warning restore CS8618
     
     private ReadOnlyCollection<NordigenLink>? _userLinks = new(new List<NordigenLink>());
-    //private ReadOnlyCollection<Institution>? _institutions;
     private HashSet<NordigenLink> _selectedLinks = new();
 
     private Dictionary<string, Institution>? _institutions;
