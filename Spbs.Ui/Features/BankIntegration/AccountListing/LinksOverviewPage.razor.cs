@@ -31,8 +31,10 @@ public partial class LinksOverviewPage : ComponentBase
 #pragma warning restore CS8618
     
     private ReadOnlyCollection<NordigenLink>? _userLinks = new(new List<NordigenLink>());
-    private ReadOnlyCollection<Institution>? _institutions;
+    //private ReadOnlyCollection<Institution>? _institutions;
     private HashSet<NordigenLink> _selectedLinks = new();
+
+    private Dictionary<string, Institution>? _institutions;
 
     protected override async Task OnInitializedAsync()
     {
@@ -60,7 +62,7 @@ public partial class LinksOverviewPage : ComponentBase
         institutions.Add(new Institution { Name = "Sandbox", Id = "SANDBOXFINANCE_SFIN0000", Bic = string.Empty });
 #endif
 
-        _institutions = new(institutions);
+        _institutions = institutions.ToDictionary(i => i.Id);
     }
 
     private async Task DeleteSelectedLinks()

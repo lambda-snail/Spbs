@@ -32,7 +32,14 @@
                   SelectedItemsChanged="OnSelectedItemsChanged">
                 <GridColumn TItem="NordigenLink" HeaderText="Institution" PropertyName="InstitutionId">
                     <NavLink class="nav-link" href="@_redirectService?.GetUrlForAccountListing(context.Id)">
-                        @context.InstitutionId
+                        @if (_institutions is not null && _institutions.ContainsKey(context.InstitutionId))
+                        {
+                            @_institutions[context.InstitutionId].Name
+                        }
+                        else
+                        {
+                            @context.InstitutionId
+                        }
                     </NavLink>
                 </GridColumn>
 
