@@ -25,6 +25,7 @@ using Spbs.Ui.Features.BankIntegration.Services;
 using Spbs.Ui.Features.Expenses;
 using Spbs.Ui.Features.Expenses.Repositories;
 using Spbs.Ui.Features.RecurringExpenses;
+using Spbs.Ui.Features.Users.Repositories;
 using Spbs.Ui.Middleware;
 
 namespace Spbs.Ui
@@ -126,6 +127,8 @@ namespace Spbs.Ui
             
             services.AddTransient<INordigenLinkWriterRepository, NordigenLinkWriterRepository>();
             services.AddTransient<INordigenLinkReaderRepository, NordigenLinkReaderRepository>();
+
+            services.AddTransient<IUserRepository, UserRepository>();
         }
 
         private void RegisterDatabaseConnections(IServiceCollection services)

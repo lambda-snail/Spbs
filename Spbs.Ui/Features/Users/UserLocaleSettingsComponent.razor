@@ -1,9 +1,10 @@
 @inherits UserSettingsComponentBase
 
-
 <h3>UserLocaleSettingsComponent</h3>
 
-<p>@UserObject.TestName</p>
+<p>@UserObject.Id</p>
+
+<Button @onclick="async () => await UserSettingsChangedCallback()" ></Button>
 
 @code {
     
