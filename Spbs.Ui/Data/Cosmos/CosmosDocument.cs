@@ -8,6 +8,9 @@ public interface ICosmosData
     [JsonProperty("id")]
     Guid Id { get; set; }
     
+    /// <summary>
+    /// The id of the owner in azure AD
+    /// </summary>
     [JsonProperty("userId")]
     Guid UserId { get; set; }
 }
