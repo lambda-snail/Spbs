@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Components;
-using Newtonsoft.Json;
 
 namespace Spbs.Ui.Features.Users;
 
@@ -15,6 +14,10 @@ public partial class UserSettingsPage : ComponentBase
     private static readonly Type _defaultSettingsPage = typeof(UserProfileComponent);
     private Dictionary<string, Type> _settingsPageMap = new();
 
+    private bool _readyToRender = false;
+    private DynamicComponent _dynamicComponent;
+    private Dictionary<string, object> _dynamicComponentParameters = new();
+
     protected override void OnInitialized()
     {
         _settingsPageMap = new()
@@ -22,5 +25,10 @@ public partial class UserSettingsPage : ComponentBase
             { "profile", typeof(UserProfileComponent) },
             { "locale", typeof(UserLocaleSettingsComponent) }
         };
+        
+        _dynamicComponentParameters.Add("UserObject", new User { TestName = "Hello World!!"});
+
+        _readyToRender = true;
+        StateHasChanged();
     }
 }

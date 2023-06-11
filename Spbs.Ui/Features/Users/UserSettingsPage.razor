@@ -1,6 +1,9 @@
 @page "/me/settings/{Area}"
 
-<DynamicComponent 
-    Type="@(Area is not null && 
-            _settingsPageMap.TryGetValue(Area, out var value) ? 
-              value : _defaultSettingsPage)" />
+@if (_readyToRender)
+{
+    <DynamicComponent
+        @ref="_dynamicComponent"
+        Parameters="_dynamicComponentParameters"
+        Type="@(Area is not null && _settingsPageMap.TryGetValue(Area, out var value) ? value : _defaultSettingsPage)"/>
+}
