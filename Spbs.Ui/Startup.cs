@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using BlazorBootstrap;
 using FluentValidation;
 using Integrations.Nordigen;
@@ -25,6 +26,7 @@ using Spbs.Ui.Features.BankIntegration.Services;
 using Spbs.Ui.Features.Expenses;
 using Spbs.Ui.Features.Expenses.Repositories;
 using Spbs.Ui.Features.RecurringExpenses;
+using Spbs.Ui.Features.Users;
 using Spbs.Ui.Features.Users.Repositories;
 using Spbs.Ui.Middleware;
 
@@ -110,7 +112,8 @@ namespace Spbs.Ui
             
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings
             {
-                DateTimeZoneHandling = DateTimeZoneHandling.Utc
+                DateTimeZoneHandling = DateTimeZoneHandling.Utc,
+                Converters = new List<JsonConverter> { new TimeZoneInfoZerializer() }
             };
         }
 
