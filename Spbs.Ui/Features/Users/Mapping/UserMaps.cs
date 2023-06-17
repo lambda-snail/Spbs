@@ -18,6 +18,9 @@ public class UserMaps : Profile
         
         CreateMap<LocaleInformationViewModel, LocaleInformation>()
             .ForMember(
+                li => li.TimeZone,
+                opt => opt.MapFrom(livm => TimeZoneInfo.FindSystemTimeZoneById(livm.TimeZone)))
+            .ForMember(
                 li => li.CultureInfo,
                 opt => opt.MapFrom(livm => CultureInfo.CreateSpecificCulture(livm.CultureInfo)));
     }
