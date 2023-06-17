@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace Spbs.Ui.Features.Users;
 
-public class TimeZoneInfoZerializer : JsonConverter<TimeZoneInfo>
+public class TimeZoneInfoSerializer : JsonConverter<TimeZoneInfo>
 {
     public override void WriteJson(JsonWriter writer, TimeZoneInfo? value, JsonSerializer serializer)
     {

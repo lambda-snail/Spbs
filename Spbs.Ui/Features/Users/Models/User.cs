@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using Newtonsoft.Json;
 using Spbs.Ui.Data.Cosmos;
 
@@ -16,7 +17,7 @@ public class User : ICosmosData
 
 public class LocaleInformation
 {
-    [JsonConverter(typeof(TimeZoneInfoZerializer))]
+    [JsonConverter(typeof(TimeZoneInfoSerializer))]
     public TimeZoneInfo TimeZone { get; set; }
     
     public DateTime ToUserTimeZone(DateTime dateTime)

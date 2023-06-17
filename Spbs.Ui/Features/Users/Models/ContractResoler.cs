@@ -10,7 +10,7 @@ class SpbsContractResolver : DefaultContractResolver
         JsonObjectContract contract = base.CreateObjectContract(objectType);
         if (objectType == typeof(TimeZoneInfo))
         {
-            contract.Converter = new TimeZoneInfoZerializer();
+            contract.Converter = new TimeZoneInfoSerializer();
         }
 
         return contract;
