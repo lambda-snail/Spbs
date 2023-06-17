@@ -1,11 +1,31 @@
 @inherits UserSettingsComponentBase
 
-<h3>UserLocaleSettingsComponent</h3>
+<h3>Locale Settings</h3>
 
-<p>@UserObject.Id</p>
+<div class="container">
+    <EditForm Model="@_localeInformationVm"
+              OnValidSubmit="@HandleValidSubmit"
+              OnInvalidSubmit="@HandleInvalidSubmit">
 
-<Button @onclick="async () => await UserSettingsChangedCallback()" ></Button>
+        @* <DataAnnotationsValidator/> *@
+        @* <ValidationSummary></ValidationSummary> *@
 
-@code {
-    
-}
+        <div class="form-group col-md-5">
+            <label for="time-zone-picker" class="control-label">Time Zone</label>
+            <InputSelect
+                TValue="string"
+                id="time-zone-picker"
+                class="form-control"
+                @bind-Value="@_localeInformationVm.TimeZone">
+
+                <option value=0 disabled selected hidden>Time Zone</option>
+                @foreach (var timeZone in TimeZoneInfo.GetSystemTimeZones())
+                {
+                    <option value="@timeZone.Id">@timeZone.DisplayName</option>
+                }
+            </InputSelect>
+            <small id="post-content-small" class="time-zone-picker">All dates will automatically adjust to the time zone you select.</small>
+        </div>
+        <button type="submit" class="btn btn-primary edit-btn">Save</button>
+    </EditForm>
+</div>
