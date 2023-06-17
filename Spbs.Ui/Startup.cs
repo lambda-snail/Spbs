@@ -82,7 +82,6 @@ namespace Spbs.Ui
             services.AddScoped<INordigenLinkWriterRepository, NordigenLinkWriterRepository>();
             services.AddScoped<INordigenAccountLinkService, NordigenAccountLinkService>();
             services.AddScoped<IRedirectLinkService, RedirectLinkService>();
-            
             services.RegisterNordigenIntegration(Configuration, "Spbs:NordigenOptions");
         }
 
@@ -113,7 +112,8 @@ namespace Spbs.Ui
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings
             {
                 DateTimeZoneHandling = DateTimeZoneHandling.Utc,
-                Converters = new List<JsonConverter> { new TimeZoneInfoZerializer() }
+                //Converters = new List<JsonConverter> { new TimeZoneInfoZerializer() },
+                ContractResolver = new SpbsContractResolver()
             };
         }
 
@@ -139,9 +139,7 @@ namespace Spbs.Ui
             var cosmosDbConnectionString =
                 Configuration.GetSection("Spbs:ConnectionStrings").GetValue<string>("CosmosDb");
             services.AddSingleton<CosmosClient>(
-                new CosmosClient(
-                    connectionString: cosmosDbConnectionString
-                )
+                new CosmosClient(connectionString: cosmosDbConnectionString)
             );
         }
 

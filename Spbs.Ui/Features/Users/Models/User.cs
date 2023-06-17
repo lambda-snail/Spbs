@@ -1,4 +1,5 @@
 using System;
+using Newtonsoft.Json;
 using Spbs.Ui.Data.Cosmos;
 
 namespace Spbs.Ui.Features.Users;
@@ -13,7 +14,18 @@ public class User : ICosmosData
     public DateTime ModifiedOn { get; set; }
 }
 
-public class LocaleInformation
+public struct LocaleInformation
 {
+    [JsonConverter(typeof(TimeZoneInfoZerializer))]
     public TimeZoneInfo TimeZone { get; set; }
+    
+    public DateTime ToUserTimeZone(DateTime dateTime)
+    {
+        return TimeZoneInfo.ConvertTimeFromUtc(dateTime, TimeZone);
+    }
+
+    public DateTime ToUtcAsync(DateTime dateTime)
+    {
+        return TimeZoneInfo.ConvertTimeToUtc(dateTime, TimeZone);
+    }
 }
