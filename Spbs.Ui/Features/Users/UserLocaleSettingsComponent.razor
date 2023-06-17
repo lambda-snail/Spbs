@@ -1,3 +1,4 @@
+@using System.Globalization
 @inherits UserSettingsComponentBase
 
 <h3>Locale Settings</h3>
@@ -26,6 +27,26 @@
             </InputSelect>
             <small id="post-content-small" class="time-zone-picker">All dates will automatically adjust to the time zone you select.</small>
         </div>
+
+        <div class="form-group col-md-5">
+            <label for="culture-picker" class="control-label">Culture</label>
+            <InputSelect
+                TValue="string"
+                id="culture-picker"
+                class="form-control"
+                @bind-Value="@_localeInformationVm.CultureInfo">
+
+                <option value=0 disabled selected hidden>Culture</option>
+                @foreach (var ci in CultureInfo.GetCultures(CultureTypes.AllCultures))
+                {
+                    <option value="@ci.Name">@ci.DisplayName</option>
+                }
+
+            </InputSelect>
+            <small id="culture-picker-small" class="culture-picker">Your culture will affect how certain string are displayed.</small>
+        </div>
+
+
         <button type="submit" class="btn btn-primary edit-btn">Save</button>
     </EditForm>
 </div>

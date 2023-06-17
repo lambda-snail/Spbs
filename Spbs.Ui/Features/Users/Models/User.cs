@@ -19,6 +19,9 @@ public class LocaleInformation
 {
     [JsonConverter(typeof(TimeZoneInfoSerializer))]
     public TimeZoneInfo TimeZone { get; set; }
+
+    [JsonConverter(typeof(CultureInfoSerializer))]
+    public CultureInfo CultureInfo { get; set; }
     
     public DateTime ToUserTimeZone(DateTime dateTime)
     {
