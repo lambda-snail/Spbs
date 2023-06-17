@@ -14,7 +14,7 @@ public class User : ICosmosData
     public DateTime ModifiedOn { get; set; }
 }
 
-public struct LocaleInformation
+public class LocaleInformation
 {
     [JsonConverter(typeof(TimeZoneInfoZerializer))]
     public TimeZoneInfo TimeZone { get; set; }
