@@ -12,12 +12,10 @@ namespace Spbs.Ui.Features.Users;
 [AuthenticationTaskExtension]
 public partial class UserSettingsPage : ComponentBase
 {
-    [Parameter]
-    public string? Area { get; set; }
+    [Parameter] public string? Area { get; set; }
 
 #pragma warning disable CS8618
-    [Inject]
-    private IUserRepository _userRepository { get; set; }
+    [Inject] private IUserRepository _userRepository { get; set; }
     
     private DynamicComponent _dynamicComponent;
 #pragma warning restore CS8618
@@ -38,13 +36,13 @@ public partial class UserSettingsPage : ComponentBase
             { "locale", typeof(UserLocaleSettingsComponent) }
         };
 
-        Guid? _userId = await UserId();
+        Guid? userId = await UserId();
         _user = await _userRepository.GetById(_userId!.Value);
         if (_user is null)
         {
             return;
         }
-        
+
         _dynamicComponentParameters.Add("UserObject", _user);
         _dynamicComponentParameters.Add("UserSettingsChangedCallback", UserProfileSettings_UserSettingsChanged);
         
