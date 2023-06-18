@@ -2,6 +2,18 @@
 
 @inherits UserSettingsComponentBase
 
-<h3>ExpenseSettingsComponent</h3>
+<Button @onclick="OnAddCategoryClickedAsync"
+        Size="Size.Small"
+        Color="ButtonColor.Primary">New Category</Button>
 
-<p>Expense settings!</p>
+<Grid @ref="_grid"
+      TItem="ExpenseCategoryListItem"
+      Class="table table-hover table-bordered table-striped"
+      Data="_expenseCategories"
+      AllowFiltering="true"
+      Responsive="true">
+
+    <GridColumn TItem="ExpenseCategoryListItem" HeaderText="Category" PropertyName="CategoryName">
+        @context.CategoryName
+    </GridColumn>
+</Grid>
