@@ -1,5 +1,6 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Components;
+using Spbs.Ui.Components;
 
 namespace Spbs.Ui.Features.Users;
 
