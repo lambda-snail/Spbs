@@ -77,7 +77,6 @@ namespace Spbs.Ui
             
             services.AddAutoMapper(typeof(Startup));
             services.AddTransient<IEulaService, EulaService>();
-            services.AddScoped<NotificationService>();
             services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<INordigenLinkWriterRepository, NordigenLinkWriterRepository>();
             services.AddScoped<INordigenAccountLinkService, NordigenAccountLinkService>();

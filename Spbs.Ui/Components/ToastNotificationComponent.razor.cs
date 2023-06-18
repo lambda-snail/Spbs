@@ -9,10 +9,14 @@ using Spbs.Ui.ComponentServices;
 
 namespace Spbs.Ui.Components;
 
-public partial class ToastNotificationComponent// : IDisposable
+public partial class ToastNotificationComponent : IDisposable
 {
-    [Inject] private NotificationService _notificationService { get; set; }
+#pragma warning disable CS8618
+    [Inject] private INotificationService _notificationService { get; set; }
+#pragma warning restore CS8618
 
+    private bool _isInitialized = false;
+    
     protected override void OnInitialized()
     {
         _notificationService.OnToastAdded += ToastAddedToast;
@@ -60,11 +64,11 @@ public partial class ToastNotificationComponent// : IDisposable
         return (backgroundCssClass, iconCssClass);
     }
     
-    // void IDisposable.Dispose()
-    // {
-    //     _notificationService.OnToastAdded -= ToastAddedToast;
-    //     _notificationService.OnToastRemoved -= ToastRemovedToast;
-    // }
+    void IDisposable.Dispose()
+    {
+        _notificationService.OnToastAdded -= ToastAddedToast;
+        _notificationService.OnToastRemoved -= ToastRemovedToast;
+    }
 
     private string GetTimeSinceCreatedText(TimeOnly time)
     {
