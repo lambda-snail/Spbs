@@ -20,6 +20,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{6637E5A0
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spbs.Ui.ImportExpenses.Tests", "Tests\Spbs.Ui.ImportExpenses.Tests\Spbs.Ui.ImportExpenses.Tests.csproj", "{7BD42068-7C6E-4E3F-80B4-43B813647AF2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spbs.Ui.User.Test", "Tests\Spbs.Ui.User.Test\Spbs.Ui.User.Test.csproj", "{04F8BDDF-6227-42A6-A9F5-EFF272A8EAD7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -46,6 +48,10 @@ Global
 		{7BD42068-7C6E-4E3F-80B4-43B813647AF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7BD42068-7C6E-4E3F-80B4-43B813647AF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7BD42068-7C6E-4E3F-80B4-43B813647AF2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04F8BDDF-6227-42A6-A9F5-EFF272A8EAD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04F8BDDF-6227-42A6-A9F5-EFF272A8EAD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04F8BDDF-6227-42A6-A9F5-EFF272A8EAD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04F8BDDF-6227-42A6-A9F5-EFF272A8EAD7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -55,5 +61,6 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{7BD42068-7C6E-4E3F-80B4-43B813647AF2} = {6637E5A0-AEB8-4D09-B3B7-DA9478F06605}
+		{04F8BDDF-6227-42A6-A9F5-EFF272A8EAD7} = {6637E5A0-AEB8-4D09-B3B7-DA9478F06605}
 	EndGlobalSection
 EndGlobal

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using BlazorBootstrap;
 using FluentValidation;
 using Integrations.Nordigen;
@@ -25,6 +26,8 @@ using Spbs.Ui.Features.BankIntegration.Services;
 using Spbs.Ui.Features.Expenses;
 using Spbs.Ui.Features.Expenses.Repositories;
 using Spbs.Ui.Features.RecurringExpenses;
+using Spbs.Ui.Features.Users;
+using Spbs.Ui.Features.Users.Repositories;
 using Spbs.Ui.Middleware;
 
 namespace Spbs.Ui
@@ -74,12 +77,10 @@ namespace Spbs.Ui
             
             services.AddAutoMapper(typeof(Startup));
             services.AddTransient<IEulaService, EulaService>();
-            services.AddScoped<NotificationService>();
             services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<INordigenLinkWriterRepository, NordigenLinkWriterRepository>();
             services.AddScoped<INordigenAccountLinkService, NordigenAccountLinkService>();
             services.AddScoped<IRedirectLinkService, RedirectLinkService>();
-            
             services.RegisterNordigenIntegration(Configuration, "Spbs:NordigenOptions");
         }
 
@@ -109,7 +110,9 @@ namespace Spbs.Ui
             
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings
             {
-                DateTimeZoneHandling = DateTimeZoneHandling.Utc
+                DateTimeZoneHandling = DateTimeZoneHandling.Utc,
+                //Converters = new List<JsonConverter> { new TimeZoneInfoZerializer() },
+                ContractResolver = new SpbsContractResolver()
             };
         }
 
@@ -126,6 +129,8 @@ namespace Spbs.Ui
             
             services.AddTransient<INordigenLinkWriterRepository, NordigenLinkWriterRepository>();
             services.AddTransient<INordigenLinkReaderRepository, NordigenLinkReaderRepository>();
+
+            services.AddTransient<IUserRepository, UserRepository>();
         }
 
         private void RegisterDatabaseConnections(IServiceCollection services)
@@ -133,9 +138,7 @@ namespace Spbs.Ui
             var cosmosDbConnectionString =
                 Configuration.GetSection("Spbs:ConnectionStrings").GetValue<string>("CosmosDb");
             services.AddSingleton<CosmosClient>(
-                new CosmosClient(
-                    connectionString: cosmosDbConnectionString
-                )
+                new CosmosClient(connectionString: cosmosDbConnectionString)
             );
         }
 
