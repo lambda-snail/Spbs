@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Spbs.Generators.UserExtensions;
+using Spbs.Ui.ComponentServices;
 using Spbs.Ui.Features.Users.Repositories;
 
 namespace Spbs.Ui.Features.Users;
@@ -16,6 +17,7 @@ public partial class UserSettingsPage : ComponentBase
 
 #pragma warning disable CS8618
     [Inject] private IUserRepository _userRepository { get; set; }
+    [Inject] private INotificationService _notificationService { get; set; }
     
     private DynamicComponent _dynamicComponent;
 #pragma warning restore CS8618
@@ -52,7 +54,10 @@ public partial class UserSettingsPage : ComponentBase
 
     private async Task UserProfileSettings_UserSettingsChanged()
     {
-        //await _userRepository.UpsertUser(user);
-        Console.WriteLine("Hello!");
+        if (_user is not null)
+        {
+            await _userRepository.UpsertUser(_user);
+            _notificationService.ShowToast("Save successful", "Your settings have been saved!",NotificationLevel.Success);
+        }
     }
 }
