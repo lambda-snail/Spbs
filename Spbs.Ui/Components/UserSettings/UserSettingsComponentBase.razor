@@ -1,0 +1,23 @@
+@using Spbs.Ui.Features.Users
+@using System.Reflection
+@using System.Runtime.CompilerServices
+@code {
+#pragma warning disable CS8618
+    [Parameter]
+    public User UserObject { get; set; }
+
+    [Parameter]
+    public Func<Task> UserSettingsChangedCallback { get; set; }
+#pragma warning restore CS8618
+
+    public static string? GetMenuName<T>() where T: UserSettingsComponentBase
+    {
+        var type = typeof(T);
+        if (type.GetCustomAttribute(typeof(MenuNameAttribute)) is MenuNameAttribute menuName)
+        {
+            return menuName.Name;
+        }
+
+        return null;
+    }
+}
