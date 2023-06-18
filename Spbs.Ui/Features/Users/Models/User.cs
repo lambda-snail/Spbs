@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using Newtonsoft.Json;
 using Spbs.Ui.Data.Cosmos;
@@ -9,6 +10,8 @@ public class User : ICosmosData
 {
     public Guid Id { get; set; }
     public Guid UserId { get; set; }
+
+    public List<string> ExpenseCategories { get; set; } = new();
 
     public LocaleInformation LocaleInformation { get; set; }
 
