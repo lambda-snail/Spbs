@@ -8,7 +8,7 @@ using Spbs.Ui.Components.UserSettings;
 
 namespace Spbs.Ui.Features.Expenses;
 
-[MenuName("Expense Settings")]
+[MenuName("Expenses")]
 public partial class ExpenseSettingsComponent : UserSettingsComponentBase
 {
 #pragma warning disable CS8618
