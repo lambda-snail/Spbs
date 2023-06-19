@@ -1,17 +1,23 @@
 @inherits Spbs.Ui.Components.UserSettings.UserSettingsComponentBase
 
-<span>
+<div class="py-4">
+    <span>
 
-<Button @onclick="OnAddCategoryClickedAsync"
-        Size="Size.Small"
-        Color="ButtonColor.Primary">New Category</Button>
+        <Button @onclick="OnAddCategoryClickedAsync"
+                Size="Size.Small"
+                Color="ButtonColor.Primary">
+            New Category
+        </Button>
 
-<Button @onclick="OnRemoveCategoryClickedAsync"
-        Disabled="@(_selectedCategories.Count == 0)"
-        Size="Size.Small"
-        Color="ButtonColor.Primary">Remove Category</Button>
-    
-</span>
+        <Button @onclick="OnRemoveCategoryClickedAsync"
+                Disabled="@(_selectedCategories.Count == 0)"
+                Size="Size.Small"
+                Color="ButtonColor.Primary">
+            Remove Category
+        </Button>
+
+    </span>
+</div>
 
 <Grid @ref="_grid"
       TItem="ExpenseCategoryListItem"
