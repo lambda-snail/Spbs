@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using BlazorBootstrap;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using Microsoft.VisualBasic.CompilerServices;
 using Spbs.Ui.Components.UserSettings;
 
 namespace Spbs.Ui.Features.Expenses;
@@ -17,6 +16,8 @@ public partial class ExpenseSettingsComponent : UserSettingsComponentBase
     
     private Grid<ExpenseCategoryListItem> _grid;
 #pragma warning restore CS8618
+
+    private HashSet<ExpenseCategoryListItem> _selectedCategories = new();
     
     private struct ExpenseCategoryListItem
     {
@@ -25,7 +26,7 @@ public partial class ExpenseSettingsComponent : UserSettingsComponentBase
     }
     
     private List<ExpenseCategoryListItem> _expenseCategories = new();
-    
+
     protected override void OnInitialized()
     {
         if (UserObject.ExpenseCategories is { Count: >0 })
@@ -50,6 +51,27 @@ public partial class ExpenseSettingsComponent : UserSettingsComponentBase
         }
         
         _expenseCategories.Add(newCategory);
+        await _grid.RefreshDataAsync();
+    }
+
+    private Task OnSelectionChanged(HashSet<ExpenseCategoryListItem> categories)
+    {
+        if (categories is { Count: >0 })
+        {
+            _selectedCategories = categories;
+        }
+
+        return Task.CompletedTask;
+    }
+    
+    private async Task OnRemoveCategoryClickedAsync()
+    {
+        foreach (var category in _selectedCategories)
+        {
+            _expenseCategories.Remove(category.CategoryName);
+        }
+        
+        _selectedCategories.Clear();
         await _grid.RefreshDataAsync();
     }
 }

@@ -1,16 +1,26 @@
-@using Spbs.Ui.Components.UserSettings
+@inherits Spbs.Ui.Components.UserSettings.UserSettingsComponentBase
 
-@inherits UserSettingsComponentBase
+<span>
 
 <Button @onclick="OnAddCategoryClickedAsync"
         Size="Size.Small"
         Color="ButtonColor.Primary">New Category</Button>
+
+<Button @onclick="OnRemoveCategoryClickedAsync"
+        Disabled="@(_selectedCategories.Count == 0)"
+        Size="Size.Small"
+        Color="ButtonColor.Primary">Remove Category</Button>
+    
+</span>
 
 <Grid @ref="_grid"
       TItem="ExpenseCategoryListItem"
       Class="table table-hover table-bordered table-striped"
       Data="_expenseCategories"
       AllowFiltering="true"
+      AllowSelection="true"
+      SelectionMode="GridSelectionMode.Multiple"
+      SelectedItemsChanged="OnSelectionChanged"
       Responsive="true">
 
     <GridColumn TItem="ExpenseCategoryListItem" HeaderText="Category" PropertyName="CategoryName">
