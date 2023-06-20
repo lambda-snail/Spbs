@@ -17,7 +17,7 @@
                               OnInvalidSubmit="@HandleInvalidSubmit">
 
                         <DataAnnotationsValidator/>
-                        <ValidationSummary></ValidationSummary>
+                        <ValidationSummary/>
 
                         <div class="form-group col-md-10">
                             <label for="expense-name">Name</label>
@@ -50,6 +50,19 @@
                         </div>
 
                         <div class="form-group col-md-10">
+                            <label for="expense-category">Category</label>
+                            <InputSelect id="expense-category"
+                                         class="form-control"
+                                         @bind-Value="@_editExpenseViewModel.Category">
+                                @foreach (var category in _expenseCategories)
+                                {
+                                    <option value="@category">@category</option>
+                                }
+                            </InputSelect>
+                            <small id="expense-category-small" class="form-text text-muted">How would you classify this expense?</small>
+                        </div>
+
+                        <div class="form-group col-md-10">
                             <label for="expense-venue">Venue</label>
                             <InputText id="expense-venue"
                                        class="form-control"
@@ -73,8 +86,8 @@
                             <label for="expense-total">Total</label>
                             <InputNumber id="expense-total"
                                          TValue="double?"
-                                       class="form-control"
-                                       @bind-Value="@_editExpenseViewModel.Total">
+                                         class="form-control"
+                                         @bind-Value="@_editExpenseViewModel.Total">
                             </InputNumber>
                             <small id="expense-currency-small" class="form-text text-muted">The total amount in the specified currenct.</small>
                             <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => _editExpenseViewModel.Total)"/>
