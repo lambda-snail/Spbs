@@ -43,6 +43,10 @@ else
                             }
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-3">Category:</div>
+                        <div class="col-auto">@(_expense.Category ?? string.Empty)</div>
+                    </div>
 
                     <div class="row">
                         <div class="col-3">Tags:</div>
@@ -81,7 +85,7 @@ else
                                 Size="Size.Small"
                                 Color="ButtonColor.Primary">
                                 <Icon Name="IconName.PlusSquare"/>
-                                New Item 
+                                New Item
                             </Button>
                         </span>
                     </div>
@@ -89,7 +93,7 @@ else
             </Card>
         </div>
 
-        <div class="row">
+        <div class="row py-4">
 
             <Grid TItem="ExpenseItem"
                   class="table table-hover table-bordered table-striped"

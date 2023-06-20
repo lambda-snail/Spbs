@@ -21,6 +21,8 @@ public class EditExpenseViewModel
     [Required]
     public DateTime Date { get; set; }
 
+    public string? Category { get; set; }
+    
     public string? Venue { get; set; }
     public string? Currency { get; set; }
     public double? Total { get; set; }

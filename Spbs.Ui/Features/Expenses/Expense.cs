@@ -30,7 +30,8 @@ public class Expense : ICosmosData
     [JsonProperty("venue")]
     public string? Venue { get; set; }
 
-//    public Category? Category { get; set; }
+    [JsonProperty("category")]
+    public string? Category { get; set; }
 
     [JsonProperty("items")]
     public List<ExpenseItem> Items { get; set; } = new();

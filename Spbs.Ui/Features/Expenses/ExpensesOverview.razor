@@ -34,6 +34,7 @@
                 @context.Date.ToString()
             </GridColumn>
             <GridColumn TItem="Expense" HeaderText="Total" PropertyName="Total">@context.Total.ToString() @context.Currency</GridColumn>
+            <GridColumn TItem="Expense" HeaderText="Category" PropertyName="Category">@context.Category</GridColumn>
             <GridColumn TItem="Expense" HeaderText="Venue" PropertyName="Venue">@context.Venue</GridColumn>
         </Grid>
     </div>

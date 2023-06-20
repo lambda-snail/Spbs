@@ -1,11 +1,16 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Components;
+using Spbs.Generators.UserExtensions;
+using Spbs.Ui.Features.Users;
+using Spbs.Ui.Features.Users.Repositories;
 
 namespace Spbs.Ui.Features.Expenses;
 
+[AuthenticationTaskExtension]
 public partial class EditExpenseComponent : ComponentBase
 {
     private bool _doShowContent = false;
@@ -13,16 +18,33 @@ public partial class EditExpenseComponent : ComponentBase
     private Expense? _expense;
     private EditExpenseViewModel _editExpenseViewModel = new() { Date = DateTime.Now };
 
-    [Inject] public IMapper mapper { get; set; }
-    [Inject] public IExpenseWriterRepository ExpenseWriterRepository { get; set; } 
+    private List<string> _expenseCategories = new();
+    
+#pragma warning disable CS8618
+    [Inject] private IMapper _mapper { get; set; }
+    [Inject] private IExpenseWriterRepository _expenseWriterRepository { get; set; } 
+    [Inject] private IUserRepository _userRepository { get; set; }
     
     [Parameter, Required] public Func<Guid?> GetUserId { get; set; }
     [Parameter] public Action OnUpdateCallback { get; set; }
+#pragma warning restore CS8618
     
     public void ShowModal()
     {
         _doShowContent = true;
         StateHasChanged();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Guid? userId = await UserId();
+        User? user = await _userRepository.GetById(_userId!.Value);
+        if (user is null)
+        {
+            return;
+        }
+
+        _expenseCategories = user.ExpenseCategories;
     }
 
     private void CloseDialog()
@@ -39,7 +61,7 @@ public partial class EditExpenseComponent : ComponentBase
         if (expense is not null)
         {
             _expense = expense;
-            _editExpenseViewModel = mapper.Map<EditExpenseViewModel>(expense);
+            _editExpenseViewModel = _mapper.Map<EditExpenseViewModel>(expense);
         }
     }
 
@@ -48,21 +70,21 @@ public partial class EditExpenseComponent : ComponentBase
         Expense expense;
         if (_expense is null)
         {
-            expense = mapper.Map<Expense>(_editExpenseViewModel);
+            expense = _mapper.Map<Expense>(_editExpenseViewModel);
         }
         else
         {
-            expense = mapper.Map(_editExpenseViewModel, _expense);
+            expense = _mapper.Map(_editExpenseViewModel, _expense);
         }
 
         EnsureUseIdIsSet(expense);
         if (_editExpenseViewModel.Id is null)
         {
-            await ExpenseWriterRepository.InsertExpenseAsync(expense);
+            await _expenseWriterRepository.InsertExpenseAsync(expense);
         }
         else
         {
-            await ExpenseWriterRepository.UpdateExpenseAsync(expense);
+            await _expenseWriterRepository.UpdateExpenseAsync(expense);
         }
         
         _expense = null;

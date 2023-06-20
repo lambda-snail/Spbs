@@ -1,9 +1,28 @@
 @page "/me/settings/{Area}"
 
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <div class="navbar-brand" href="#">User Settings</div>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                @foreach (var component in _settingsPageMap.Keys)
+                {
+                    <li class="nav-item">
+                        <NavLink href=@($"/me/settings/" + component) class="nav-link">@_settingsPageMap[component].MenuName</NavLink>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</nav>
+
 @if (_readyToRender)
 {
     <DynamicComponent
         @ref="_dynamicComponent"
         Parameters="_dynamicComponentParameters"
-        Type="@(Area is not null && _settingsPageMap.TryGetValue(Area, out var value) ? value : _defaultSettingsPage)"/>
+        Type="@(Area is not null && _settingsPageMap.TryGetValue(Area, out var value) ? value.ComponentType : _defaultSettingsPage)"/>
 }

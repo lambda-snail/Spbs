@@ -1,0 +1,40 @@
+@inherits Spbs.Ui.Components.UserSettings.UserSettingsComponentBase
+
+<div class="container py-4 m-0">
+    <div class="row">
+        <div class="col px-0">
+            <Button @onclick="OnAddCategoryClickedAsync"
+                    Size="Size.Small"
+                    Color="ButtonColor.Secondary">
+                New Category
+            </Button>
+
+            <Button @onclick="OnRemoveCategoryClickedAsync"
+                    Disabled="@(_selectedCategories.Count == 0)"
+                    Size="Size.Small"
+                    Color="ButtonColor.Secondary">
+                Remove Category
+            </Button>
+            <Button @onclick="OnSaveClicked"
+                    Size="Size.Small"
+                    Color="ButtonColor.Primary">
+                Save
+            </Button>
+        </div>
+    </div>
+</div>
+
+<Grid @ref="_grid"
+      TItem="ExpenseCategoryListItem"
+      Class="table table-hover table-bordered table-striped"
+      Data="_expenseCategories"
+      AllowFiltering="true"
+      AllowSelection="true"
+      SelectionMode="GridSelectionMode.Multiple"
+      SelectedItemsChanged="OnSelectionChanged"
+      Responsive="true">
+
+    <GridColumn TItem="ExpenseCategoryListItem" HeaderText="Category" PropertyName="CategoryName">
+        @context.CategoryName
+    </GridColumn>
+</Grid>

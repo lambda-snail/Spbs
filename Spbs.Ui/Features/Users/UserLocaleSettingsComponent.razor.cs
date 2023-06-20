@@ -1,8 +1,10 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Components;
+using Spbs.Ui.Components.UserSettings;
 
 namespace Spbs.Ui.Features.Users;
 
+[MenuName("Locale")]
 public partial class UserLocaleSettingsComponent : UserSettingsComponentBase
 {
     private LocaleInformationViewModel _localeInformationVm { get; set; } = new();
