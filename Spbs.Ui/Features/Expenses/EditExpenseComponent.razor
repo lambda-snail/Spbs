@@ -54,6 +54,7 @@
                             <InputSelect id="expense-category"
                                          class="form-control"
                                          @bind-Value="@_editExpenseViewModel.Category">
+                                <option value=""></option>
                                 @foreach (var category in _expenseCategories)
                                 {
                                     <option value="@category">@category</option>
