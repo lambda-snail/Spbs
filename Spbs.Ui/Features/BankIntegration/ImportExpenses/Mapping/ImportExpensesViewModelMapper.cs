@@ -25,6 +25,7 @@ public class ImportExpensesViewModelMapper : Profile
             .ForMember(e => e.Venue, opt => opt.MapFrom(vm => vm.RemittanceInformationUnstructured))
             .ForMember(e => e.Description, opt => opt.MapFrom(vm => "Expense imported with id " + vm.TransactionId))
             .ForMember(e => e.Name, opt => opt.MapFrom(vm => vm.RemittanceInformationUnstructured))
+            .ForMember(e => e.Category, opt => opt.Ignore())
             
             // Untill we can support expenses with a total but no expense items.
             .ForMember(e => e.Items, opt => 
