@@ -77,6 +77,7 @@ public partial class ExpenseSettingsComponent : UserSettingsComponentBase
 
     private void OnSaveClicked()
     {
+        UserObject.ExpenseCategories = _expenseCategories.Select(c => c.CategoryName).ToList();
         UserSettingsChangedCallback?.Invoke();
     }
 }
