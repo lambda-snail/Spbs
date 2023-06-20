@@ -74,4 +74,9 @@ public partial class ExpenseSettingsComponent : UserSettingsComponentBase
         _selectedCategories.Clear();
         await _grid.RefreshDataAsync();
     }
+
+    private void OnSaveClicked()
+    {
+        UserSettingsChangedCallback?.Invoke();
+    }
 }
