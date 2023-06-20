@@ -5,17 +5,22 @@
 
         <Button @onclick="OnAddCategoryClickedAsync"
                 Size="Size.Small"
-                Color="ButtonColor.Primary">
+                Color="ButtonColor.Secondary">
             New Category
         </Button>
 
         <Button @onclick="OnRemoveCategoryClickedAsync"
                 Disabled="@(_selectedCategories.Count == 0)"
                 Size="Size.Small"
-                Color="ButtonColor.Primary">
+                Color="ButtonColor.Secondary">
             Remove Category
         </Button>
 
+    </span>
+    <span class="d-flex flex-row justify-content-end">
+        <Button 
+                Size="Size.Small"
+                Color="ButtonColor.Primary">Save</Button>
     </span>
 </div>
 
