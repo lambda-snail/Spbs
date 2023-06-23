@@ -28,6 +28,7 @@ using Spbs.Ui.Features.Expenses.Repositories;
 using Spbs.Ui.Features.RecurringExpenses;
 using Spbs.Ui.Features.Users;
 using Spbs.Ui.Features.Users.Repositories;
+using Spbs.Ui.Features.Visualization.DataAccess;
 using Spbs.Ui.Middleware;
 
 namespace Spbs.Ui
@@ -131,6 +132,8 @@ namespace Spbs.Ui
             services.AddTransient<INordigenLinkReaderRepository, NordigenLinkReaderRepository>();
 
             services.AddTransient<IUserRepository, UserRepository>();
+            
+            services.AddScoped<IExpenseBatchReader, ExpenseBatchReader>();
         }
 
         private void RegisterDatabaseConnections(IServiceCollection services)
