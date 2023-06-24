@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
@@ -13,7 +12,6 @@ public partial class GraphComponent<TDataItem> : ComponentBase
 
 #pragma warning disable CS8618
     [Inject] IJSRuntime _jSRuntime { get; set; }
-#pragma warning restore CS8618
 
     /// <summary>
     /// The items from which to create the data visualization.
@@ -30,6 +28,7 @@ public partial class GraphComponent<TDataItem> : ComponentBase
     /// Given a TDataItem, what label should be displayed in the graph?
     /// </summary>
     [Parameter] public Func<TDataItem, string> ToLabelTransform { get; set; }
+#pragma warning restore CS8618
     
     private List<string> _filteredLabels = new();
     private List<double> _filteredValues = new();
@@ -37,7 +36,7 @@ public partial class GraphComponent<TDataItem> : ComponentBase
     
     private IJSObjectReference _chart;
     private bool _isChartCreated = false;
-    
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (_isChartCreated) return;
