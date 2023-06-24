@@ -1,5 +1,11 @@
 ﻿@page "/expenses/visualize"
+@using Spbs.Ui.Features.Visualization.Models
 
-<canvas id="@_canvasId" />
-
-
+@if (_expenses is { Count: >0 })
+{
+    <GraphComponent TDataItem="ExpenseVisualizationModel"
+                    DataItems="_expenses"
+                    ToValueTransform="(ExpenseVisualizationModel e) => e.Total"
+                    ToLabelTransform="(ExpenseVisualizationModel e) => e.Category ?? _noCategoryLabel" 
+    />    
+}
