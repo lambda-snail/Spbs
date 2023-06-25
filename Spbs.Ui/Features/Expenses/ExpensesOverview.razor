@@ -11,8 +11,8 @@
             <MudPaper Elevation="25" Class="my-1">
                 <MudToolBar>
                     <MudIconButton Icon="@Icons.Material.Outlined.Add" OnClick="ToggleExpenseDialog" />
-                    <MudIconButton Icon="@Icons.Material.Outlined.Edit"/>
-                    <MudIconButton Icon="@Icons.Material.Outlined.Remove" Color="Color.Inherit"/>
+                    <MudIconButton Icon="@Icons.Material.Outlined.Edit" Disabled="@(_numSelectedExpenses != 1)" />
+                    <MudIconButton Icon="@Icons.Material.Outlined.Remove" Color="Color.Inherit" Disabled="@(_numSelectedExpenses == 0)" OnClick="DeleteExpenses" />
                     <MudSpacer/>
 
                     <MudDatePicker
@@ -30,12 +30,15 @@
         </MudItem>
         <MudItem xs="12">
             <MudDataGrid T="Expense"
+                         @ref="@_grid"
                          Items="@_cachedExpenses" 
                          Filterable="true" 
                          SortMode="@SortMode.Multiple"
                          MultiSelection="true"
+                         SelectedItemsChanged="@SelectedItemsChanged"
                          Groupable="false">
                 <Columns>
+                    <SelectColumn T="Expense" />
                     <TemplateColumn T="Expense" Title="Name">
                         <CellTemplate>
                             <MudButton Variant="Variant.Text" Color="Color.Primary">
@@ -48,7 +51,7 @@
                     <PropertyColumn Property="x => x.Total"/>
                     <PropertyColumn Property="x => x.Category"/>
                     <PropertyColumn Property="x => x.Venue"/>
-                    
+
                 </Columns>
                 <PagerContent>
                     <MudDataGridPager T="Expense"/>
