@@ -14,22 +14,29 @@
         </div>
     </MudAppBar>
     <MudDrawer @bind-Open="@_drawerOpen">
-        
-        <MudNavMenu>
-            <MudNavLink Href="/home" Match="NavLinkMatch.All">Home</MudNavLink>
-            <MudNavLink Href="/expenses" Match="NavLinkMatch.All">Expenses</MudNavLink>
-            <MudNavLink Href="/recurring" Match="NavLinkMatch.All">Recurring Expenses</MudNavLink>
-            <MudNavLink Href="/data/visualize" Match="NavLinkMatch.All">Visualize</MudNavLink>
+
+        <MudNavMenu Bordered="true">
+            <MudText Typo="Typo.h6" Class="px-4">Spbs</MudText>
+            <MudText Typo="Typo.body2" Class="px-4 mud-text-secondary">Main Menu</MudText>
+            <MudDivider Class="my-2"/>
             
+            <MudNavLink Href="/home" Icon="@Icons.Material.Filled.Home" Match="NavLinkMatch.All">Home</MudNavLink>
+            <MudNavLink Href="/expenses" Icon="@Icons.Material.Filled.AttachMoney" Match="NavLinkMatch.All">Expenses</MudNavLink>
+            <MudNavLink Href="/recurring" Icon="@Icons.Material.Filled.Schedule" Match="NavLinkMatch.All">Recurring Expenses</MudNavLink>
+            <MudNavLink Href="/data/visualize" Icon="@Icons.Material.Filled.BarChart" Match="NavLinkMatch.All">Visualize</MudNavLink>
+
             <MudNavGroup Title="Bank Integration" Expanded="false">
-                <MudNavLink Href="/accounts/links/"  Match="NavLinkMatch.All">Import Expenses</MudNavLink>
-                <MudNavLink Href="/external/banks"  Match="NavLinkMatch.All">Link to Bank</MudNavLink>
+                <MudNavLink Href="/accounts/links/" Icon="@Icons.Material.Filled.KeyboardDoubleArrowLeft" Match="NavLinkMatch.All">Import Expenses</MudNavLink>
+                <MudNavLink Href="/external/banks" Icon="@Icons.Material.Filled.AddLink" Match="NavLinkMatch.All">Link to Bank</MudNavLink>
             </MudNavGroup>
             @* <MudNavLink Href="/about"  Match="NavLinkMatch.All">About</MudNavLink> *@
         </MudNavMenu>
-        
+
     </MudDrawer>
+    
     <MudMainContent>
-        @Body
+        <MudContainer MaxWidth="MaxWidth.False">
+            @Body
+        </MudContainer>
     </MudMainContent>
 </MudLayout>
