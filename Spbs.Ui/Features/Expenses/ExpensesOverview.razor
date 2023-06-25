@@ -1,51 +1,61 @@
 @page "/expenses"
-@using Size = MudBlazor.Size
 
 <div>
-    <div class="row flex-column justify-content-start">
-        <span class="col">
-            <h3>Expenses Overview</h3>
-        </span>
-        <span class="col">
-            <Button @onclick="ToggleExpenseDialog"
-                    Size="BlazorBootstrap.Size.Small"
-                    Color="ButtonColor.Primary">
-                New Expense
-            </Button>
-        </span>
-        <span>
-            <MudDatePicker 
-                Label="Expenses for Month" 
-                HelperText="@_dateFilterYearMonth?.ToShortDateString()" 
-                @bind-Date="_dateFilterYearMonth" 
-                OpenTo="OpenTo.Year" 
-                FixDay="1" 
-                DateFormat="yyyy-MM" 
-                PickerMonthChanged="ReloadData" />
-        </span>
-    </div>
-    
-    <MudDataGrid T="Expense" Items="@_cachedExpenses" Filterable="false" SortMode="@SortMode.None" Groupable="false">
-        <Columns>
-            <PropertyColumn Property="x => x.Name"/>
-            <PropertyColumn Property="x => x.Date"/>
-            <PropertyColumn Property="x => x.Total"/>
-            <PropertyColumn Property="x => x.Category"/>
-            <PropertyColumn Property="x => x.Venue"/>
-            <TemplateColumn CellClass="d-flex justify-end">
-                <CellTemplate>
-                    <MudStack Row>
-                        <MudButton Size="@Size.Small" Variant="@Variant.Outlined" Color="@Color.Primary">Edit</MudButton>
-                        <MudButton Size="@Size.Small" Variant="@Variant.Outlined" Color="@Color.Warning">Delete</MudButton>
-                    </MudStack>
-                </CellTemplate>
-            </TemplateColumn>
-        </Columns>
-        <PagerContent>
-            <MudDataGridPager T="Expense"/>
-        </PagerContent>
-    </MudDataGrid>
+    <MudGrid>
+        <MudItem xs="12">
+            <MudElement HtmlTag="h1" Class="py-4">
+                Expenses Overview
+            </MudElement>
+        </MudItem>
+        <MudItem xs="12">
+            <MudPaper Elevation="25" Class="my-1">
+                <MudToolBar>
+                    <MudIconButton Icon="@Icons.Material.Outlined.Add" OnClick="ToggleExpenseDialog" />
+                    <MudIconButton Icon="@Icons.Material.Outlined.Edit"/>
+                    <MudIconButton Icon="@Icons.Material.Outlined.Remove" Color="Color.Inherit"/>
+                    <MudSpacer/>
 
+                    <MudDatePicker
+                        Label="Filter Expenses for Month"
+                        @bind-Date="_dateFilterYearMonth"
+                        OpenTo="OpenTo.Year"
+                        FixDay="1"
+                        DateFormat="yyyy-MM"
+                        PickerMonthChanged="ReloadData"/>
+
+                    <MudSpacer/>
+                    <MudIconButton Icon="@Icons.Material.Outlined.Settings" Color="Color.Inherit"/>
+                </MudToolBar>
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12">
+            <MudDataGrid T="Expense"
+                         Items="@_cachedExpenses" 
+                         Filterable="true" 
+                         SortMode="@SortMode.Multiple"
+                         MultiSelection="true"
+                         Groupable="false">
+                <Columns>
+                    <TemplateColumn T="Expense" Title="Name">
+                        <CellTemplate>
+                            <MudButton Variant="Variant.Text" Color="Color.Primary">
+                                <NavLink href="@GetExpenseDetailsUrl(context.Item)">@context.Item.Name</NavLink>
+                            </MudButton>
+                        </CellTemplate>
+                    </TemplateColumn>
+
+                    <PropertyColumn Property="x => x.Date"/>
+                    <PropertyColumn Property="x => x.Total"/>
+                    <PropertyColumn Property="x => x.Category"/>
+                    <PropertyColumn Property="x => x.Venue"/>
+                    
+                </Columns>
+                <PagerContent>
+                    <MudDataGridPager T="Expense"/>
+                </PagerContent>
+            </MudDataGrid>
+        </MudItem>
+    </MudGrid>
 
     @* <div class="row py-2"> *@
     @*     <Grid TItem="Expense" *@
