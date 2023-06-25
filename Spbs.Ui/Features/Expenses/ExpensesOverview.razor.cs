@@ -19,6 +19,7 @@ public partial class ExpensesOverview : ComponentBase
     private EditExpenseComponent _editExpenseComponent;
     private MudDataGrid<Expense> _grid;
     [Inject] private IExpenseReaderRepository _expenseReader { get; set; }
+    [Inject] private IExpenseWriterRepository _expenseWriter { get; set; }
     [Inject] private ISnackbar _snackBar { get; set; }
 #pragma warning restore CS8618
 
@@ -67,6 +68,14 @@ public partial class ExpensesOverview : ComponentBase
             // We shouldn't get here, but just in case
             _snackBar.Add("No expenses selected", Severity.Warning);
         }
+
+        foreach (var expense in selectedItems)
+        {
+            //_expenseWriter.DeleteAsync(expense);
+            _cachedExpenses.Remove(expense);
+        }
+
+        _grid.ReloadServerData();
         
         _snackBar.Add($"Deleted {selectedItems.Count} {(selectedItems.Count > 1 ? "expenses" : "expense")}", Severity.Success);
     }
