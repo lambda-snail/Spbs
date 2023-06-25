@@ -28,6 +28,9 @@ using Spbs.Ui.Features.Expenses.Repositories;
 using Spbs.Ui.Features.RecurringExpenses;
 using Spbs.Ui.Features.Users;
 using Spbs.Ui.Features.Users.Repositories;
+using Spbs.Ui.Features.Visualization.DataAccess;
+using Spbs.Ui.Features.Visualization.Models;
+using Spbs.Ui.Features.Visualization.Models.Validation;
 using Spbs.Ui.Middleware;
 
 namespace Spbs.Ui
@@ -93,6 +96,7 @@ namespace Spbs.Ui
             services.AddSingleton<IValidator<DataConfigurationOptions>, DataConfigurationOptionsValidator>();
             services.AddSingleton<IValidator<NordigenEula>, NordigenEulaFluentValidation>();
             services.AddSingleton<IValidator<TransactionsRequestParameters>, TransactionsParametersRequestFluentValidation>();
+            services.AddSingleton<IValidator<GraphDataFilter>, GraphDataFilterFluentValidation>();
         }
 
         private void RegisterConfigurations(IServiceCollection services)
@@ -131,6 +135,8 @@ namespace Spbs.Ui
             services.AddTransient<INordigenLinkReaderRepository, NordigenLinkReaderRepository>();
 
             services.AddTransient<IUserRepository, UserRepository>();
+            
+            services.AddScoped<IExpenseBatchReader, ExpenseBatchReader>();
         }
 
         private void RegisterDatabaseConnections(IServiceCollection services)

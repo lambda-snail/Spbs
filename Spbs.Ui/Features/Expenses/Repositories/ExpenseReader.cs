@@ -44,11 +44,24 @@ public class ExpenseReader : CosmosRepositoryBase<Expense>, IExpenseReaderReposi
         return null;
     }
 
-    public Task<List<Expense>> GetSingleExpensesByUserFromMonth(Guid userId, DateTime date, int take = 25, int skip = 0)
+    public Task<List<Expense>> GetAllExpensesByUserFromMonth(Guid userId, DateTime date)
+    {
+        _logger.LogInformation("(Expense Reader) Request to get all expenses for {UserId} from date {Date}", userId, date);
+        
+        var queryDefinition = _container.GetItemLinqQueryable<CosmosDocument<Expense>>()
+            .Where(doc => doc.Data.UserId == userId)
+            .Where(doc => doc.Type == _cosmosType)
+            .Where(doc => doc.Data.Date >= date)
+            .OrderBy(doc => doc.Data.Date)
+            .ToQueryDefinition();
+
+        return GetAll(queryDefinition);
+    }
+    
+    public Task<List<Expense>> GetSingleExpensesByUserFromMonth(Guid userId, DateTime date, int take, int skip)
     {
         _logger.LogInformation("(Expense Reader) Request to get expenses for {UserId} from date {Date}", userId, date);
-
-        List<Expense> items = new(take);
+        
         var queryDefinition = _container.GetItemLinqQueryable<CosmosDocument<Expense>>()
             .Where(doc => doc.Data.UserId == userId)
             .Where(doc => doc.Type == _cosmosType)
