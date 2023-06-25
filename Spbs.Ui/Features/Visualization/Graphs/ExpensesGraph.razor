@@ -1,5 +1,4 @@
 ﻿@page "/data/visualize"
-@using Spbs.Ui.Features.Visualization.Models
 
 <div id="dashboard" class="container">
     <div class="row">
@@ -23,14 +22,7 @@
             </div>
 
             <div class="row">
-                @if (_expenses is { Count: >0 })
-                {
-                    <GraphComponent TDataItem="ExpenseVisualizationModel"
-                                    @ref="_graph1"
-                                    DataItems="_expenses"
-                                    ToValueTransform="(ExpenseVisualizationModel e) => e.Total"
-                                    ToLabelTransform="(ExpenseVisualizationModel e) => e.Category ?? _noCategoryLabel"/>
-                }
+                <BarChart @ref="_chart1" Class="mb-4" />
             </div>
         </div>
         <div class="col">
@@ -38,40 +30,3 @@
         </div>
     </div>
 </div>
-
-@* @if (_expenses is { Count: >0 }) *@
-@* { *@
-@*     <GraphComponent TDataItem="ExpenseVisualizationModel" *@
-@*                     DataItems="_expenses" *@
-@*                     ToValueTransform="(ExpenseVisualizationModel e) => e.Total" *@
-@*                     ToLabelTransform="(ExpenseVisualizationModel e) => e.Category ?? _noCategoryLabel"/> *@
-@* } *@
-
-
-@* <EditForm Model="@_filter" *@
-@*           OnValidSubmit="@RefreshData"> *@
-@* *@
-@*     <FluentValidationValidator/> *@
-@*      *@
-@*     $1$ <ValidationSummary/> #1# *@
-@* *@
-@*     <div class="form-group col-md-10"> *@
-@*         <label for="filter-from">From</label> *@
-@*         <InputDate id="filter-from" *@
-@*                    class="form-control" *@
-@*                    @bind-Value="@_filter.FromDate"> *@
-@*         </InputDate> *@
-@*         <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => _filter.FromDate)"/> *@
-@*     </div> *@
-@* *@
-@*     <div class="form-group col-md-10"> *@
-@*         <label for="filter-to">To</label> *@
-@*         <InputDate id="filter-to" *@
-@*                    class="form-control" *@
-@*                    @bind-Value="@_filter.ToDate"> *@
-@*         </InputDate> *@
-@*         <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => _filter.ToDate)"/> *@
-@*     </div> *@
-@* *@
-@*     <button type="submit" class="btn btn-primary edit-btn">Submit</button> *@
-@* </EditForm> *@
