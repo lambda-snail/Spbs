@@ -74,6 +74,14 @@ public partial class GraphComponent<TDataItem> : ComponentBase
         _chart = await _jSRuntime!.InvokeAsync<IJSObjectReference>("createChart", _canvasId, config);
         _isChartCreated = true;
     }
+
+    public async ValueTask Refresh()
+    {
+        if (_isChartCreated)
+        {
+            await _jSRuntime.InvokeVoidAsync("addDataToChart", _chart, _filteredLabels, _filteredValues);
+        }
+    }
     
     private void SumByCategory()
     {
@@ -107,5 +115,4 @@ public partial class GraphComponent<TDataItem> : ComponentBase
             _filteredValues.Add(data.Value);
         }
     }
-
 }
