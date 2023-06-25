@@ -1,18 +1,35 @@
 ﻿@inherits LayoutComponentBase
 
-<Sidebar @ref="_sidebar"
-         IconName="IconName.BootstrapFill"
-         Title="Spbs"
-         BadgeText="v0.0.0"
-         DataProvider="SidebarDataProvider"/>
+<MudThemeProvider @bind-IsDarkMode="@_isDarkMode"/>
+<MudDialogProvider/>
+<MudSnackbarProvider/>
 
-<main class="main">
-        
-        <div class="bb-top-row px-4 d-flex justify-content-between">
-            <Icon Name="IconName.List" role="button" @onclick="ToggleSidebar"/>
-            <div><LoginDisplay/></div>
+<ToastNotificationComponent/>
+
+<MudLayout>
+    <MudAppBar>
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())"/>
+        <div>
+            <LoginDisplay/>
         </div>
+    </MudAppBar>
+    <MudDrawer @bind-Open="@_drawerOpen">
         
-        <div class="px-4 py-2 col-12">@Body</div>
-    </main>
-    <ToastNotificationComponent />
+        <MudNavMenu>
+            <MudNavLink Href="/home" Match="NavLinkMatch.All">Home</MudNavLink>
+            <MudNavLink Href="/expenses" Match="NavLinkMatch.All">Expenses</MudNavLink>
+            <MudNavLink Href="/recurring" Match="NavLinkMatch.All">Recurring Expenses</MudNavLink>
+            <MudNavLink Href="/data/visualize" Match="NavLinkMatch.All">Visualize</MudNavLink>
+            
+            <MudNavGroup Title="Bank Integration" Expanded="false">
+                <MudNavLink Href="/accounts/links/"  Match="NavLinkMatch.All">Import Expenses</MudNavLink>
+                <MudNavLink Href="/external/banks"  Match="NavLinkMatch.All">Link to Bank</MudNavLink>
+            </MudNavGroup>
+            @* <MudNavLink Href="/about"  Match="NavLinkMatch.All">About</MudNavLink> *@
+        </MudNavMenu>
+        
+    </MudDrawer>
+    <MudMainContent>
+        @Body
+    </MudMainContent>
+</MudLayout>

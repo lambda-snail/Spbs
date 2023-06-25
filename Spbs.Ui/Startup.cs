@@ -1,17 +1,17 @@
 using System;
-using System.Collections.Generic;
 using BlazorBootstrap;
 using FluentValidation;
 using Integrations.Nordigen;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Microsoft.Identity.Web;
-using Microsoft.Identity.Web.UI;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Identity.Web;
+using Microsoft.Identity.Web.UI;
+using MudBlazor.Services;
 using Newtonsoft.Json;
 using Serilog;
 using Shared.Utilities;
@@ -69,6 +69,7 @@ namespace Spbs.Ui
 
             services.AddRazorPages();
             services.AddBlazorBootstrap();
+            services.AddMudServices();
             
             var blazorBuilder = services.AddServerSideBlazor()
                 .AddMicrosoftIdentityConsentHandler();

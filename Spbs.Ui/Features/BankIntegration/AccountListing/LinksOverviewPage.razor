@@ -8,15 +8,15 @@
                 <h3>Current Active Bank Links</h3>
             </span>
             <span class="col">
-                <Button Type="ButtonType.Link"
+                <Button Type="BlazorBootstrap.ButtonType.Link"
                         To="external/banks"
-                        Size="Size.Small"
+                        Size="BlazorBootstrap.Size.Small"
                         Color="ButtonColor.Primary">
                     Add Link
                 </Button>
 
                 <Button @onclick="async () => await DeleteSelectedLinks()"
-                        Size="Size.Small"
+                        Size="BlazorBootstrap.Size.Small"
                         Color="ButtonColor.Secondary">
                     Delete Link
                 </Button>

@@ -5,7 +5,7 @@
         <span class="col"><h3>Expenses Overview</h3></span> 
         <span class="col">
             <Button @onclick="ToggleExpenseDialog"
-                    Size="Size.Small"
+                    Size="BlazorBootstrap.Size.Small"
                     Color="ButtonColor.Primary">
                 New Expense
             </Button>
@@ -30,7 +30,7 @@
             <GridColumn TItem="Expense"
                         HeaderText="Date" 
                         PropertyName="Date" 
-                        FilterOperator="FilterOperator.GreaterThanOrEquals" FilterValue="@(DateTime.Now.AddMonths(-1).ToString())">
+                        FilterOperator="BlazorBootstrap.FilterOperator.GreaterThanOrEquals" FilterValue="@(DateTime.Now.AddMonths(-1).ToString())">
                 @context.Date.ToString()
             </GridColumn>
             <GridColumn TItem="Expense" HeaderText="Total" PropertyName="Total">@context.Total.ToString() @context.Currency</GridColumn>

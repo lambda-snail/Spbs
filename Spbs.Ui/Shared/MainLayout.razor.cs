@@ -21,30 +21,12 @@ public partial class MainLayout : LayoutComponentBase
         Guid? userId = await UserId();
         ArgumentNullException.ThrowIfNull(userId);
     }
-
-    private async Task<SidebarDataProviderResult> SidebarDataProvider(SidebarDataProviderRequest request)
+    
+    bool _drawerOpen = true;
+    private bool _isDarkMode = true;
+    
+    void DrawerToggle()
     {
-        if (_navItems is null)
-            _navItems = GetNavItems();
-
-        return await Task.FromResult(request.ApplyTo(_navItems));
+        _drawerOpen = !_drawerOpen;
     }
-
-    private IEnumerable<NavItem> GetNavItems()
-    {
-        _navItems = new List<NavItem>
-        {
-            new NavItem { Id = "1", Href = "/home", IconName = IconName.HouseDoorFill, Text = "Home" },
-            new NavItem { Id = "2", Href = "/expenses", IconName = IconName.CurrencyEuro, Text = "Expenses", IconColor = IconColor.Primary },
-            new NavItem { Id = "3", Href = "/recurring", IconName = IconName.Calendar, Text = "Recurring Expenses", IconColor = IconColor.Primary },
-            new NavItem { Id = "4", Href = "/data/visualize", IconName = IconName.PieChartFill, Text = "Visualize", IconColor = IconColor.Primary },
-            new NavItem { Id = "5", IconName = IconName.PiggyBankFill, Text = "Bank Integration", IconColor = IconColor.Success },
-            new NavItem { Id = "6", Href = "/accounts/links/", IconName = IconName.GearWideConnected, Text = "Import Expenses", ParentId = "5" },
-            new NavItem { Id = "7", Href = "/external/banks", IconName = IconName.BookmarkPlus, Text = "Link to Bank", ParentId = "5" },
-        };
-
-        return _navItems;
-    }
-
-    private void ToggleSidebar() => _sidebar.ToggleSidebar();
 }
