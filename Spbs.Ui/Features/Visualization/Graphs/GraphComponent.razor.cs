@@ -8,7 +8,7 @@ namespace Spbs.Ui.Features.Visualization.Graphs;
 
 public partial class GraphComponent<TDataItem> : ComponentBase
 {
-    private readonly string _canvasId = "chartjs-canvas-" + DateTime.Now;
+    private readonly string _canvasId = "chartjs-canvas-" + Guid.NewGuid();
 
 #pragma warning disable CS8618
     [Inject] IJSRuntime _jSRuntime { get; set; }
@@ -39,7 +39,7 @@ public partial class GraphComponent<TDataItem> : ComponentBase
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (_isChartCreated) return;
+        if (!firstRender) return;
 
         SumByCategory();
         
