@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
@@ -54,9 +55,9 @@ public partial class ExpensesOverview : ComponentBase
         StateHasChanged();
     }
     
-    private void ToggleExpenseDialog()
+    private void ToggleExpenseDialog(Expense? expense)
     {
-        _editExpenseComponent?.SetModalContent(null);
+        _editExpenseComponent?.SetModalContent(expense);
         _editExpenseComponent?.ShowModal();
     }
 
@@ -75,9 +76,22 @@ public partial class ExpensesOverview : ComponentBase
             _cachedExpenses.Remove(expense);
         }
 
+        selectedItems.Clear();
         _grid.ReloadServerData();
         
         _snackBar.Add($"Deleted {selectedItems.Count} {(selectedItems.Count > 1 ? "expenses" : "expense")}", Severity.Success);
+    }
+
+    private async Task EditSelectedItem()
+    {
+        var selectedItems = _grid.SelectedItems;
+        if (selectedItems is { Count: not 1 })
+        {
+            _snackBar.Add("Too many expenses selected", Severity.Warning);
+        }
+
+        //await _grid.SetEditingItemAsync(selectedItems.First());
+        ToggleExpenseDialog(selectedItems.First());
     }
 
     private void SelectedItemsChanged(HashSet<Expense> selection)

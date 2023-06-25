@@ -10,8 +10,8 @@
         <MudItem xs="12">
             <MudPaper Elevation="25" Class="my-1">
                 <MudToolBar>
-                    <MudIconButton Icon="@Icons.Material.Outlined.Add" OnClick="ToggleExpenseDialog" />
-                    <MudIconButton Icon="@Icons.Material.Outlined.Edit" Disabled="@(_numSelectedExpenses != 1)" />
+                    <MudIconButton Icon="@Icons.Material.Outlined.Add" OnClick="() => ToggleExpenseDialog(null)" />
+                    <MudIconButton Icon="@Icons.Material.Outlined.Edit" Disabled="@(_numSelectedExpenses != 1)" OnClick="EditSelectedItem" />
                     <MudIconButton Icon="@Icons.Material.Outlined.Remove" Color="Color.Inherit" Disabled="@(_numSelectedExpenses == 0)" OnClick="DeleteExpenses" />
                     <MudSpacer/>
 
@@ -31,7 +31,9 @@
         <MudItem xs="12">
             <MudDataGrid T="Expense"
                          @ref="@_grid"
-                         Items="@_cachedExpenses" 
+                         Items="@_cachedExpenses"
+                         EditMode="DataGridEditMode.Form"
+                         EditTrigger="DataGridEditTrigger.OnRowClick"
                          Filterable="true" 
                          SortMode="@SortMode.Multiple"
                          MultiSelection="true"
