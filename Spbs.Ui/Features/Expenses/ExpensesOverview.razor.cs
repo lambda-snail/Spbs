@@ -1,64 +1,40 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.InteropServices.JavaScript;
 using System.Threading.Tasks;
-using BlazorBootstrap;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
 using Spbs.Generators.UserExtensions;
-using Spbs.Ui.Auth;
-using Spbs.Ui.Components;
 
 namespace Spbs.Ui.Features.Expenses;
 
 [AuthenticationTaskExtension()]
 public partial class ExpensesOverview : ComponentBase
 {
-    private DateTime _filterLowerBound;
-    private bool _filterDateHasChanged;
+    private DateTime? _dateFilterYearMonth;
     private List<Expense> _cachedExpenses = new();
     
 #pragma warning disable CS8618
-    private Grid<Expense> _expensesGrid;
     private EditExpenseComponent _editExpenseComponent;
     [Inject] public IExpenseReaderRepository ExpenseRepository { get; set; }
 #pragma warning restore CS8618
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        _filterLowerBound = DateTime.UtcNow;
-        _filterDateHasChanged = true;
+        var now = DateTime.UtcNow;
+        _dateFilterYearMonth = new DateTime(now.Year, now.Month, 1);
+
+        await ReloadData(_dateFilterYearMonth);
     }
 
-    private async Task<GridDataProviderResult<Expense>> FetchExpenses(GridDataProviderRequest<Expense> request)
+    private async Task ReloadData(DateTime? date)
     {
-        var filters = _expensesGrid?.GetFilters();
-        if (filters is not null)
+        if (date is null)
         {
-            foreach (var f in filters)
-            {
-                if (f.PropertyName == "Date")
-                {
-                    DateTime newFilterCandidate = DateTime.Parse(f.Value);
-                    if (newFilterCandidate != _filterLowerBound)
-                    {
-                        _filterLowerBound = newFilterCandidate;
-                        _filterDateHasChanged = true;
-                    }
-                }
-            }            
-        }
-
-        if (_filterDateHasChanged)
-        {
-            Guid? userId = await UserId();
-            _cachedExpenses = await ExpenseRepository.GetSingleExpensesByUserFromMonth(userId!.Value, _filterLowerBound);
-            _filterDateHasChanged = false;
+            _cachedExpenses.Clear();
+            return;
         }
         
-        return request.ApplyTo(_cachedExpenses);
+        Guid? userId = await UserId();
+        _cachedExpenses = await ExpenseRepository.GetMonthlyExpensesForUser(userId!.Value, date.Value);
     }
 
     public string GetExpenseDetailsUrl(Expense e)
@@ -68,7 +44,7 @@ public partial class ExpensesOverview : ComponentBase
 
     private async void ExpenseItemAdded()
     {
-        await _expensesGrid.RefreshDataAsync();
+
         StateHasChanged();
     }
     

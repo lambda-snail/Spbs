@@ -1,8 +1,11 @@
 @page "/expenses"
+@using Size = MudBlazor.Size
 
 <div>
     <div class="row flex-column justify-content-start">
-        <span class="col"><h3>Expenses Overview</h3></span> 
+        <span class="col">
+            <h3>Expenses Overview</h3>
+        </span>
         <span class="col">
             <Button @onclick="ToggleExpenseDialog"
                     Size="BlazorBootstrap.Size.Small"
@@ -10,34 +13,66 @@
                 New Expense
             </Button>
         </span>
-    </div>
-
-    <div class="row py-2">
-        <Grid TItem="Expense"
-              @ref="_expensesGrid"
-              class="table table-hover table-bordered table-striped"
-              DataProvider="FetchExpenses"
-              AllowPaging="true"
-              PageSize="10"
-              AllowFiltering="true"
-              Responsive="true">
-            <GridColumn TItem="Expense" HeaderText="Name" PropertyName="Name">
-                <button type="button" class="btn btn-link">
-                    <NavLink href="@GetExpenseDetailsUrl(context)">@context.Name</NavLink>
-                </button>
-            </GridColumn>
-
-            <GridColumn TItem="Expense"
-                        HeaderText="Date" 
-                        PropertyName="Date" 
-                        FilterOperator="BlazorBootstrap.FilterOperator.GreaterThanOrEquals" FilterValue="@(DateTime.Now.AddMonths(-1).ToString())">
-                @context.Date.ToString()
-            </GridColumn>
-            <GridColumn TItem="Expense" HeaderText="Total" PropertyName="Total">@context.Total.ToString() @context.Currency</GridColumn>
-            <GridColumn TItem="Expense" HeaderText="Category" PropertyName="Category">@context.Category</GridColumn>
-            <GridColumn TItem="Expense" HeaderText="Venue" PropertyName="Venue">@context.Venue</GridColumn>
-        </Grid>
+        <span>
+            <MudDatePicker 
+                Label="Expenses for Month" 
+                HelperText="@_dateFilterYearMonth?.ToShortDateString()" 
+                @bind-Date="_dateFilterYearMonth" 
+                OpenTo="OpenTo.Year" 
+                FixDay="1" 
+                DateFormat="yyyy-MM" 
+                PickerMonthChanged="ReloadData" />
+        </span>
     </div>
     
+    <MudDataGrid T="Expense" Items="@_cachedExpenses" Filterable="false" SortMode="@SortMode.None" Groupable="false">
+        <Columns>
+            <PropertyColumn Property="x => x.Name"/>
+            <PropertyColumn Property="x => x.Date"/>
+            <PropertyColumn Property="x => x.Total"/>
+            <PropertyColumn Property="x => x.Category"/>
+            <PropertyColumn Property="x => x.Venue"/>
+            <TemplateColumn CellClass="d-flex justify-end">
+                <CellTemplate>
+                    <MudStack Row>
+                        <MudButton Size="@Size.Small" Variant="@Variant.Outlined" Color="@Color.Primary">Edit</MudButton>
+                        <MudButton Size="@Size.Small" Variant="@Variant.Outlined" Color="@Color.Warning">Delete</MudButton>
+                    </MudStack>
+                </CellTemplate>
+            </TemplateColumn>
+        </Columns>
+        <PagerContent>
+            <MudDataGridPager T="Expense"/>
+        </PagerContent>
+    </MudDataGrid>
+
+
+    @* <div class="row py-2"> *@
+    @*     <Grid TItem="Expense" *@
+    @*           @ref="_expensesGrid" *@
+    @*           class="table table-hover table-bordered table-striped" *@
+    @*           DataProvider="FetchExpenses" *@
+    @*           AllowPaging="true" *@
+    @*           PageSize="10" *@
+    @*           AllowFiltering="true" *@
+    @*           Responsive="true"> *@
+    @*         <GridColumn TItem="Expense" HeaderText="Name" PropertyName="Name"> *@
+    @*             <button type="button" class="btn btn-link"> *@
+    @*                 <NavLink href="@GetExpenseDetailsUrl(context)">@context.Name</NavLink> *@
+    @*             </button> *@
+    @*         </GridColumn> *@
+    @* *@
+    @*         <GridColumn TItem="Expense" *@
+    @*                     HeaderText="Date"  *@
+    @*                     PropertyName="Date"  *@
+    @*                     FilterOperator="BlazorBootstrap.FilterOperator.GreaterThanOrEquals" FilterValue="@(DateTime.Now.AddMonths(-1).ToString())"> *@
+    @*             @context.Date.ToString() *@
+    @*         </GridColumn> *@
+    @*         <GridColumn TItem="Expense" HeaderText="Total" PropertyName="Total">@context.Total.ToString() @context.Currency</GridColumn> *@
+    @*         <GridColumn TItem="Expense" HeaderText="Category" PropertyName="Category">@context.Category</GridColumn> *@
+    @*         <GridColumn TItem="Expense" HeaderText="Venue" PropertyName="Venue">@context.Venue</GridColumn> *@
+    @*     </Grid> *@
+    @* </div> *@
+
     <EditExpenseComponent @ref="_editExpenseComponent" GetUserId="() => _userId" OnUpdateCallback="ExpenseItemAdded"></EditExpenseComponent>
 </div>
