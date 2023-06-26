@@ -1,5 +1,4 @@
 @using global::Shared.Utilities
-
 <MudOverlay Visible="@_doShowContent" DarkBackground="true" Absolute="true">
     <MudCard Class="pa-8" Elevation="3">
         <MudCardContent>
@@ -25,11 +24,21 @@
                 </div>
 
                 <div class="form-group col-md-10">
-                    <MudTextField @bind-Value="@_editExpenseViewModel.Description" Label="Description" Variant="Variant.Text" Margin="Margin.Normal" HelperText="Add a description for the expense (optional)"/>
+                    <MudTextField @bind-Value="@_editExpenseViewModel.Description"
+                                  Validation="@(async (string s) => await _expenseValidator.ValidateValueAsync(_editExpenseViewModel, e => e.Description))"
+                                  Label="Description"
+                                  Variant="Variant.Text"
+                                  Margin="Margin.Normal"
+                                  HelperText="Add a description for the expense (optional)"/>
                 </div>
 
                 <div class="form-group col-md-10">
-                    <MudDatePicker Label="Date and Time" Editable="true" @bind-Date="@_editExpenseViewModel.Date" DateFormat="yyyy-MM-dd" HelperText="When was the expense incurred?"/>
+                    <MudDatePicker Label="Date and Time" 
+                                   Validation="@(async (DateTime? d) => await _expenseValidator.ValidateValueAsync(_editExpenseViewModel, e => e.Date))"
+                                   Editable="true" 
+                                   @bind-Date="@_editExpenseViewModel.Date" 
+                                   DateFormat="yyyy-MM-dd" 
+                                   HelperText="When was the expense incurred?"/>
                 </div>
 
                 <div class="form-group col-md-10">
@@ -43,7 +52,12 @@
                 </div>
 
                 <div class="form-group col-md-10">
-                    <MudTextField @bind-Value="@_editExpenseViewModel.Venue" Label="Venue" Variant="Variant.Text" Margin="Margin.Normal" HelperText="Where was the expense incurred?"/>
+                    <MudTextField @bind-Value="@_editExpenseViewModel.Venue" 
+                                  Validation="@(async (string s) => await _expenseValidator.ValidateValueAsync(_editExpenseViewModel, e => e.Venue))"
+                                  Label="Venue" 
+                                  Variant="Variant.Text" 
+                                  Margin="Margin.Normal" 
+                                  HelperText="Where was the expense incurred?"/>
                 </div>
 
                 <div class="form-group col-md-10">
