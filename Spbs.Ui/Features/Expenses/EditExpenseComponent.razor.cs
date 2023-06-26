@@ -9,7 +9,6 @@ using MudBlazor;
 using Spbs.Generators.UserExtensions;
 using Spbs.Ui.Features.Users;
 using Spbs.Ui.Features.Users.Repositories;
-using Shared.Utilities;
 using Severity = MudBlazor.Severity;
 
 namespace Spbs.Ui.Features.Expenses;
@@ -78,7 +77,7 @@ public partial class EditExpenseComponent : ComponentBase
         await _form.Validate();
         if (_form.IsValid)
         {
-            _snackbar.Add("Changes saved!");
+            _snackbar.Add("Changes saved!", Severity.Success);
         }
         else
         {
