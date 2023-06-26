@@ -4,80 +4,60 @@
         <MudCardContent>
             <MudText Typo="Typo.h6">Edit Expense</MudText>
             <MudDivider Class="mb-4"/>
-            @* <EditForm Model="@_editExpenseViewModel" *@
-            @*           OnValidSubmit="@HandleValidSubmit" *@
-            @*           OnInvalidSubmit="@HandleInvalidSubmit"> *@
-
-            @* <DataAnnotationsValidator/> *@
-            @* <ValidationSummary/> *@
 
             <MudForm @ref="@_form"
                      Model="@_editExpenseViewModel" ValidationDelay="0">
 
-                <div class="form-group col-md-10">
-                    <MudTextField @bind-Value="@_editExpenseViewModel.Name"
-                                  Validation="@(async (string s) => await _expenseValidator.ValidateValueAsync(_editExpenseViewModel, e => e.Name))"
-                                  Label="Name"
-                                  Variant="Variant.Text"
-                                  Margin="Margin.Normal"
-                                  HelperText="Choose a nifty title for your post!"/>
-                </div>
+                <MudTextField @bind-Value="@_editExpenseViewModel.Name"
+                              Validation="@(async (string s) => await _expenseValidator.ValidateValueAsync(_editExpenseViewModel, e => e.Name))"
+                              Label="Name"
+                              Variant="Variant.Text"
+                              Margin="Margin.Normal"
+                              HelperText="Choose a nifty title for your post!"/>
 
-                <div class="form-group col-md-10">
-                    <MudTextField @bind-Value="@_editExpenseViewModel.Description"
-                                  Validation="@(async (string s) => await _expenseValidator.ValidateValueAsync(_editExpenseViewModel, e => e.Description))"
-                                  Label="Description"
-                                  Variant="Variant.Text"
-                                  Margin="Margin.Normal"
-                                  HelperText="Add a description for the expense (optional)"/>
-                </div>
+                <MudTextField @bind-Value="@_editExpenseViewModel.Description"
+                              Validation="@(async (string s) => await _expenseValidator.ValidateValueAsync(_editExpenseViewModel, e => e.Description))"
+                              Label="Description"
+                              Variant="Variant.Text"
+                              Margin="Margin.Normal"
+                              HelperText="Add a description for the expense (optional)"/>
 
-                <div class="form-group col-md-10">
-                    <MudDatePicker Label="Date and Time" 
-                                   Validation="@(async (DateTime? d) => await _expenseValidator.ValidateValueAsync(_editExpenseViewModel, e => e.Date))"
-                                   Editable="true" 
-                                   @bind-Date="@_editExpenseViewModel.Date" 
-                                   DateFormat="yyyy-MM-dd" 
-                                   HelperText="When was the expense incurred?"/>
-                </div>
+                <MudDatePicker Label="Date and Time"
+                               Validation="@(async (DateTime? d) => await _expenseValidator.ValidateValueAsync(_editExpenseViewModel, e => e.Date))"
+                               Editable="true"
+                               @bind-Date="@_editExpenseViewModel.Date"
+                               DateFormat="yyyy-MM-dd"
+                               HelperText="When was the expense incurred?"/>
 
-                <div class="form-group col-md-10">
-                    <MudSelect T="string" Label="Category" Variant="Variant.Text" @bind-Value="@_editExpenseViewModel.Category" HelperText="How would you classify this expense?">
-                        <MudSelectItem Value="@string.Empty"></MudSelectItem>
-                        @foreach (var category in _expenseCategories)
-                        {
-                            <MudSelectItem Value="@category">@category</MudSelectItem>
-                        }
-                    </MudSelect>
-                </div>
+                <MudSelect T="string" Label="Category" Variant="Variant.Text" @bind-Value="@_editExpenseViewModel.Category" HelperText="How would you classify this expense?">
+                    <MudSelectItem Value="@string.Empty"></MudSelectItem>
+                    @foreach (var category in _expenseCategories)
+                    {
+                        <MudSelectItem Value="@category">@category</MudSelectItem>
+                    }
+                </MudSelect>
 
-                <div class="form-group col-md-10">
-                    <MudTextField @bind-Value="@_editExpenseViewModel.Venue" 
-                                  Validation="@(async (string s) => await _expenseValidator.ValidateValueAsync(_editExpenseViewModel, e => e.Venue))"
-                                  Label="Venue" 
-                                  Variant="Variant.Text" 
-                                  Margin="Margin.Normal" 
-                                  HelperText="Where was the expense incurred?"/>
-                </div>
+                <MudTextField @bind-Value="@_editExpenseViewModel.Venue"
+                              Validation="@(async (string s) => await _expenseValidator.ValidateValueAsync(_editExpenseViewModel, e => e.Venue))"
+                              Label="Venue"
+                              Variant="Variant.Text"
+                              Margin="Margin.Normal"
+                              HelperText="Where was the expense incurred?"/>
 
-                <div class="form-group col-md-10">
-                    <MudTextField @bind-Value="@_editExpenseViewModel.Currency"
-                                  Validation="@(async (string s) => await _expenseValidator.ValidateValueAsync(_editExpenseViewModel, e => e.Currency))" 
-                                  Label="Currency" 
-                                  Variant="Variant.Text" 
-                                  Margin="Margin.Normal" 
-                                  HelperText="The currency that the purchase was made in"/>
-                </div>
+                <MudTextField @bind-Value="@_editExpenseViewModel.Currency"
+                              Validation="@(async (string s) => await _expenseValidator.ValidateValueAsync(_editExpenseViewModel, e => e.Currency))"
+                              Label="Currency"
+                              Variant="Variant.Text"
+                              Margin="Margin.Normal"
+                              HelperText="The currency that the purchase was made in"/>
 
-                <div class="form-group col-md-10">
-                    <MudNumericField @bind-Value="@_editExpenseViewModel.Total"
-                                     Validation="@(async (double d) => await _expenseValidator.ValidateValueAsync(_editExpenseViewModel, e => e.Total))"
-                                     Immediate="true"
-                                     Label="Total"
-                                     Variant="Variant.Text"
-                                     HelperText="The total amount in the specified currency"
-                                     Min="0.0"/>
-                </div>
+                <MudNumericField @bind-Value="@_editExpenseViewModel.Total"
+                                 Validation="@(async (double d) => await _expenseValidator.ValidateValueAsync(_editExpenseViewModel, e => e.Total))"
+                                 Immediate="true"
+                                 Label="Total"
+                                 Variant="Variant.Text"
+                                 HelperText="The total amount in the specified currency"
+                                 Min="0.0"/>
 
                 <button type="submit" class="btn btn-primary edit-btn">Submit</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal" @onclick="@CloseDialog">Close</button>
