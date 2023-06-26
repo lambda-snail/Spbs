@@ -91,7 +91,8 @@
                            OnClick="@(AddExpenseItem)"
                            Color="Color.Primary" />
             
-            <MudIconButton Icon="@Icons.Material.Filled.EditNote"
+            <MudIconButton Disabled="@(_numSelectedExpenseItems != 1)" OnClick="EditSelectedItem"
+                           Icon="@Icons.Material.Filled.EditNote"
                            Color="Color.Default"/>
                 
             <MudIconButton Icon="@Icons.Material.Filled.Delete" 
@@ -110,6 +111,7 @@
                  Filterable="true"
                  SortMode="@SortMode.Multiple"
                  MultiSelection="true"
+                 SelectedItemsChanged="OnSelectedItemsChanged"
                  Groupable="false">
         <Columns>
             <SelectColumn T="ExpenseItem"/>
