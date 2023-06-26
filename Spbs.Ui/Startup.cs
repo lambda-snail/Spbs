@@ -25,6 +25,7 @@ using Spbs.Ui.Features.BankIntegration.Models.Validation;
 using Spbs.Ui.Features.BankIntegration.Services;
 using Spbs.Ui.Features.Expenses;
 using Spbs.Ui.Features.Expenses.Repositories;
+using Spbs.Ui.Features.Expenses.Validation;
 using Spbs.Ui.Features.RecurringExpenses;
 using Spbs.Ui.Features.Users;
 using Spbs.Ui.Features.Users.Repositories;
@@ -98,6 +99,7 @@ namespace Spbs.Ui
             services.AddSingleton<IValidator<NordigenEula>, NordigenEulaFluentValidation>();
             services.AddSingleton<IValidator<TransactionsRequestParameters>, TransactionsParametersRequestFluentValidation>();
             services.AddSingleton<IValidator<GraphDataFilter>, GraphDataFilterFluentValidation>();
+            services.AddSingleton<IValidator<EditExpenseViewModel>, EditExpenseViewModelFluentValidation>();
         }
 
         private void RegisterConfigurations(IServiceCollection services)
