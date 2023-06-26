@@ -87,17 +87,23 @@
 
     <MudPaper Elevation="25" Class="mt-4 mb-2">
         <MudToolBar>
-            <MudIconButton Icon="@Icons.Material.Filled.Add"
-                           OnClick="@(AddExpenseItem)"
-                           Color="Color.Primary" />
-            
-            <MudIconButton Disabled="@(_numSelectedExpenseItems != 1)" OnClick="EditSelectedItem"
-                           Icon="@Icons.Material.Filled.EditNote"
-                           Color="Color.Default"/>
-                
-            <MudIconButton Disabled="@(_numSelectedExpenseItems == 0)" OnClick="DeleteExpenseItems"
-                           Icon="@Icons.Material.Filled.Delete" 
-                           Color="Color.Secondary" />
+            <MudTooltip Delay="600" Text="Add a new item">
+                <MudIconButton Icon="@Icons.Material.Filled.Add"
+                               OnClick="@(AddExpenseItem)"
+                               Color="Color.Primary"/>
+            </MudTooltip>
+
+            <MudTooltip Delay="600" Text="Edit the selected">
+                <MudIconButton Disabled="@(_numSelectedExpenseItems != 1)" OnClick="EditSelectedItem"
+                               Icon="@Icons.Material.Filled.EditNote"
+                               Color="Color.Default"/>
+            </MudTooltip>
+
+            <MudTooltip Delay="600" Text="Delete selected items">
+                <MudIconButton Disabled="@(_numSelectedExpenseItems == 0)" OnClick="DeleteExpenseItems"
+                               Icon="@Icons.Material.Filled.Delete"
+                               Color="Color.Secondary"/>
+            </MudTooltip>
         </MudToolBar>
     </MudPaper>
 
