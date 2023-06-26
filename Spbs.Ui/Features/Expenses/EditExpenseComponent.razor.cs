@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Components;
+using MudBlazor;
 using Spbs.Generators.UserExtensions;
 using Spbs.Ui.Features.Users;
 using Spbs.Ui.Features.Users.Repositories;
@@ -117,5 +118,16 @@ public partial class EditExpenseComponent : ComponentBase
     private void ResetModel()
     {
         _editExpenseViewModel = new() { Date = DateTime.Now };
+    }
+
+    /// <summary>
+    /// Update the date of the view model whenever there is a change. This is a workaround since mud blazor date picker
+    /// seems to be unable to bind to a DateTime - it only works with a nullable DateTime.
+    /// </summary>
+    private void OnDatePickerDateChanged(DateTime? newDate)
+    {
+        if(newDate is null) return;
+        _editExpenseViewModel.Date = newDate.Value;
+
     }
 }
