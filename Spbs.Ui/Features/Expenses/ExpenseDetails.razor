@@ -87,10 +87,8 @@
 
     <MudPaper Elevation="25" Class="mt-4 mb-2">
         <MudToolBar>
-
-
             <MudIconButton Icon="@Icons.Material.Filled.Add"
-                           OnClick="@(() => EditOrCreateExpenseItem(null))"
+                           OnClick="@(AddExpenseItem)"
                            Color="Color.Primary" />
             
             <MudIconButton Icon="@Icons.Material.Filled.EditNote"
@@ -117,9 +115,15 @@
             <PropertyColumn Property="x => x.Name"/>
             <PropertyColumn Property="x => x.Quantity"/>
             <PropertyColumn Property="x => x.Price"/>
+            
+            <TemplateColumn T="ExpenseItem" Title="Total">
+                <CellTemplate>
+                    @context.Item.GetCostOfItem() @_expense.Currency
+                </CellTemplate>
+            </TemplateColumn>
         </Columns>
         <PagerContent>
-            <MudDataGridPager T="Expense"/>
+            <MudDataGridPager T="ExpenseItem"/>
         </PagerContent>
     </MudDataGrid>
 }

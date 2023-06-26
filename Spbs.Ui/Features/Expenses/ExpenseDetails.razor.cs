@@ -96,4 +96,13 @@ public partial class ExpenseDetails : ComponentBase
         _editExpenseItemComponent?.SetModalContent(item);
         _editExpenseItemComponent?.ShowModal();
     }
+
+    private void AddExpenseItem()
+    {
+        var newItem = new ExpenseItem { Id = Guid.NewGuid() };
+        
+        _expense!.Items.Add(newItem);
+        _grid.ReloadServerData();
+        _grid.SetEditingItemAsync(newItem);
+    }
 }
