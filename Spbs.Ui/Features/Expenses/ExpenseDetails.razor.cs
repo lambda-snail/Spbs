@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
+using MudBlazor;
 using Spbs.Generators.UserExtensions;
 
 namespace Spbs.Ui.Features.Expenses;
@@ -22,6 +23,7 @@ public partial class ExpenseDetails : ComponentBase
     
     private EditExpenseComponent _editExpenseComponent;
     private EditExpenseItemComponent _editExpenseItemComponent;
+    private MudDataGrid<ExpenseItem> _grid;
 #pragma warning restore CS8618
     
     protected override void OnInitialized()

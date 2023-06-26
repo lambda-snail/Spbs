@@ -1,122 +1,127 @@
 @page "/expenses/{ExpenseId}"
 
-@if (_expense is null)
+@if (_expense is not null)
 {
-    <h3>ExpenseDetails</h3>
-    <p>Oops, nothing here!</p>
-}
-else
-{
-    <div class="container">
-        <div class="row">
-            <Card>
-                <CardHeader>
-                    <h3>@_expense.Name</h3>
-                </CardHeader>
-                <CardBody>
-                    <div class="row">
-                        <div class="col-3">Description</div>
-                        <div class="col-auto">@_expense.Description</div>
-                    </div>
-                    <div class="row">
-                        <div class="col-3">Date:</div>
-                        <div class="col-auto">@_expense.Date.ToString("s")</div>
-                    </div>
-                    <div class="row">
-                        <div class="col-3">Venue:</div>
-                        <div class="col-auto">@_expense.Venue</div>
-                    </div>
-                    <div class="row">
-                        <div class="col-3">Total:</div>
-                        <div class="col-auto">@_expense.Total @_expense.Currency</div>
-                    </div>
-                    <div class="row">
-                        <div class="col-3">Recurring:</div>
-                        <div class="col-auto">
-                            @if (_expense.Recurring)
-                            {
-                                <text>Yes</text>
-                            }
-                            else
-                            {
-                                <text>No</text>
-                            }
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-3">Category:</div>
-                        <div class="col-auto">@(_expense.Category ?? string.Empty)</div>
-                    </div>
+    <MudPaper Class="pa-4 mt-4">
+        <MudText>
+            @_expense.Name
+        </MudText>
 
-                    <div class="row">
-                        <div class="col-3">Tags:</div>
-                        <div class="col-auto">
-                            @if (_expense?.Tags is not null)
-                            {
-                                @foreach (var tag in _expense!.Tags.Split(" "))
-                                {
-                                    <span class="badge bg-success me-1">@tag</span>
-                                }
-                            }
 
-                            <span onclick="@AddTagList" class="badge bg-success me-1">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
-                                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
-                                </svg>
-                            </span>
-                        </div>
-                    </div>
-                </CardBody>
-                <CardFooter>
-                    <div>
-                        <span data-toggle="tooltip" data-placement="top" title="Edit">
-                            <Button
-                                onclick="@ToggleEditMode"
-                                Size="BlazorBootstrap.Size.Small"
-                                Color="ButtonColor.Primary">
-                                <Icon Name="IconName.PencilSquare"/>
-                                Edit
-                            </Button>
-                        </span>
+        <MudGrid>
+            <MudItem xs="12">
+                <MudTextField T="string"
+                              ReadOnly="true"
+                              Text="@_expense.Description"
+                              Lines="4"
+                              Label="Description"
+                              Variant="Variant.Text"
+                              Margin="Margin.Dense">
+                </MudTextField>
+            </MudItem>
 
-                        <span data-toggle="tooltip" data-placement="top" title="Edit">
-                            <Button
-                                @onclick="@(() => EditOrCreateExpenseItem(null))"
-                                Size="BlazorBootstrap.Size.Small"
-                                Color="ButtonColor.Primary">
-                                <Icon Name="IconName.PlusSquare"/>
-                                New Item
-                            </Button>
-                        </span>
-                    </div>
-                </CardFooter>
-            </Card>
-        </div>
+            <MudItem xs="6">
+                <MudTextField T="string"
+                              ReadOnly="true"
+                              Text="@_expense.Date.ToString("s")"
+                              Label="Date"
+                              Variant="Variant.Text"
+                              Margin="Margin.Dense">
+                </MudTextField>
+            </MudItem>
 
-        <div class="row py-4">
+            <MudItem xs="6">
+                <MudTextField T="string"
+                              ReadOnly="true"
+                              Text="@_expense.Venue"
+                              Label="Venue"
+                              Variant="Variant.Text"
+                              Margin="Margin.Dense">
+                </MudTextField>
+            </MudItem>
 
-            <Grid TItem="ExpenseItem"
-                  class="table table-hover table-bordered table-striped"
-                  Data="_expense.Items"
-                  AllowFiltering="true"
-                  Responsive="true">
+            <MudItem xs="6">
+                <MudTextField T="string"
+                              ReadOnly="true"
+                              Text=@(_expense.Total + " " + _expense.Currency)
+                              Label="Total"
+                              Variant="Variant.Text"
+                              Margin="Margin.Dense">
+                </MudTextField>
+            </MudItem>
 
-                <GridColumn TItem="ExpenseItem" HeaderText="Name" PropertyName="Name">
-                    <button type="button" class="btn btn-link" @onclick="@(() => EditOrCreateExpenseItem(context))">
-                        @context.Name
-                    </button>
-                </GridColumn>
+            <MudItem xs="6">
+                <MudTextField T="string"
+                              ReadOnly="true"
+                              Text="@_expense.Category"
+                              Label="Category"
+                              Variant="Variant.Text"
+                              Margin="Margin.Dense">
+                </MudTextField>
 
-                <GridColumn TItem="ExpenseItem" HeaderText="Quantity" PropertyName="Quantity">
-                    @context.Quantity.ToString()
-                </GridColumn>
+            </MudItem>
 
-                <GridColumn TItem="ExpenseItem" HeaderText="Price" PropertyName="Price">
-                    @context.Price.ToString()
-                </GridColumn>
-            </Grid>
-        </div>
-    </div>
+            <MudDivider/>
+
+            <MudItem xs="12">
+                @if (_expense?.Tags is not null)
+                {
+                    @foreach (var tag in _expense!.Tags.Split(" "))
+                    {
+                        <MudChip Color="Color.Primary">@tag</MudChip>
+                    }
+                }
+
+                <MudIconButton Icon="@Icons.Material.Filled.Add" aria-label="add tag" OnClick="@AddTagList"/>
+            </MudItem>
+            <MudItem>
+                <MudButton Icon="@Icons.Material.Filled.Edit"
+                           OnClick="@ToggleEditMode"
+                           Color="Color.Primary">
+                    Edit Expense
+                </MudButton>
+            </MudItem>
+        </MudGrid>
+    </MudPaper>
+
+
+    <MudPaper Elevation="25" Class="mt-4 mb-2">
+        <MudToolBar>
+
+
+            <MudIconButton Icon="@Icons.Material.Filled.Add"
+                           OnClick="@(() => EditOrCreateExpenseItem(null))"
+                           Color="Color.Primary" />
+            
+            <MudIconButton Icon="@Icons.Material.Filled.EditNote"
+                           Color="Color.Default"/>
+                
+            <MudIconButton Icon="@Icons.Material.Filled.Delete" 
+                           Color="Color.Secondary" />
+        </MudToolBar>
+    </MudPaper>
+
+
+    <MudDataGrid T="ExpenseItem"
+                 @ref="@_grid"
+                 Items="@_expense.Items"
+                 ReadOnly="false"
+                 EditMode="DataGridEditMode.Form"
+                 EditTrigger="DataGridEditTrigger.OnRowClick"
+                 Filterable="true"
+                 SortMode="@SortMode.Multiple"
+                 MultiSelection="true"
+                 Groupable="false">
+        <Columns>
+            <SelectColumn T="ExpenseItem"/>
+            <PropertyColumn Property="x => x.Name"/>
+            <PropertyColumn Property="x => x.Quantity"/>
+            <PropertyColumn Property="x => x.Price"/>
+        </Columns>
+        <PagerContent>
+            <MudDataGridPager T="Expense"/>
+        </PagerContent>
+    </MudDataGrid>
 }
 
 <EditExpenseComponent @ref="_editExpenseComponent" GetUserId="() => _userId" OnUpdateCallback="ExpenseUpdated"></EditExpenseComponent>
