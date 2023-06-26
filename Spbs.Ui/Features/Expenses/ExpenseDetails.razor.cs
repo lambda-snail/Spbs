@@ -44,14 +44,14 @@ public partial class ExpenseDetails : ComponentBase
         StateHasChanged();
     }
 
-    private async Task SaveExpense()
+    private async Task SaveExpense(string successMessage = "")
     {
         if (_expense is not null)
         {
             await _expenseWriterRepository.UpdateExpenseAsync(_expense);            
         }
 
-        _snackbar.Add("Changes saved successfully!", Severity.Success);
+        _snackbar.Add(string.IsNullOrWhiteSpace(successMessage) ? "Changes saved successfully!" : successMessage, Severity.Success);
         StateHasChanged();
     }
 
@@ -99,7 +99,7 @@ public partial class ExpenseDetails : ComponentBase
         var selectedItems = _grid.SelectedItems;
         if (selectedItems is { Count: not 1 })
         {
-            _snackbar.Add("Too many expenses selected", Severity.Warning);
+            _snackbar.Add("Too many items selected", Severity.Warning);
         }
 
         await  _grid.SetEditingItemAsync(selectedItems.First());
@@ -108,5 +108,25 @@ public partial class ExpenseDetails : ComponentBase
     private void OnSelectedItemsChanged(HashSet<ExpenseItem> selection)
     {
         _numSelectedExpenseItems = selection.Count;
+    }
+
+    private async Task DeleteExpenseItems()
+    {
+        var selectedItems = _grid.SelectedItems;
+        if (selectedItems is { Count: 0 })
+        {
+            _snackbar.Add("No items selected", Severity.Warning);
+        }
+
+        foreach (var item in selectedItems)
+        {
+            _expense!.Items.Remove(item);
+        }
+
+        int numDeleted = selectedItems.Count;
+        selectedItems.Clear();
+        _numSelectedExpenseItems = 0;
+
+        await SaveExpense("Deleted " + numDeleted + (numDeleted > 1 ? "items" : "item"));
     }
 }

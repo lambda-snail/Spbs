@@ -95,7 +95,8 @@
                            Icon="@Icons.Material.Filled.EditNote"
                            Color="Color.Default"/>
                 
-            <MudIconButton Icon="@Icons.Material.Filled.Delete" 
+            <MudIconButton Disabled="@(_numSelectedExpenseItems == 0)" OnClick="DeleteExpenseItems"
+                           Icon="@Icons.Material.Filled.Delete" 
                            Color="Color.Secondary" />
         </MudToolBar>
     </MudPaper>
