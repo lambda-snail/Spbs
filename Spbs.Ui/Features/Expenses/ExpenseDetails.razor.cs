@@ -27,7 +27,6 @@ public partial class ExpenseDetails : ComponentBase
     [Inject] ISnackbar _snackbar { get; set; }
     
     private EditExpenseComponent _editExpenseComponent;
-    private EditExpenseItemComponent _editExpenseItemComponent;
     private MudDataGrid<ExpenseItem> _grid;
 #pragma warning restore CS8618
     
