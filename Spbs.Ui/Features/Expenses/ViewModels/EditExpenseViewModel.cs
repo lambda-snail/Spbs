@@ -11,15 +11,13 @@ public class EditExpenseViewModel
 {
     public Guid? Id { get; set; }
     
-    [Required]
     public string Name { get; set; }
     public string? Description { get; set; }
 
     public bool Recurring { get; set; } = false;
 
     public Guid OwningUserId { get; set; }
-
-    [Required, NotNull]
+    
     public DateTime? Date { get; set; }
 
     public string? Category { get; set; }
