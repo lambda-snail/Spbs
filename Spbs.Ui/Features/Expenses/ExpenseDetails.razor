@@ -106,6 +106,7 @@
                  ReadOnly="false"
                  EditMode="DataGridEditMode.Form"
                  EditTrigger="DataGridEditTrigger.OnRowClick"
+                 CommittedItemChanges="OnExpenseItemChanged"
                  Filterable="true"
                  SortMode="@SortMode.Multiple"
                  MultiSelection="true"
@@ -129,4 +130,3 @@
 }
 
 <EditExpenseComponent @ref="_editExpenseComponent" GetUserId="() => _userId" OnUpdateCallback="ExpenseUpdated"></EditExpenseComponent>
-<EditExpenseItemComponent @ref="_editExpenseItemComponent" OnUpdateCallback="ExpenseItemUpdated"></EditExpenseItemComponent>

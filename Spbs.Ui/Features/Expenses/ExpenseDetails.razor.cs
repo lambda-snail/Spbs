@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Components;
@@ -21,6 +20,8 @@ public partial class ExpenseDetails : ComponentBase
     [Inject] private IJSRuntime _jsRuntime { get; set; }
     [Inject] private IMapper _mapper { get; set; }
     
+    [Inject] ISnackbar _snackbar { get; set; }
+    
     private EditExpenseComponent _editExpenseComponent;
     private EditExpenseItemComponent _editExpenseItemComponent;
     private MudDataGrid<ExpenseItem> _grid;
@@ -41,19 +42,13 @@ public partial class ExpenseDetails : ComponentBase
 
     private async Task SaveExpense()
     {
-        if (_expense is null)
+        if (_expense is not null)
         {
-            return;
+            await _expenseWriterRepository.UpdateExpenseAsync(_expense);            
         }
 
-        await _expenseWriterRepository.UpdateExpenseAsync(_expense!);
+        _snackbar.Add("Changes saved successfully!", Severity.Success);
         StateHasChanged();
-    }
-
-    private void ToggleEditMode()
-    {
-        _editExpenseComponent?.SetModalContent(_expense);
-        _editExpenseComponent?.ShowModal();
     }
 
     private async Task AddTagList()
@@ -75,26 +70,10 @@ public partial class ExpenseDetails : ComponentBase
         FetchExpense();
     }
     
-    private async Task ExpenseItemUpdated(ExpenseItem? item)
+    private void ToggleEditMode()
     {
-        if (item is null)
-        {
-            return;
-        }
-
-        ExpenseItem? existingItem = _expense!.Items.FirstOrDefault(i => i.Id == item.Id);
-        if (existingItem is null)
-        {
-            _expense.Items.Add(item);
-        }
-        
-        await SaveExpense();
-    }
-    
-    private void EditOrCreateExpenseItem(ExpenseItem item)
-    {
-        _editExpenseItemComponent?.SetModalContent(item);
-        _editExpenseItemComponent?.ShowModal();
+        _editExpenseComponent?.SetModalContent(_expense);
+        _editExpenseComponent?.ShowModal();
     }
 
     private void AddExpenseItem()
@@ -104,5 +83,10 @@ public partial class ExpenseDetails : ComponentBase
         _expense!.Items.Add(newItem);
         _grid.ReloadServerData();
         _grid.SetEditingItemAsync(newItem);
+    }
+
+    private Task OnExpenseItemChanged()
+    {
+        return SaveExpense();
     }
 }
