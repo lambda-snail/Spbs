@@ -9,9 +9,8 @@
 <MudLayout>
     <MudAppBar>
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())"/>
-        <div>
-            <LoginDisplay/>
-        </div>
+        <MudSpacer />
+        <LoginDisplay/>
     </MudAppBar>
     <MudDrawer @bind-Open="@_drawerOpen">
 
