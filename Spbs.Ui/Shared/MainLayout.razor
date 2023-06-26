@@ -12,9 +12,9 @@
         <MudSpacer />
         <LoginDisplay/>
     </MudAppBar>
-    <MudDrawer @bind-Open="@_drawerOpen">
+    <MudDrawer @bind-Open="@_drawerOpen" ClipMode="DrawerClipMode.Docked">
 
-        <MudNavMenu Bordered="true" Rounded="true">
+        <MudNavMenu Bordered="true" Rounded="true" Color="Color.Primary" Class="ps-2">
             <MudText Typo="Typo.h6" Class="px-4">Spbs</MudText>
             <MudText Typo="Typo.body2" Class="px-4 mud-text-secondary">Main Menu</MudText>
             <MudDivider Class="my-2"/>
@@ -34,7 +34,7 @@
     </MudDrawer>
     
     <MudMainContent>
-        <MudContainer MaxWidth="MaxWidth.False">
+        <MudContainer MaxWidth="MaxWidth.False" Class="py-5">
             @Body
         </MudContainer>
     </MudMainContent>
