@@ -128,4 +128,24 @@ public partial class ExpenseDetails : ComponentBase
 
         await SaveExpense("Deleted " + numDeleted + (numDeleted > 1 ? "items" : "item"));
     }
+    
+    private string DeleteButtonTooltip()
+    {
+        if (_numSelectedExpenseItems == 0 )
+        {
+            return "Delete item (none selected)";
+        }
+
+        return "Delete item";
+    }
+
+    private string EditButtonTooltip()
+    {
+        return _numSelectedExpenseItems switch
+        {
+            0 => "Edit item (none selected)",
+            >1 => "Edit item (too many selected)",
+            _ => "Edit item"
+        };
+    }
 }

@@ -84,7 +84,6 @@
         </MudGrid>
     </MudPaper>
 
-
     <MudPaper Elevation="25" Class="mt-4 mb-2">
         <MudToolBar>
             <MudTooltip Delay="600" Text="Add a new item">
@@ -93,20 +92,19 @@
                                Color="Color.Primary"/>
             </MudTooltip>
 
-            <MudTooltip Delay="600" Text="Edit the selected">
+            <MudTooltip Delay="600" Text="@EditButtonTooltip()">
                 <MudIconButton Disabled="@(_numSelectedExpenseItems != 1)" OnClick="EditSelectedItem"
                                Icon="@Icons.Material.Filled.Edit"
                                Color="Color.Default"/>
             </MudTooltip>
 
-            <MudTooltip Delay="600" Text="Delete selected items">
+            <MudTooltip Delay="600" Text="@DeleteButtonTooltip()">
                 <MudIconButton Disabled="@(_numSelectedExpenseItems == 0)" OnClick="DeleteExpenseItems"
                                Icon="@Icons.Material.Filled.Delete"
                                Color="Color.Secondary"/>
             </MudTooltip>
         </MudToolBar>
     </MudPaper>
-
 
     <MudDataGrid T="ExpenseItem"
                  @ref="@_grid"
