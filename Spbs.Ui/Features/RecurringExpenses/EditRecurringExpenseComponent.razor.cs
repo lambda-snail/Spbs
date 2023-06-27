@@ -3,7 +3,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Components;
-using Spbs.Ui.Features.Expenses;
 
 namespace Spbs.Ui.Features.RecurringExpenses;
 
@@ -15,11 +14,13 @@ public partial class EditRecurringExpenseComponent
     private RecurringExpense? _expense;
 
 
+#pragma warning disable CS8618
     [Inject] public IMapper Mapper { get; set; }
     [Inject] public IRecurringExpenseWriterRepository RecurringExpenseWriterRepository { get; set; } 
     
     [Parameter, Required] public Func<Guid?> GetUserId { get; set; }
-    [Parameter] public Func<Task> OnUpdateCallback { get; set; }
+    [Parameter] public Func<RecurringExpense, Task> OnUpdateCallback { get; set; }
+#pragma warning restore CS8618
     
     public void ShowModal()
     {
@@ -69,7 +70,7 @@ public partial class EditRecurringExpenseComponent
         
         CloseDialog();
         ResetModel();
-        await OnUpdateCallback();
+        await OnUpdateCallback(expense);
         StateHasChanged();
     }
 
