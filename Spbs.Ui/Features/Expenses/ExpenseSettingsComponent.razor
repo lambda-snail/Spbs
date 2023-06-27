@@ -1,40 +1,49 @@
 @inherits Spbs.Ui.Components.UserSettings.UserSettingsComponentBase
 
-<div class="container py-4 m-0">
-    <div class="row">
-        <div class="col px-0">
-            <Button @onclick="OnAddCategoryClickedAsync"
-                    Size="BlazorBootstrap.Size.Small"
-                    Color="ButtonColor.Secondary">
-                New Category
-            </Button>
+<MudPaper Elevation="25" Class="mt-8 mb-4">
+    <MudToolBar>
+        <MudTooltip Text="New Category">
+            <MudIconButton OnClick="OnAddCategoryClickedAsync"
+                           Icon="@Icons.Material.Filled.Add"
+                           Color="Color.Primary"/>
+        </MudTooltip>
+        <MudTooltip Text="@EditButtonTooltip()">
+            <MudIconButton OnClick="EditSelectedItem"
+                           Disabled="@(_selectedCategories.Count != 1)"
+                           Icon="@Icons.Material.Filled.Edit"
+                           Color="Color.Primary"/>
+        </MudTooltip>
+        <MudTooltip Text="@DeleteButtonTooltip()">
+            <MudIconButton OnClick="OnRemoveCategoryClickedAsync"
+                           Disabled="@(_selectedCategories.Count == 0)"
+                           Icon="@Icons.Material.Filled.Remove"
+                           Color="Color.Primary"/>
+        </MudTooltip>
+        <MudSpacer/>
 
-            <Button @onclick="OnRemoveCategoryClickedAsync"
-                    Disabled="@(_selectedCategories.Count == 0)"
-                    Size="BlazorBootstrap.Size.Small"
-                    Color="ButtonColor.Secondary">
-                Remove Category
-            </Button>
-            <Button @onclick="OnSaveClicked"
-                    Size="BlazorBootstrap.Size.Small"
-                    Color="ButtonColor.Primary">
-                Save
-            </Button>
-        </div>
-    </div>
-</div>
+        <MudTooltip Text="@SaveButtonTooltip()">
+            <MudIconButton OnClick="OnSaveClicked"
+                           Disabled="@(!_isDirty)"
+                           Icon="@Icons.Material.Filled.Save"
+                           Color="Color.Secondary"/>
+        </MudTooltip>
+    </MudToolBar>
+</MudPaper>
 
-<Grid @ref="_grid"
-      TItem="ExpenseCategoryListItem"
-      Class="table table-hover table-bordered table-striped"
-      Data="_expenseCategories"
-      AllowFiltering="true"
-      AllowSelection="true"
-      SelectionMode="GridSelectionMode.Multiple"
-      SelectedItemsChanged="OnSelectionChanged"
-      Responsive="true">
 
-    <GridColumn TItem="ExpenseCategoryListItem" HeaderText="Category" PropertyName="CategoryName">
-        @context.CategoryName
-    </GridColumn>
-</Grid>
+<MudDataGrid T="ExpenseCategoryListItem"
+             @ref="_grid"
+             Items="_expenseCategories"
+             ReadOnly="false"
+             EditMode="DataGridEditMode.Form"
+             CommittedItemChanges="@OnCommittedItemChanged"
+             MultiSelection="true"
+             SelectedItemsChanged="OnSelectionChanged"
+             Bordered="true"
+             Dense="false"
+             EditTrigger="DataGridEditTrigger.OnRowClick">
+    <Columns>
+        <SelectColumn/>
+        <PropertyColumn Property="x => x.CategoryName" Title="Category"/>
+    </Columns>
+</MudDataGrid>

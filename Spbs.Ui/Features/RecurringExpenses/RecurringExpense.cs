@@ -24,10 +24,12 @@ public enum RecurrenceType
 
 public class RecurringExpenseHistoryItem
 {
+    [JsonProperty("id")]
     public Guid Id { get; set; }
+    [JsonProperty("total")]
     public double Total { get; set; }
+    [JsonProperty("date")]
     public DateTime Date { get; set; }
-    public bool Payed { get; set; } = false;
 }
 
 public class RecurringExpense : ICosmosData

@@ -85,7 +85,7 @@ public partial class ExpenseDetails : ComponentBase
         
         _expense!.Items.Add(newItem);
         await _grid.ReloadServerData();
-        await  _grid.SetEditingItemAsync(newItem);
+        await _grid.SetEditingItemAsync(newItem);
     }
 
     private Task OnExpenseItemChanged()
