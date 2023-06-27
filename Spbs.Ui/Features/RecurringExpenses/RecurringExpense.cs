@@ -27,7 +27,6 @@ public class RecurringExpenseHistoryItem
     public Guid Id { get; set; }
     public double Total { get; set; }
     public DateTime Date { get; set; }
-    public bool Payed { get; set; } = false;
 }
 
 public class RecurringExpense : ICosmosData
