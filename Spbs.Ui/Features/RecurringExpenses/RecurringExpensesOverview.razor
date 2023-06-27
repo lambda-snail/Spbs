@@ -1,26 +1,23 @@
 @page "/recurring"
+@using Size = MudBlazor.Size
 
-<h3>RecurringExpensesOverview</h3>
+<MudText Typo="Typo.h3" GutterBottom="true" Class="mt-4">Recurring Expenses</MudText>
 
-<p>Here you will see all information related to recurring bills and subscriptions.</p>
+<MudDivider Class="mb-4"/>
 
-@* 
-Content to show
-- List of recurring expenses, with dropdown to filter on subscriptions only, bills only etc
-- A widget with the next due date
-- A widget with upcoming due dates for current month, and passed due dates
-*@
+<MudGrid Spacing="6" Class="mt-16">
+    <MudItem xs="7">
+        <MudText Typo="Typo.h5" GutterBottom="true">All Recurring Expenses</MudText>
+        
+        <RecurringExpensesListComponent @ref="_recurringExpensesList"/>
 
-<div class="container">
-    <div class="row">
-        <div class="col-6">
-            <UpcomingRecurringExpensesComponent />
-        </div>
-        <div class="col-6">
-            <div class="row">
-                <RecurringExpensesListComponent @ref="_recurringExpensesList"/>
-            </div>
-        </div>
-    </div>
+    </MudItem>
+    <MudItem xs="5">
+        <MudText Typo="Typo.h5" GutterBottom="true">Upcoming Expenses</MudText>
+        <MudPaper Class="d-flex flex-column pa-2" Style="height:100%;" Outlined="true">
 
-</div>
+            <UpcomingRecurringExpensesComponent/>
+
+        </MudPaper>
+    </MudItem>
+</MudGrid>
