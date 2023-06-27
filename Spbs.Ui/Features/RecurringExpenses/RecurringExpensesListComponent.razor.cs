@@ -102,7 +102,26 @@ public partial class RecurringExpensesListComponent : SelectableListComponent<Re
             // delete from repo
         }
         
-        _grid.Selection.Clear();
         await _grid.ReloadServerData();
+    }
+    
+    private string DeleteButtonTooltip()
+    {
+        if (_grid.Selection is { Count: 0 })
+        {
+            return "Delete expense (none selected)";
+        }
+
+        return "Delete expense";
+    }
+
+    private string EditButtonTooltip()
+    {
+        return _grid.Selection switch
+        {
+            { Count: 0 } => "Edit expense (none selected)",
+            { Count: >1 } => "Edit expense (too many selected)",
+            _ => "Edit expense"
+        };
     }
 }

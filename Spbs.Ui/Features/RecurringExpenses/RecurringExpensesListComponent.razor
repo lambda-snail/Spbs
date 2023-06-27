@@ -13,19 +13,19 @@
         <MudToolBar>
 
                 <MudToolBar>
-                    <MudTooltip Delay="600" Text="Add a new item">
+                    <MudTooltip Delay="600" Text="Add a new expense">
                         <MudIconButton Icon="@Icons.Material.Filled.Add"
                                        OnClick="@(AddRecurringExpense)"
                                        Color="Color.Secondary"/>
                     </MudTooltip>
 
-                    <MudTooltip Delay="600" Text="Edit the selected item">
+                    <MudTooltip Delay="600" Text="@EditButtonTooltip()">
                         <MudIconButton Disabled="@(_numSelectedExpenses != 1)" OnClick="EditSelectedExpense"
                                        Icon="@Icons.Material.Filled.Edit"
                                        Color="Color.Secondary"/>
                     </MudTooltip>
 
-                    <MudTooltip Delay="600" Text="Delete selected items">
+                    <MudTooltip Delay="600" Text="@DeleteButtonTooltip()">
                         <MudIconButton Disabled="@(_numSelectedExpenses == 0)" OnClick="DeleteExpenses"
                                        Icon="@Icons.Material.Filled.Delete"
                                        Color="Color.Secondary"/>
