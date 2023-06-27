@@ -1,4 +1,5 @@
 ﻿@page "/data/visualize"
+@using ChartType = MudBlazor.ChartType
 
 <div id="dashboard" class="container">
     <div class="row">
@@ -22,7 +23,7 @@
             </div>
 
             <div class="row">
-                <BarChart @ref="_chart1" Class="mb-4" />
+                <MudChart @ref="_chart1" ChartType="ChartType.Bar" ChartSeries="@_series" XAxisLabels="@_filteredLabels.ToArray()" />
             </div>
         </div>
         <div class="col">
