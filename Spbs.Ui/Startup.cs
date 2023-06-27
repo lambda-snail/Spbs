@@ -27,6 +27,7 @@ using Spbs.Ui.Features.Expenses;
 using Spbs.Ui.Features.Expenses.Repositories;
 using Spbs.Ui.Features.Expenses.Validation;
 using Spbs.Ui.Features.RecurringExpenses;
+using Spbs.Ui.Features.RecurringExpenses.Validation;
 using Spbs.Ui.Features.Users;
 using Spbs.Ui.Features.Users.Repositories;
 using Spbs.Ui.Features.Visualization.DataAccess;
@@ -100,6 +101,7 @@ namespace Spbs.Ui
             services.AddSingleton<IValidator<TransactionsRequestParameters>, TransactionsParametersRequestFluentValidation>();
             services.AddSingleton<IValidator<GraphDataFilter>, GraphDataFilterFluentValidation>();
             services.AddSingleton<IValidator<EditExpenseViewModel>, EditExpenseViewModelFluentValidation>();
+            services.AddSingleton<IValidator<EditRecurringExpenseViewModel>, EditRecurringExpenseViewModelFluentValidation>();
         }
 
         private void RegisterConfigurations(IServiceCollection services)
