@@ -1,15 +1,48 @@
 @inherits Spbs.Ui.Components.SelectableListComponent<RecurringExpense>
 
-<div class="container">
+@* <div class="container"> *@
+    @* *@
+    @* <div class="row"> *@
+    @*     <div class="d-flex justify-content-end gx-2"> *@
+    @*         <button class="btn btn-outline-primary" onclick="@ToggleExpenseDialog" data-toggle="tooltip" data-placement="top" title="Add New Expense"> *@
+    @*             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16"> *@
+    @*                 <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/> *@
+    @*                 <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/> *@
+    @*             </svg> *@
+    @*         </button> *@
+    @*         <div class="dropdown"> *@
+    @*             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"> *@
+    @*                 Filter *@
+    @*             </button> *@
+    @*             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1"> *@
+    @*                 <li> *@
+    @*                     <a class="dropdown-item" @onclick="() => SetFocusRecurrenceType(null)">All</a> *@
+    @*                 </li> *@
+    @*                 <li> *@
+    @*                     <a class="dropdown-item" @onclick="() => SetFocusRecurrenceType(RecurrenceType.Subscription)">Subscriptions</a> *@
+    @*                 </li> *@
+    @*                 <li> *@
+    @*                     <a class="dropdown-item" @onclick="() => SetFocusRecurrenceType(RecurrenceType.Bill)">Bills</a> *@
+    @*                 </li> *@
+    @*                 <li> *@
+    @*                     <a class="dropdown-item" @onclick="() => SetFocusRecurrenceType(RecurrenceType.Invoice)">Invoices</a> *@
+    @*                 </li> *@
+    @*             </ul> *@
+    @*         </div> *@
+    @*     </div> *@
+    @* </div> *@
 
-    <div class="row">
-        <div class="d-flex justify-content-end gx-2">
-            <button class="btn btn-outline-primary" onclick="@ToggleExpenseDialog" data-toggle="tooltip" data-placement="top" title="Add New Expense">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16">
-                    <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
-                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
-                </svg>
-            </button>
+
+    <MudDataGrid T="RecurringExpense"
+                 Items="@_recurringExpenses"
+                 MultiSelection="true"
+                 SortMode="SortMode.Multiple"
+                 Filterable="true"
+                 Hideable="true"
+                 SelectedItemsChanged="@SelectedItemsChanged">
+        <ToolBarContent>
+            <MudText GutterBottom="true" Typo="Typo.h6">@GetBillingTypeUIText()</MudText>
+            <MudSpacer/>
             <div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                     Filter
@@ -29,57 +62,73 @@
                     </li>
                 </ul>
             </div>
-        </div>
-    </div>
+        </ToolBarContent>
+        <Columns>
+            <SelectColumn T="RecurringExpense"/>
+            <TemplateColumn T="RecurringExpense" Title="Name">
+                <CellTemplate>
+                    <MudButton Variant="Variant.Text" Color="Color.Primary">
+                        <NavLink href="@context.Item.GetDetailsUrl()">@context.Item.Name</NavLink>
+                    </MudButton>
+                </CellTemplate>
+            </TemplateColumn>
+            <PropertyColumn Property="x => x.BillingDay"/>
+            <PropertyColumn Property="x => x.BillingPrincipal"/>
+        </Columns>
+        <PagerContent>
+            <MudDataGridPager T="RecurringExpense"/>
+        </PagerContent>
+    </MudDataGrid>
 
-    <div class="card text-center row">
-        <div class="card-header">
-            @GetBillingTypeUIText()
-        </div>
-        <div class="card-body">
-            <div id="list" class="row gy-2">
-                @if (_recurringExpenses?.Count > 0)
-                {
-                    for (int i = 0; i < _recurringExpenses.Count; ++i)
-                    {
-                        int row = i;
-                        RecurringExpense expense = _recurringExpenses[row];
-                        <div onclick="@(() => SetSelected(row))" class="card @GetRowClass(row)">
-                            <div class="card-body">
-                                <h5 class="card-title">@expense.Name</h5>
-                                @if (!IsSelected(row))
-                                {
-                                    <h6 class="card-subtitle mb-2 text-muted">Billed on the @(expense.BillingDay):th every month</h6>
-                                    <NavLink class="card-link" href="@expense.GetDetailsUrl()">
-                                        Details
-                                    </NavLink>
-                                }
-                                else
-                                {
-                                    <button class="btn btn-outline-light" onclick="@ToggleExpenseDialog" data-toggle="tooltip" data-placement="top" title="Edit">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
-                                        </svg>
-                                    </button>
-                                }
-                            </div>
-                        </div>
-                    }
-                }
-            </div>
-        </div>
-        <div class="card-footer text-muted">
-            @if (_recurringExpenses?.Count > 0)
-            {
-                <p>You have @_recurringExpenses!.Count @GetBillingTypeUIText()</p>
-            }
-            else
-            {
-                <p>No recurring expenses</p>
-            }
-        </div>
-    </div>
-</div>
+
+@*     <div class="card text-center row"> *@
+@*         <div class="card-header"> *@
+@*             @GetBillingTypeUIText() *@
+@*         </div> *@
+@*         <div class="card-body"> *@
+@*             <div id="list" class="row gy-2"> *@
+@*                 @if (_recurringExpenses?.Count > 0) *@
+@*                 { *@
+@*                     for (int i = 0; i < _recurringExpenses.Count; ++i) *@
+@*                     { *@
+@*                         int row = i; *@
+@*                         RecurringExpense expense = _recurringExpenses[row]; *@
+@*                         <div onclick="@(() => SetSelected(row))" class="card @GetRowClass(row)"> *@
+@*                             <div class="card-body"> *@
+@*                                 <h5 class="card-title">@expense.Name</h5> *@
+@*                                 @if (!IsSelected(row)) *@
+@*                                 { *@
+@*                                     <h6 class="card-subtitle mb-2 text-muted">Billed on the @(expense.BillingDay):th every month</h6> *@
+@*                                     <NavLink class="card-link" href="@expense.GetDetailsUrl()"> *@
+@*                                         Details *@
+@*                                     </NavLink> *@
+@*                                 } *@
+@*                                 else *@
+@*                                 { *@
+@*                                     <button class="btn btn-outline-light" onclick="@ToggleExpenseDialog" data-toggle="tooltip" data-placement="top" title="Edit"> *@
+@*                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16"> *@
+@*                                             <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/> *@
+@*                                             <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/> *@
+@*                                         </svg> *@
+@*                                     </button> *@
+@*                                 } *@
+@*                             </div> *@
+@*                         </div> *@
+@*                     } *@
+@*                 } *@
+@*             </div> *@
+@*         </div> *@
+@*         <div class="card-footer text-muted"> *@
+@*             @if (_recurringExpenses?.Count > 0) *@
+@*             { *@
+@*                 <p>You have @_recurringExpenses!.Count @GetBillingTypeUIText()</p> *@
+@*             } *@
+@*             else *@
+@*             { *@
+@*                 <p>No recurring expenses</p> *@
+@*             } *@
+@*         </div> *@
+@*     </div> *@
+@* </div> *@
 
 <EditRecurringExpenseComponent OnUpdateCallback="ItemAddedOrUpdated" GetUserId="() => _userId" @ref="_editRecurringExpensesDialog"/>

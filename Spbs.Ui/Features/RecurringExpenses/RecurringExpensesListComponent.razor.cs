@@ -114,4 +114,9 @@ public partial class RecurringExpensesListComponent : SelectableListComponent<Re
         await FetchRecurringExpenses();
         StateHasChanged();
     }
+
+    private void SelectedItemsChanged(HashSet<RecurringExpense> obj)
+    {
+        
+    }
 }
