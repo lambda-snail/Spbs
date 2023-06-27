@@ -57,7 +57,11 @@ public partial class RecurringExpensesListComponent : SelectableListComponent<Re
 
     private async Task ItemAddedOrUpdated(RecurringExpense expense)
     {
-        _recurringExpenses.Add(expense);
+        if (!_recurringExpenses.Contains(expense))
+        {
+            _recurringExpenses.Add(expense);
+        }
+
         await _grid.ReloadServerData();
         StateHasChanged();
     }
