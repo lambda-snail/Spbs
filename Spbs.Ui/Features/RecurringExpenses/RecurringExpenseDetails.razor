@@ -4,7 +4,41 @@
 
 @if (_expense is null)
 {
-    <p>Loading</p>
+    <MudPaper Class="pa-4 mt-4">
+            <MudText Typo="Typo.h5">
+                <MudSkeleton />
+            </MudText>
+    
+            <MudDivider Class="mt-2 mb-4"/>
+    
+            <MudGrid>
+                <MudItem xs="12">
+                    <MudSkeleton SkeletonType="SkeletonType.Rectangle" />
+                </MudItem>
+    
+                <MudItem xs="6">
+                    <MudSkeleton />
+                </MudItem>
+    
+                <MudItem xs="6">
+                    <MudSkeleton />
+                </MudItem>
+    
+                <MudItem xs="6">
+                    <MudSkeleton />
+                </MudItem>
+    
+                <MudItem xs="6">
+                    <MudSkeleton />
+                </MudItem>
+    
+                <MudItem xs="6">
+                    <MudSkeleton />
+                </MudItem>
+    
+                <MudDivider/>
+            </MudGrid>
+        </MudPaper>
 }
 else
 {
