@@ -25,7 +25,8 @@ public partial class RecurringExpensesListComponent : SelectableListComponent<Re
     protected override List<RecurringExpense>? GetList() => _recurringExpenses;
     
     EditRecurringExpenseComponent _editRecurringExpensesDialog;
-    
+
+    private RecurrenceType? _filterRecurrence = null;
     private Dictionary<RecurrenceType, string> _billingTypeUIString = new ()
     {
         {RecurrenceType.Bill, "Bills" },
@@ -40,17 +41,6 @@ public partial class RecurringExpensesListComponent : SelectableListComponent<Re
         await UserId();
     }
 
-    public Task SetFilter(RecurringExpenseListFilter? filter)
-    {
-        _filter = filter;
-        return FetchRecurringExpenses();
-    }
-
-    public Task ClearFilter()
-    {
-        return SetFilter(null);
-    }
-
     private async Task FetchRecurringExpenses()
     {
         await UserId();
@@ -59,35 +49,10 @@ public partial class RecurringExpensesListComponent : SelectableListComponent<Re
             return; 
         }
 
-        List<RecurringExpense>? recurringExpenses = null;
-        if (_filter is { RecurrenceType: not null })
-        {
-            recurringExpenses = await RecurringExpenseReaderRepository.GetRecurringExpensesByUserId(_userId.Value, _filter.RecurrenceType.Value);
-        }
-        else
-        {
-            recurringExpenses = await RecurringExpenseReaderRepository.GetRecurringExpensesByUserId(_userId.Value);
-        }
-        
-        _recurringExpenses = recurringExpenses;
+        _recurringExpenses = await RecurringExpenseReaderRepository.GetRecurringExpensesByUserId(_userId.Value);
         StateHasChanged();
     }
 
-    private string GetRowClass(int i)
-    {
-        return GetSelected() == i ? "bg-secondary text-white" : string.Empty;
-    }
-
-    private string GetBillingTypeUIText()
-    {
-        if (_filter?.RecurrenceType != null)
-        {
-            return _billingTypeUIString[_filter.RecurrenceType.Value];
-        }
-     
-        return "Recurring Expenses";
-    }
-    
     private void ToggleExpenseDialog()
     {
         RecurringExpense? e = null;
@@ -99,14 +64,6 @@ public partial class RecurringExpensesListComponent : SelectableListComponent<Re
         
         _editRecurringExpensesDialog?.SetModalContent(e);
         _editRecurringExpensesDialog?.ShowModal();
-    }
-
-    private void SetFocusRecurrenceType(RecurrenceType? type)
-    {
-        SetFilter(new()
-        {
-            RecurrenceType = type
-        });
     }
 
     private async Task ItemAddedOrUpdated()

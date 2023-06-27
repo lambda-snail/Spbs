@@ -37,31 +37,14 @@
                  Items="@_recurringExpenses"
                  MultiSelection="true"
                  SortMode="SortMode.Multiple"
-                 Filterable="true"
+                 Filterable="false"
                  Hideable="true"
-                 SelectedItemsChanged="@SelectedItemsChanged">
+                 SelectedItemsChanged="@SelectedItemsChanged"
+                 Dense="true">
         <ToolBarContent>
-            <MudText GutterBottom="true" Typo="Typo.h6">@GetBillingTypeUIText()</MudText>
-            <MudSpacer/>
-            <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                    Filter
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                    <li>
-                        <a class="dropdown-item" @onclick="() => SetFocusRecurrenceType(null)">All</a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" @onclick="() => SetFocusRecurrenceType(RecurrenceType.Subscription)">Subscriptions</a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" @onclick="() => SetFocusRecurrenceType(RecurrenceType.Bill)">Bills</a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" @onclick="() => SetFocusRecurrenceType(RecurrenceType.Invoice)">Invoices</a>
-                    </li>
-                </ul>
-            </div>
+            <MudToolBar>
+                
+            </MudToolBar>
         </ToolBarContent>
         <Columns>
             <SelectColumn T="RecurringExpense"/>
@@ -72,8 +55,8 @@
                     </MudButton>
                 </CellTemplate>
             </TemplateColumn>
-            <PropertyColumn Property="x => x.BillingDay"/>
-            <PropertyColumn Property="x => x.BillingPrincipal"/>
+            <PropertyColumn Property="x => x.RecurrenceType" Filterable="true" />
+            <PropertyColumn Property="x => x.BillingPrincipal" Filterable="true" />
         </Columns>
         <PagerContent>
             <MudDataGridPager T="RecurringExpense"/>
