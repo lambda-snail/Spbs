@@ -1,69 +1,148 @@
 @page "/recurring-expenses/{ExpenseId}"
-@using System.ComponentModel
+
 <h3>Details of Recurring Expense</h3>
 
 @if (_expense is null)
 {
-    <p>Loading ...</p>
+    <p>Loading</p>
 }
 else
 {
-    <container>
-        <div class="row">
-            <div class="col-6">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">@_expense.Name</h5>
-                        <p class="card-text">@_expense.Description</p>
-                        <div id="attributes" class="justify-content-between">
-                            <div class="row">
-                                <div class="col-3">Date</div>
-                                <div class="col-7">@_expense.BillingDay</div>
-                            </div>
-                            <div class="row">
-                                <div class="col-3">Total</div>
-                                <div class="col-7">@_expense.Total @_expense.Currency</div>
-                            </div>
-                            <div class="row">
-                                <div class="col-3">Recipient</div>
-                                <div class="col-7">@_expense.BillingPrincipal</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <MudPaper Class="pa-4 mt-4">
+        <MudText Typo="Typo.h5">
+            @_expense.Name
+        </MudText>
+
+        <MudDivider Class="mt-2 mb-4"/>
+
+        <MudGrid>
+            <MudItem xs="12">
+                <MudTextField T="string"
+                              ReadOnly="true"
+                              Text="@_expense.Description"
+                              Lines="4"
+                              Label="Description"
+                              Variant="Variant.Text"
+                              Margin="Margin.Dense">
+                </MudTextField>
+            </MudItem>
+
+            <MudItem xs="6">
+                <MudNumberField T="int"
+                                ReadOnly="true"
+                                Text="@_expense.BillingDay"
+                                Label="Billing Day"
+                                Variant="Variant.Text"
+                                Margin="Margin.Dense">
+                </MudNumberField>
+            </MudItem>
+
+            <MudItem xs="6">
+                <MudNumberField T="double"
+                                ReadOnly="true"
+                                Text="@_expense.Total"
+                                Label="Total"
+                                Variant="Variant.Text"
+                                Margin="Margin.Dense">
+                </MudNumberField>
+            </MudItem>
+
+            <MudItem xs="6">
+                <MudTextField T="string"
+                              ReadOnly="true"
+                              Text=@(_expense.Total + " " + _expense.Currency)
+                              Label="Total"
+                              Variant="Variant.Text"
+                              Margin="Margin.Dense">
+                </MudTextField>
+            </MudItem>
+
+            <MudItem xs="6">
+                <MudTextField T="string"
+                              ReadOnly="true"
+                              Text="@_expense.BillingPrincipal"
+                              Label="Recipient"
+                              Variant="Variant.Text"
+                              Margin="Margin.Dense">
+                </MudTextField>
+            </MudItem>
+
+            <MudItem xs="6">
+                <MudTextField T="string"
+                              ReadOnly="true"
+                              Text="@_expense.BillingType.ToString()"
+                              Label="Billing Period"
+                              Variant="Variant.Text"
+                              Margin="Margin.Dense">
+                </MudTextField>
+            </MudItem>
+
+            <MudDivider/>
 
 
-            <div class="col-6">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Payment History</h5>
+            @* <MudItem> *@
+            @*     <MudButton Icon="@Icons.Material.Filled.Edit" *@
+            @*                OnClick="@ToggleEditMode" *@
+            @*                Color="Color.Primary"> *@
+            @*         Edit Expense *@
+            @*     </MudButton> *@
+            @* </MudItem> *@
+        </MudGrid>
+    </MudPaper>
 
-                        @if (_expense.PaymentHistory.Count == 0)
-                        {
-                            <p>Nothing to show here!</p>
-                        }
-                        else
-                        {
-                            @foreach (var item in _expense.PaymentHistory)
-                            {
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h5 class="card-title">@item.Date</h5>
-                                        <div id="attributes" class="justify-content-between">
-                                            <div class="row">
-                                                <div class="col-3">Total</div>
-                                                <div class="col-7">@item.Total @_expense.Currency</div>
-                                            </div>
-                                        </div>
 
-                                    </div>
-                                </div>
-                            }
-                        }
-                    </div>
-                </div>
-            </div>
-        </div>
-    </container>
+    <MudPaper Elevation="25" Class="mt-4 mb-2">
+        <MudToolBar>
+            <MudTooltip Delay="600" Text="Add a new item">
+                <MudIconButton Icon="@Icons.Material.Filled.Add"
+                               OnClick="@(AddExpenseItem)"
+                               Color="Color.Primary"/>
+            </MudTooltip>
+    
+            <MudTooltip Delay="600" Text="@EditButtonTooltip()">
+                <MudIconButton Disabled="@(_numSelectedHistoryItems != 1)" OnClick="EditSelectedItem"
+                               Icon="@Icons.Material.Filled.Edit"
+                               Color="Color.Default"/>
+            </MudTooltip>
+    
+            <MudTooltip Delay="600" Text="@DeleteButtonTooltip()">
+                <MudIconButton Disabled="@(_numSelectedHistoryItems == 0)" OnClick="DeleteExpenseItems"
+                               Icon="@Icons.Material.Filled.Delete"
+                               Color="Color.Secondary"/>
+            </MudTooltip>
+        </MudToolBar>
+    </MudPaper>
+
+    <MudDataGrid T="RecurringExpenseHistoryItem"
+                 @ref="@_grid"
+                 Items="@_expense.PaymentHistory"
+                 ReadOnly="false"
+                 EditMode="DataGridEditMode.Form"
+                 EditTrigger="DataGridEditTrigger.OnRowClick"
+                 CommittedItemChanges="OnHistoryItemChanged"
+                 SelectedItemsChanged="OnSelectedItemsChanged"
+                 Filterable="true"
+                 SortMode="@SortMode.Multiple"
+                 MultiSelection="true"
+                 Groupable="false">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">
+                Payment History
+            </MudText>
+        </ToolBarContent>
+        <Columns>
+            <SelectColumn T="RecurringExpenseHistoryItem"/>
+            <PropertyColumn Property="x => x.Total"/>
+            <PropertyColumn Property="x => x.Date">
+                <EditTemplate>
+                    <MudDatePicker @bind-Date="@context.Item.Date"
+                                   Required="true"
+                                   RequiredError="Please select a date for the expense!"/>
+                </EditTemplate>
+            </PropertyColumn>
+        </Columns>
+        <PagerContent>
+            <MudDataGridPager T="RecurringExpenseHistoryItem"/>
+        </PagerContent>
+    </MudDataGrid>
 }

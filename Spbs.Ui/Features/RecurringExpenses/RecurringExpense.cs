@@ -1,10 +1,8 @@
 #nullable enable
 using System;
 using System.Collections.Generic;
-using System.Security.Principal;
 using Newtonsoft.Json;
 using Spbs.Ui.Data.Cosmos;
-using Spbs.Ui.Features.Expenses;
 
 namespace Spbs.Ui.Features.RecurringExpenses;
 
@@ -29,7 +27,7 @@ public class RecurringExpenseHistoryItem
     [JsonProperty("total")]
     public double Total { get; set; }
     [JsonProperty("date")]
-    public DateTime Date { get; set; }
+    public DateTime? Date { get; set; }
 }
 
 public class RecurringExpense : ICosmosData
