@@ -83,10 +83,6 @@ public partial class EditExpenseComponent : ComponentBase
         {
             _snackbar.Add("An error occured while saving", Severity.Error);
         }
-
-        CloseDialog();
-        
-        return;
         
         Expense expense;
         if (_expense is null)
