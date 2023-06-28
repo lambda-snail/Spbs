@@ -5,40 +5,40 @@
 @if (_expense is null)
 {
     <MudPaper Class="pa-4 mt-4">
-            <MudText Typo="Typo.h5">
-                <MudSkeleton />
-            </MudText>
-    
-            <MudDivider Class="mt-2 mb-4"/>
-    
-            <MudGrid>
-                <MudItem xs="12">
-                    <MudSkeleton SkeletonType="SkeletonType.Rectangle" />
-                </MudItem>
-    
-                <MudItem xs="6">
-                    <MudSkeleton />
-                </MudItem>
-    
-                <MudItem xs="6">
-                    <MudSkeleton />
-                </MudItem>
-    
-                <MudItem xs="6">
-                    <MudSkeleton />
-                </MudItem>
-    
-                <MudItem xs="6">
-                    <MudSkeleton />
-                </MudItem>
-    
-                <MudItem xs="6">
-                    <MudSkeleton />
-                </MudItem>
-    
-                <MudDivider/>
-            </MudGrid>
-        </MudPaper>
+        <MudText Typo="Typo.h5">
+            <MudSkeleton/>
+        </MudText>
+
+        <MudDivider Class="mt-2 mb-4"/>
+
+        <MudGrid>
+            <MudItem xs="12">
+                <MudSkeleton SkeletonType="SkeletonType.Rectangle"/>
+            </MudItem>
+
+            <MudItem xs="6">
+                <MudSkeleton/>
+            </MudItem>
+
+            <MudItem xs="6">
+                <MudSkeleton/>
+            </MudItem>
+
+            <MudItem xs="6">
+                <MudSkeleton/>
+            </MudItem>
+
+            <MudItem xs="6">
+                <MudSkeleton/>
+            </MudItem>
+
+            <MudItem xs="6">
+                <MudSkeleton/>
+            </MudItem>
+
+            <MudDivider/>
+        </MudGrid>
+    </MudPaper>
 }
 else
 {
@@ -111,19 +111,16 @@ else
                 </MudTextField>
             </MudItem>
 
-            <MudDivider/>
-
-
-            @* <MudItem> *@
-            @*     <MudButton Icon="@Icons.Material.Filled.Edit" *@
-            @*                OnClick="@ToggleEditMode" *@
-            @*                Color="Color.Primary"> *@
-            @*         Edit Expense *@
-            @*     </MudButton> *@
-            @* </MudItem> *@
+            <MudItem Class="d-flex align-end justify-end">
+                <MudSpacer/>
+                <MudButton Icon="@Icons.Material.Filled.Edit"
+                           OnClick="@ToggleEditMode"
+                           Color="Color.Primary">
+                    Edit Expense
+                </MudButton>
+            </MudItem>
         </MudGrid>
     </MudPaper>
-
 
     <MudPaper Elevation="25" Class="mt-4 mb-2">
         <MudToolBar>
@@ -132,18 +129,26 @@ else
                                OnClick="@(AddExpenseItem)"
                                Color="Color.Primary"/>
             </MudTooltip>
-    
+
             <MudTooltip Delay="600" Text="@EditButtonTooltip()">
                 <MudIconButton Disabled="@(_numSelectedHistoryItems != 1)" OnClick="EditSelectedItem"
                                Icon="@Icons.Material.Filled.Edit"
                                Color="Color.Default"/>
             </MudTooltip>
-    
+
             <MudTooltip Delay="600" Text="@DeleteButtonTooltip()">
                 <MudIconButton Disabled="@(_numSelectedHistoryItems == 0)" OnClick="DeleteExpenseItems"
                                Icon="@Icons.Material.Filled.Delete"
                                Color="Color.Secondary"/>
             </MudTooltip>
+
+            <MudSpacer/>
+
+            <MudButton Icon="@Icons.Material.Filled.Edit"
+                       OnClick="@ToggleEditMode"
+                       Color="Color.Primary">
+                Edit Expense
+            </MudButton>
         </MudToolBar>
     </MudPaper>
 
@@ -179,4 +184,6 @@ else
             <MudDataGridPager T="RecurringExpenseHistoryItem"/>
         </PagerContent>
     </MudDataGrid>
+
+    <EditRecurringExpenseComponent OnUpdateCallback="RecurringExpenseUpdated" GetUserId="() => _userId" @ref="_expenseEditor"/>
 }

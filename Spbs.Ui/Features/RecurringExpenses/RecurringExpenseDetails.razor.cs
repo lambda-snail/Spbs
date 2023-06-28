@@ -24,6 +24,7 @@ public partial class RecurringExpenseDetails
     [Inject] private IRecurringExpenseWriterRepository _expenseWriter { get; set; }
     [Inject] private ISnackbar _snackbar { get; set; }
 
+    private EditRecurringExpenseComponent _expenseEditor;
     private MudDataGrid<RecurringExpenseHistoryItem> _grid;
     private int _numSelectedHistoryItems = 0;
 #pragma warning restore CS8618
@@ -110,5 +111,18 @@ public partial class RecurringExpenseDetails
             >1 => "Edit item (too many selected)",
             _ => "Edit item"
         };
+    }
+
+    private Task RecurringExpenseUpdated(RecurringExpense expense)
+    {
+        _expense = expense;
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
+
+    private void ToggleEditMode()
+    {
+        _expenseEditor.SetModalContent(_expense);
+        _expenseEditor.ShowModal();
     }
 }

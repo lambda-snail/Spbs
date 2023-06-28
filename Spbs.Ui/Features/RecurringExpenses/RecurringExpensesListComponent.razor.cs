@@ -55,7 +55,7 @@ public partial class RecurringExpensesListComponent : SelectableListComponent<Re
         StateHasChanged();
     }
 
-    private async Task ItemAddedOrUpdated(RecurringExpense expense)
+    private async Task ExpenseAddedOrUpdated(RecurringExpense expense)
     {
         if (!_recurringExpenses.Contains(expense))
         {
