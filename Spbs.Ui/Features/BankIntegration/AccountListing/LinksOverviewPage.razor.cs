@@ -2,17 +2,14 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Collections.ObjectModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Integrations.Nordigen;
 using Microsoft.AspNetCore.Components;
+using MudBlazor;
 using Spbs.Generators.UserExtensions;
-using Spbs.Ui.Components;
-using Spbs.Ui.ComponentServices;
 using Spbs.Ui.Features.BankIntegration.Models;
 using Spbs.Ui.Features.BankIntegration.Services;
 
@@ -25,15 +22,17 @@ public partial class LinksOverviewPage : ComponentBase
     [Inject] private INordigenLinkReaderRepository _linkReader { get; set; }
     [Inject] private INordigenLinkWriterRepository _linkWriter { get; set; }
     [Inject] private INordigenApiClient _nordigenCLient { get; set; }
-    [Inject] private INotificationService _notificationService { get; set; }
+    [Inject] private ISnackbar _snackbar { get; set; }
     [Inject] private IMapper _mapper { get; set; }
     [Inject] private IRedirectLinkService _redirectService { get; set; }
+    
+    private MudDataGrid<NordigenLink> _grid;
 #pragma warning restore CS8618
     
     private ReadOnlyCollection<NordigenLink>? _userLinks = new(new List<NordigenLink>());
-    private HashSet<NordigenLink> _selectedLinks = new();
 
     private Dictionary<string, Institution>? _institutions;
+    private int _numSelectedLinks = 0;
 
     protected override async Task OnInitializedAsync()
     {
@@ -66,36 +65,50 @@ public partial class LinksOverviewPage : ComponentBase
 
     private async Task DeleteSelectedLinks()
     {
-        if (_selectedLinks is not { Count: >0 })
+        HashSet<NordigenLink> selection = _grid.SelectedItems;
+        if (selection is not { Count: >0 })
         {
+            _snackbar.Add("No links selected", Severity.Error);
             return;
         }
 
-        foreach (var link in _selectedLinks)
+        foreach (var link in selection)
         {
-            await _linkWriter!.DeleteLink(link);
+            await _linkWriter.DeleteLink(link);
 
             if (link is { NordigenId: not null })
             {
                 _nordigenCLient?.DeleteRequisition(link.NordigenId.Value);
             }
-
-            // TODO: Error handling
-            _notificationService?.ShowToast("Link Deleted", $"Link to {link.InstitutionId} was successfully deleted!",
-                NotificationLevel.Success);
         }
+        
+        _snackbar.Add("Link(s) deleted successfully", Severity.Success);
 
         // Slightly inefficient, but the user will probably not delete that many at a time so should be ok :)
-        _userLinks = new(_userLinks!.Where(l => !_selectedLinks.Contains(l)).ToList());
+        _userLinks = new(_userLinks!.Where(l => !selection.Contains(l)).ToList());
 
-        _selectedLinks.Clear();
-
+        selection.Clear();
+        await _grid.ReloadServerData();
         StateHasChanged();
     }
 
-    private Task OnSelectedItemsChanged(HashSet<NordigenLink>? selection)
+    private string DeleteButtonTooltip()
     {
-        _selectedLinks = selection is not null && selection.Any() ? selection : new();
-        return Task.CompletedTask;
+        if (_grid.Selection is null || _grid.Selection is { Count: 0 })
+        {
+            return "Delete links (none selected)";
+        }
+
+        if (_grid.Selection is { Count: 1 })
+        {
+            return "Delete link";
+        }
+        
+        return "Delete links";
+    }
+
+    private void SelectedItemsChanged(HashSet<NordigenLink> selection)
+    {
+        _numSelectedLinks = selection.Count;
     }
 }
