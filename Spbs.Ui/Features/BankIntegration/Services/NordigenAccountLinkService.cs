@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using AutoMapper;
+using FluentValidation;
 using Integrations.Nordigen;
 using Integrations.Nordigen.Models;
 using Spbs.Ui.Features.BankIntegration.Models;
@@ -91,6 +92,24 @@ public class NordigenAccountLinkService : INordigenAccountLinkService
 
     public Task<ListTransactionsResponse?> GetAccountTransactions(Guid accountId, TransactionsRequestParameters requestParameters)
     {
-        return _nordigenCLient.GetAccountTransactions(accountId, requestParameters.DateFrom, requestParameters.DateTo);
+        DateOnly? start = null;
+        DateOnly? end = null;
+        if (requestParameters.Range.Start is not null)
+        {
+            start = new DateOnly(
+                requestParameters.Range.Start.Value.Year, 
+                requestParameters.Range.Start.Value.Month,
+                requestParameters.Range.Start.Value.Day);
+        }
+        
+        if (requestParameters.Range.End is not null)
+        {
+            end = new DateOnly(
+                requestParameters.Range.End.Value.Year, 
+                requestParameters.Range.End.Value.Month,
+                requestParameters.Range.End.Value.Day);
+        }
+
+        return _nordigenCLient.GetAccountTransactions(accountId, start, end);
     }
 }

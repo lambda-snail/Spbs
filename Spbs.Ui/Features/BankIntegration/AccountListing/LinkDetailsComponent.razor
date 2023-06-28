@@ -2,143 +2,145 @@
 @inherits SelectableListComponent<Guid>
 
 @using Blazored.FluentValidation
+@using Integrations.Nordigen.Models
+@using Spbs.Ui.Features.RecurringExpenses
 
-<h3>Details for link to @_link?.InstitutionId</h3>
+@if (_link is not null)
+{
+    <MudText Typo="Typo.h4" GutterBottom="true" Class="mt-4">Accounts Connected to @_link.InstitutionId</MudText>
 
-<div class="container">
-<div class="row g-2 justify-content-evenly">
-<div class="card mx-2 col">
+    <MudDivider Class="mb-4"/>
 
-    <div class="card-header row">
-        <div id="content-link-info" class="col-12">
-            @if (_link is not null)
-            {
-                <div class="row">
-                    <div class="col-6">Institution:</div>
-                    <div class="col-6">@_link.InstitutionId</div>
-                </div>
-                <div class="row">
-                    <div class="col-6">Created On:</div>
-                    <div class="col-6">@_link.Created.ToString()</div>
-                </div>
-                <div class="row">
-                    <div class="col-6">Linked Accounts:</div>
-                    <div class="col-6">@_link.Accounts.Count.ToString()</div>
-                </div>
-            }
-        </div>
-    </div>
-    <div class="card-body row">
-        @if (_link is null or { Accounts: null or { Count: 0 } })
+    <MudText Typo="Typo.h5" GutterBottom="true">All Connected Accounts</MudText>
+
+    <MudPaper Class="pa-2 mb-4">
+        <MudGrid>
+            <MudItem xs="6">
+                <MudTextField Value="@_link.InstitutionId" Label="Institution" ReadOnly="true" Variant="Variant.Text"/>
+            </MudItem>
+            <MudItem xs="6">
+                <MudTextField Value="@_link.Created.ToString()" Label="Created On" ReadOnly="true" Variant="Variant.Text"/>
+            </MudItem>
+            <MudItem xs="6">
+                <Mud TextField Value="@_link.Created.ToString()" Label="Created On" ReadOnly="true" Variant="Variant.Text"/>
+                <MudNumericField Value="@_link.Accounts.Count" Label="LinkedList Accounts" Variant="Variant.Text" ReadOnly="true"/>
+            </MudItem>
+        </MudGrid>
+    </MudPaper>
+
+    <MudToolBar>
+        <MudTooltip Text="@GetLoadButtonTooltip()">
+        <MudButton Disabled="@(_selectedAccounts is not { Count: 1 })"
+                   OnClick="LoadTransactionsFromNordigen"
+                   Color="Color.Primary">
+            Load Expenses
+        </MudButton>
+        </MudTooltip>
+        <MudTooltip Text="@GetImportButtonTooltip()">
+        <MudButton Disabled="@(_loadedTransactions is not { Count: >0 })"
+                   OnClick="ProceedToImportPage"
+                   Variant="Variant.Outlined"
+                   Color="Color.Secondary">
+            Proceed to Import
+        </MudButton>
+        </MudTooltip>
+
+        @if (_loadedTransactions is { Count: >0 })
         {
-            <div>No accounts are associated with this link. If you expect accounts to be listed here, please try to recreate the link again.</div>
+            <MudText>Loaded @_loadedTransactions.Count transactions</MudText>
         }
-        else
-        {
-            @for (int i = 0; i < _accounts.Count; ++i)
-            {
-                int row = i;
-                var account = _accounts[i];
-                <div class="row">
-                    <div class="card @GetRowClass(row)" onclick="@(() => SetSelected(row))">
-                        <div class="card-body container">
-                            <div class="row">
-                                <div class="col">
-                                    Iban:
-                                </div>
-                                <div class="col card-text">
-                                    @account.Iban
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    Account Status:
-                                </div>
-                                <div class="col card-text">
-                                    @account.Status
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    Created On:
-                                </div>
-                                <div class="col card-text">
-                                    @account.Created
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    Last Access:
-                                </div>
-                                <div class="col card-text">
-                                    @account.LastAccessed
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            }
-        }
-    </div>
-</div>
-<div class="card mx-2 col">
 
-    <div class="card-header row">
-        @if (HasSelection() && _loadedTransactions is { Count: 0 })
-        {
-            <div class="col">
-                <EditForm Model="@_transactionsRequestParameters"
-                          OnValidSubmit="@HandleValidSubmit_LoadTransactionsFromNordigen"
-                          OnInvalidSubmit="@HandleInvalidSubmit">
+        <MudSpacer/>
 
-                    <FluentValidationValidator/>
-                    <ValidationSummary/>
+        <MudDateRangePicker Label="Custom start month" StartMonth="@DateTime.Now.AddMonths(-1)" @bind-DateRange="@_transactionsRequestParameters.Range"/>
 
-                    <div class="form-group col-md-10">
-                        <label for="from-date">From Date</label>
-                        <InputDate id="from-date"
-                                   class="form-control"
-                                   @bind-Value="@_transactionsRequestParameters.DateFrom">
-                        </InputDate>
-                        <small id="from-date-small" class="form-text text-muted">Load transactions from this date only.</small>
-                        <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => _transactionsRequestParameters.DateFrom)"/>
-                    </div>
+    </MudToolBar>
 
-                    <div class="form-group col-md-10">
-                        <label for="to-date">To Date</label>
-                        <InputDate id="to-date"
-                                   class="form-control"
-                                   @bind-Value="@_transactionsRequestParameters.DateTo">
-                        </InputDate>
-                        <small id="to-date-small" class="form-text text-muted">Load transactions until this date only.</small>
-                        <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => _transactionsRequestParameters.DateTo)"/>
-                    </div>
+    <MudDataGrid T="AccountV2"
+                 @ref="_grid"
+                 Items="@_accounts"
+                 MultiSelection="true"
+                 Filterable="false"
+                 Hideable="false"
+                 SelectedItemsChanged="@OnSelectionChanged"
+                 Dense="true">
+        <Columns>
+            <SelectColumn T="AccountV2"/>
+            <PropertyColumn Property="x => x.Iban"/>
+            <PropertyColumn Property="x => x.Status"/>
+            <PropertyColumn Property="x => x.Created" Title="Created On"/>
+            <PropertyColumn Property="x => x.LastAccessed" Title="Last Accessed"/>
+        </Columns>
+        <PagerContent>
+            <MudDataGridPager T="AccountV2"/>
+        </PagerContent>
+    </MudDataGrid>
+}
 
-                    <button type="submit" class="btn btn-primary edit-btn">Load Transactions</button>
-                </EditForm>
-            </div>
-        }
-        else if (_loadedTransactions is { Count: >0 })
-        {
-            <div class="col">
-                <button class="btn btn-primary edit-btn" @onclick="HandleValidSubmit_ProceedToImportPage">To Import Configuration</button>
-            </div>
-        }
-        else
-        {
-            <p>Nothing here!</p>
-        }
-    </div>
-    <div class="card-body row">
-        @if (_loadedTransactions is not null and { Count: >0 })
-        {
-            <p>Loaded @_loadedTransactions.Count transactions. Proceed to the import page to filter and create expenses.</p>
-        }
-        else
-        {
-            <p>No transactions loaded yet!</p>
-        }
-    </div>
-</div>
-</div>
-</div>
+@* <h3>Details for link to @_link?.InstitutionId</h3> *@
+
+@* <div class="container"> *@
+@*     <div class="row g-2 justify-content-evenly"> *@
+@*         <div class="card mx-2 col"> *@
+@*              *@
+@*         <div class="card mx-2 col"> *@
+@* *@
+@*             <div class="card-header row"> *@
+@*                 @if (HasSelection() && _loadedTransactions is { Count: 0 }) *@
+@*                 { *@
+@*                     <div class="col"> *@
+@*                         <EditForm Model="@_transactionsRequestParameters" *@
+@*                                   OnValidSubmit="@HandleValidSubmit_LoadTransactionsFromNordigen" *@
+@*                                   OnInvalidSubmit="@HandleInvalidSubmit"> *@
+@* *@
+@*                             <FluentValidationValidator/> *@
+@*                             <ValidationSummary/> *@
+@* *@
+@*                             <div class="form-group col-md-10"> *@
+@*                                 <label for="from-date">From Date</label> *@
+@*                                 <InputDate id="from-date" *@
+@*                                            class="form-control" *@
+@*                                            @bind-Value="@_transactionsRequestParameters.DateFrom"> *@
+@*                                 </InputDate> *@
+@*                                 <small id="from-date-small" class="form-text text-muted">Load transactions from this date only.</small> *@
+@*                                 <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => _transactionsRequestParameters.DateFrom)"/> *@
+@*                             </div> *@
+@* *@
+@*                             <div class="form-group col-md-10"> *@
+@*                                 <label for="to-date">To Date</label> *@
+@*                                 <InputDate id="to-date" *@
+@*                                            class="form-control" *@
+@*                                            @bind-Value="@_transactionsRequestParameters.DateTo"> *@
+@*                                 </InputDate> *@
+@*                                 <small id="to-date-small" class="form-text text-muted">Load transactions until this date only.</small> *@
+@*                                 <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => _transactionsRequestParameters.DateTo)"/> *@
+@*                             </div> *@
+@* *@
+@*                             <button type="submit" class="btn btn-primary edit-btn">Load Transactions</button> *@
+@*                         </EditForm> *@
+@*                     </div> *@
+@*                 } *@
+@*                 else if (_loadedTransactions is { Count: >0 }) *@
+@*                 { *@
+@*                     <div class="col"> *@
+@*                         <button class="btn btn-primary edit-btn" @onclick="HandleValidSubmit_ProceedToImportPage">To Import Configuration</button> *@
+@*                     </div> *@
+@*                 } *@
+@*                 else *@
+@*                 { *@
+@*                     <p>Nothing here!</p> *@
+@*                 } *@
+@*             </div> *@
+@*             <div class="card-body row"> *@
+@*                 @if (_loadedTransactions is not null and { Count: >0 }) *@
+@*                 { *@
+@*                     <p>Loaded @_loadedTransactions.Count transactions. Proceed to the import page to filter and create expenses.</p> *@
+@*                 } *@
+@*                 else *@
+@*                 { *@
+@*                     <p>No transactions loaded yet!</p> *@
+@*                 } *@
+@*             </div> *@
+@*         </div> *@
+@*     </div> *@
+@* </div> *@
