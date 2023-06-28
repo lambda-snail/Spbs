@@ -1,9 +1,6 @@
 @page "/accounts/links/{RequisitionId}"
-@inherits SelectableListComponent<Guid>
-
-@using Blazored.FluentValidation
 @using Integrations.Nordigen.Models
-@using Spbs.Ui.Features.RecurringExpenses
+@inherits SelectableListComponent<Guid>
 
 @if (_link is not null)
 {
@@ -76,71 +73,3 @@
         </PagerContent>
     </MudDataGrid>
 }
-
-@* <h3>Details for link to @_link?.InstitutionId</h3> *@
-
-@* <div class="container"> *@
-@*     <div class="row g-2 justify-content-evenly"> *@
-@*         <div class="card mx-2 col"> *@
-@*              *@
-@*         <div class="card mx-2 col"> *@
-@* *@
-@*             <div class="card-header row"> *@
-@*                 @if (HasSelection() && _loadedTransactions is { Count: 0 }) *@
-@*                 { *@
-@*                     <div class="col"> *@
-@*                         <EditForm Model="@_transactionsRequestParameters" *@
-@*                                   OnValidSubmit="@HandleValidSubmit_LoadTransactionsFromNordigen" *@
-@*                                   OnInvalidSubmit="@HandleInvalidSubmit"> *@
-@* *@
-@*                             <FluentValidationValidator/> *@
-@*                             <ValidationSummary/> *@
-@* *@
-@*                             <div class="form-group col-md-10"> *@
-@*                                 <label for="from-date">From Date</label> *@
-@*                                 <InputDate id="from-date" *@
-@*                                            class="form-control" *@
-@*                                            @bind-Value="@_transactionsRequestParameters.DateFrom"> *@
-@*                                 </InputDate> *@
-@*                                 <small id="from-date-small" class="form-text text-muted">Load transactions from this date only.</small> *@
-@*                                 <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => _transactionsRequestParameters.DateFrom)"/> *@
-@*                             </div> *@
-@* *@
-@*                             <div class="form-group col-md-10"> *@
-@*                                 <label for="to-date">To Date</label> *@
-@*                                 <InputDate id="to-date" *@
-@*                                            class="form-control" *@
-@*                                            @bind-Value="@_transactionsRequestParameters.DateTo"> *@
-@*                                 </InputDate> *@
-@*                                 <small id="to-date-small" class="form-text text-muted">Load transactions until this date only.</small> *@
-@*                                 <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => _transactionsRequestParameters.DateTo)"/> *@
-@*                             </div> *@
-@* *@
-@*                             <button type="submit" class="btn btn-primary edit-btn">Load Transactions</button> *@
-@*                         </EditForm> *@
-@*                     </div> *@
-@*                 } *@
-@*                 else if (_loadedTransactions is { Count: >0 }) *@
-@*                 { *@
-@*                     <div class="col"> *@
-@*                         <button class="btn btn-primary edit-btn" @onclick="HandleValidSubmit_ProceedToImportPage">To Import Configuration</button> *@
-@*                     </div> *@
-@*                 } *@
-@*                 else *@
-@*                 { *@
-@*                     <p>Nothing here!</p> *@
-@*                 } *@
-@*             </div> *@
-@*             <div class="card-body row"> *@
-@*                 @if (_loadedTransactions is not null and { Count: >0 }) *@
-@*                 { *@
-@*                     <p>Loaded @_loadedTransactions.Count transactions. Proceed to the import page to filter and create expenses.</p> *@
-@*                 } *@
-@*                 else *@
-@*                 { *@
-@*                     <p>No transactions loaded yet!</p> *@
-@*                 } *@
-@*             </div> *@
-@*         </div> *@
-@*     </div> *@
-@* </div> *@
