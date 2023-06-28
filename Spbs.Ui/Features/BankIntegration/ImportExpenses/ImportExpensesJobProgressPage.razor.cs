@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Spbs.Generators.UserExtensions;
@@ -59,27 +58,5 @@ public partial class ImportExpensesJobProgressPage : ComponentBase
     {
         _numExpensesImported += 1;
         StateHasChanged();
-    }
-
-    private async Task<bool> AssignUserId(List<Expense> expenses)
-    {
-        Guid? userId = await UserId();
-        if (userId is null)
-        {
-            return false;
-        }
-
-        foreach (var expense in expenses)
-        {
-            expense.UserId = userId.Value;
-        }
-
-        return true;
-    }
-
-    private int GetImportProgressLabelPercentage()
-    {
-        float percentage = _numExpensesImported / (float)_numExpensesToImport;
-        return (int)(100f * percentage);
     }
 }
