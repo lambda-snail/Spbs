@@ -33,11 +33,16 @@ public partial class LinksOverviewPage : ComponentBase
 
     private Dictionary<string, Institution>? _institutions;
     private int _numSelectedLinks = 0;
+    private bool _isDataLoaded = false;
+    
+    private static readonly int _numSkeletonsWhenLoading = 3;
 
     protected override async Task OnInitializedAsync()
     {
         await InitInstitutionList();
         await GetLinksForUser();
+
+        _isDataLoaded = true;
         StateHasChanged();
     }
 

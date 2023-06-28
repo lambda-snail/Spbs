@@ -33,91 +33,49 @@
 
 
     <Columns>
-        <SelectColumn T="NordigenLink"/>
+        @if (_isDataLoaded)
+        {
+            <SelectColumn T="NordigenLink"/>
+            
+            <TemplateColumn T="NordigenLink" Title="Name">
+                <CellTemplate>
+                    <MudButton Variant="Variant.Text" Color="Color.Primary">
+                        <NavLink class="nav-link" href="@_redirectService.GetUrlForAccountListing(context.Item.Id)">
+                            @if (_institutions is not null && _institutions.TryGetValue(context.Item.InstitutionId, out var institution))
+                            {
+                                @institution.Name
+                            }
+                            else
+                            {
+                                @context.Item.InstitutionId
+                            }
+                        </NavLink>
+                    </MudButton>
+                </CellTemplate>
+            </TemplateColumn>
 
+            <TemplateColumn T="NordigenLink" Title="Accounts">
+                <CellTemplate>
+                    @context.Item.Accounts.Count.ToString()
+                </CellTemplate>
+            </TemplateColumn>
 
-        <TemplateColumn T="NordigenLink" Title="Name">
-            <CellTemplate>
-                <MudButton Variant="Variant.Text" Color="Color.Primary">
-                    <NavLink class="nav-link" href="@_redirectService.GetUrlForAccountListing(context.Item.Id)">
-                        @if (_institutions is not null && _institutions.TryGetValue(context.Item.InstitutionId, out var institution))
-                        {
-                            @institution.Name
-                        }
-                        else
-                        {
-                            @context.Item.InstitutionId
-                        }
-                    </NavLink>
-                </MudButton>
-            </CellTemplate>
-        </TemplateColumn>
-        
-        <TemplateColumn T="NordigenLink" Title="Accounts">
-            <CellTemplate>
-                @context.Item.Accounts.Count.ToString()
-            </CellTemplate>
-        </TemplateColumn>
-        
-        <PropertyColumn Property="x => x.Created" Title="Created On"/>
+            <PropertyColumn Property="x => x.Created" Title="Created On"/>
+        }
+        else
+        {
+            <MudGrid Spacing="2">
+                @for (int i = 0; i < _numSkeletonsWhenLoading; ++i)
+                {
+                    <MudItem xs="12">
+                        <MudSkeleton/>
+                        <MudSkeleton/>
+                    </MudItem>
+                }
+            </MudGrid>
+        }
     </Columns>
     <PagerContent>
         <MudDataGridPager T="NordigenLink"/>
     </PagerContent>
 </MudDataGrid>
-
-@* <div class="container"> *@
-@*     <div> *@
-@*         <div class="row flex-column justify-content-start"> *@
-@*             <span class="col"> *@
-@*                 <h3>Current Active Bank Links</h3> *@
-@*             </span> *@
-@*             <span class="col"> *@
-@*                 <Button Type="BlazorBootstrap.ButtonType.Link" *@
-@*                         To="external/banks" *@
-@*                         Size="BlazorBootstrap.Size.Small" *@
-@*                         Color="ButtonColor.Primary"> *@
-@*                     Add Link *@
-@*                 </Button> *@
-@* *@
-@*                 <Button @onclick="async () => await DeleteSelectedLinks()" *@
-@*                         Size="BlazorBootstrap.Size.Small" *@
-@*                         Color="ButtonColor.Secondary"> *@
-@*                     Delete Link *@
-@*                 </Button> *@
-@*             </span> *@
-@*         </div> *@
-@* *@
-@*         <div class="row py-2"> *@
-@*             <Grid TItem="NordigenLink" *@
-@*                   class="table table-hover table-bordered table-striped" *@
-@*                   Data="_userLinks" *@
-@*                   Responsive="true" *@
-@*                   AllowSelection="true" *@
-@*                   SelectedItemsChanged="OnSelectedItemsChanged"> *@
-@*                 <GridColumn TItem="NordigenLink" HeaderText="Institution" PropertyName="InstitutionId"> *@
-@*                     <NavLink class="nav-link" href="@_redirectService?.GetUrlForAccountListing(context.Id)"> *@
-@*                         @if (_institutions is not null && _institutions.ContainsKey(context.InstitutionId)) *@
-@*                         { *@
-@*                             @_institutions[context.InstitutionId].Name *@
-@*                         } *@
-@*                         else *@
-@*                         { *@
-@*                             @context.InstitutionId *@
-@*                         } *@
-@*                     </NavLink> *@
-@*                 </GridColumn> *@
-@* *@
-@*                 <GridColumn TItem="NordigenLink" HeaderText="Accounts" PropertyName="Accounts"> *@
-@*                     @context.Accounts.Count *@
-@*                 </GridColumn> *@
-@* *@
-@*                 <GridColumn TItem="NordigenLink" *@
-@*                             HeaderText="Created On" *@
-@*                             PropertyName="Created"> *@
-@*                     @context.Created.ToString() *@
-@*                 </GridColumn> *@
-@*             </Grid> *@
-@*         </div> *@
-@*     </div> *@
-@* </div> *@
