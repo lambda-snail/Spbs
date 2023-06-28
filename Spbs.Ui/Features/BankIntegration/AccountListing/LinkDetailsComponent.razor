@@ -25,26 +25,31 @@
         </MudGrid>
     </MudPaper>
 
-    <MudToolBar>
+    <MudToolBar Class="mb-2">
         <MudTooltip Text="@GetLoadButtonTooltip()">
-        <MudButton Disabled="@(_selectedAccounts is not { Count: 1 })"
-                   OnClick="LoadTransactionsFromNordigen"
-                   Color="Color.Primary">
-            Load Expenses
-        </MudButton>
+            <MudButton Disabled="@(_selectedAccounts is not { Count: 1 } || _isLoadInProgress)"
+                       OnClick="LoadTransactionsFromNordigen"
+                       Color="Color.Primary">
+                Load Expenses
+                <MudOverlay DarkBackground="true" Visible="_isLoadInProgress" Absolute="true">
+                    <MudProgressCircular Color="Color.Primary" Indeterminate="true"></MudProgressCircular>
+                </MudOverlay>
+            </MudButton>
         </MudTooltip>
+
+
         <MudTooltip Text="@GetImportButtonTooltip()">
-        <MudButton Disabled="@(_loadedTransactions is not { Count: >0 })"
-                   OnClick="ProceedToImportPage"
-                   Variant="Variant.Outlined"
-                   Color="Color.Secondary">
-            Proceed to Import
-        </MudButton>
+            <MudButton Disabled="@(_loadedTransactions is not { Count: >0 })"
+                       OnClick="ProceedToImportPage"
+                       Variant="Variant.Outlined"
+                       Color="Color.Secondary">
+                Proceed to Import
+            </MudButton>
         </MudTooltip>
 
         @if (_loadedTransactions is { Count: >0 })
         {
-            <MudText>Loaded @_loadedTransactions.Count transactions</MudText>
+            <MudText Class="mx-2">Loaded @_loadedTransactions.Count transactions</MudText>
         }
 
         <MudSpacer/>

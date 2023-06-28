@@ -46,6 +46,7 @@ public partial class LinkDetailsComponent : SelectableListComponent<Guid>
     };
 
     private List<ImportExpensesViewModel> _loadedTransactions = new();
+    private bool _isLoadInProgress = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -86,6 +87,9 @@ public partial class LinkDetailsComponent : SelectableListComponent<Guid>
             return;
         }
 
+        _isLoadInProgress = true;
+        StateHasChanged();
+        
         var selectedAccount = _selectedAccounts.First();
 
         var accountId = selectedAccount.Id; //_link?.Accounts[accountIndex.Value];
@@ -110,7 +114,8 @@ public partial class LinkDetailsComponent : SelectableListComponent<Guid>
             _loadedTransactions.AddRange(pendingTransactions);
         }
 
-        _snackbar.Add("Transactions loaded successfully! Proceed to import to filter further before committing.");
+        _isLoadInProgress = false;
+        _snackbar.Add("Transactions loaded successfully! Proceed to import to filter further before committing.", Severity.Success);
     }
 
     private bool IsFilterValid()
