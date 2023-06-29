@@ -15,15 +15,17 @@ public partial class EulaCreationComponent : ComponentBase
 {
     private NordigenEula _eula = new();
     
+#pragma warning disable CS8618
     [Inject] private IEulaService _eulaService { get; set; }
     [Inject] private IDateTimeProvider _dateTime { get; set; }
-    [Inject] private NotificationService _notificationService { get; set; } 
+    [Inject] private INotificationService _notificationService { get; set; } 
 
     [Parameter, Required] public Func<Institution> SetInstitution { get; set; }
     private Institution? _institution = null;
 
     [Parameter, Required] public Func<Task> OnEulaCreatedCallbackAsync { get; set; }
-
+#pragma warning restore CS8618
+    
     private bool _isSubmitted = false;
 
     public NordigenEula? GetEula()

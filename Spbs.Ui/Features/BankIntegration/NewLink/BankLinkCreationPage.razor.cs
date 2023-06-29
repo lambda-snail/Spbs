@@ -63,6 +63,8 @@ public partial class BankLinkCreationPage
 
     public async Task OnContinueButtonClicked()
     {
+        _ChildToolBarElement = null;
+        
         switch (_selectionData.State)
         {
             case SelectionState.SelectInstitution:
