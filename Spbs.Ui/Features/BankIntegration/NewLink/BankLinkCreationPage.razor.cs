@@ -19,6 +19,17 @@ internal class SelectionViewModel
     public SelectionState State { get; set; }
     public Institution Institution { get; set; }
     public NordigenEula Eula { get; set; }
+
+    public string GetInformativeTitle()
+    {
+        return State switch
+        {
+            SelectionState.SelectInstitution => "Select an institution",
+            SelectionState.CreateEula => $"Create and accept a license agreement for {Institution.Name}",
+            SelectionState.CreateLink => "Review the Details",
+            _ => "Oops, something went wrong :("
+        };
+    }
 }
 
 public partial class BankLinkCreationPage

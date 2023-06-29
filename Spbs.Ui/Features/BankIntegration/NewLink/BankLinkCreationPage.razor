@@ -1,52 +1,34 @@
 @page "/external/banks"
 
-<div class="container">
-    <div class="row">
-        <div class="col">
-            @switch (_selectionData.State)
-            {
-                case SelectionState.SelectInstitution:
-                    <span>Select an institution</span>
-                    break;
-                case SelectionState.CreateEula:
-                    <span>Create and accept a license agreement for @_selectionData.Institution.Name</span>
-                    break;
-                case SelectionState.CreateLink:
-                    <span>Review the Details</span>
-                    break;
-                default:
-                    <p>Oops, something went wrong :(</p>
-                    break;
-            }
-            
-        </div>
-        <div class="col">
-            <a class="button button-primary" @onclick="OnContinueButtonClicked">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right-circle" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z"/>
-                </svg>
-            </a>
-            Continue
-        </div>
-    </div>
-    <hr/>
-    <div class="row">
+<MudText Typo="Typo.h3" GutterBottom="true" Class="mt-4">@_selectionData.GetInformativeTitle()</MudText>
 
-        @switch (_selectionData.State)
-        {
-            case SelectionState.SelectInstitution:
-                <InstitutionSelectorComponent @ref="_institutionSelector"/>
-                break;
-            case SelectionState.CreateEula:
-                <EulaCreationComponent OnEulaCreatedCallbackAsync="OnContinueButtonClicked" SetInstitution="() => _selectionData.Institution" @ref="_eulaCreator"/>
-                break;
-            case SelectionState.CreateLink:
-                <NewLinkComponent SetInstitution="() => _selectionData.Institution" SetEula="() => _selectionData.Eula" @ref="_newLink" />
-                break;
-            default:
-                <p>Oops, something went wrong :(</p>
-                break;
-        }
-        
-    </div>
-</div>
+<MudDivider Class="mb-4"/>
+
+<MudPaper Elevation="25" Class="mt-2 mb-4">
+    <MudToolBar>
+        <MudIconButton Icon="@Icons.Material.Filled.ArrowCircleRight"
+                       OnClick="OnContinueButtonClicked"
+                       Color="Color.Primary"
+                       Variant="Variant.Outlined">
+            Next
+        </MudIconButton>
+    </MudToolBar>
+</MudPaper>
+
+<MudPaper Class="pa-2">
+    @switch (_selectionData.State)
+    {
+        case SelectionState.SelectInstitution:
+            <InstitutionSelectorComponent @ref="_institutionSelector"/>
+            break;
+        case SelectionState.CreateEula:
+            <EulaCreationComponent OnEulaCreatedCallbackAsync="OnContinueButtonClicked" SetInstitution="() => _selectionData.Institution" @ref="_eulaCreator"/>
+            break;
+        case SelectionState.CreateLink:
+            <NewLinkComponent SetInstitution="() => _selectionData.Institution" SetEula="() => _selectionData.Eula" @ref="_newLink"/>
+            break;
+        default:
+            <p>Oops, something went wrong :(</p>
+            break;
+    }
+</MudPaper>
