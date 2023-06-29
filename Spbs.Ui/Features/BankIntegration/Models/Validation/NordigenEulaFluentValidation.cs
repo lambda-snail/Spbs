@@ -6,9 +6,7 @@ public class NordigenEulaFluentValidation : AbstractValidator<NordigenEula>
 {
     public NordigenEulaFluentValidation()
     {
-        RuleFor(e => e.AccessScope)
-            .NotNull()
-            .NotEmpty();
+        RuleFor(e => e.AccessScope).NotEmpty();
 
         RuleFor(e => e.AccessValidForDays).GreaterThanOrEqualTo(1).LessThanOrEqualTo(90); // Values from Nordigen
         RuleFor(e => e.MaxHistoricalDays).GreaterThanOrEqualTo(1).LessThanOrEqualTo(730);
