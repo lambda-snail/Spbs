@@ -1,45 +1,51 @@
 @using Spbs.Ui.Features.BankIntegration.Models
 @inherits Spbs.Ui.Components.SelectableListComponent<Spbs.Ui.Features.BankIntegration.Models.Institution>
 
-@if (_institutions is not null)
+@if (!_isDataLoaded)
 {
-    <MudStack Row="true" Spacing="2" >
-        <MudTextField @ref="_searchBar"
-                      @bind-Value="InstitutionFilter"
-                      Class="pb-5 ps-2"
-                      Variant="Variant.Text" 
-                      Placeholder="Search Institution"></MudTextField>
-        <MudIconButton Icon="@Icons.Material.Outlined.Search" 
-                       OnClick="FilterOnChange"
-                       Color="Color.Secondary" />
-    </MudStack>
-    
-    @* <div class="container"> *@
-    @*     <div class="row row-cols-6 mx-0 my-3 mt-0"> *@
-    @*         <InputText @bind-Value="InstitutionFilter" @ref="_searchBar"/> *@
-    @*         <span> *@
-    @*             <button class="btn btn-outline-primary" onclick="@FilterOnChange"> *@
-    @*                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16"> *@
-    @*                     <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/> *@
-    @*                 </svg> *@
-    @*             </button> *@
-    @*         </span> *@
-    @*     </div> *@
-    @*     <div class="row row-cols-6 gy-2 gx-2"> *@
-    @*         @for (int i = 0; i < _institutions.Count; ++i) *@
-    @*         { *@
-    @*             int row = i; *@
-    @*             Institution institution = _institutions[i]; *@
-    @*             <div class="col"> *@
-    @*                 <div class="card @GetRowClass(row)" onclick="@(() => SetSelected(row))"> *@
-    @*                     <img src="@institution.Logo" class="card-img-top img-responsive" alt="Logotype of @institution.Name"> *@
-    @*                     <div class="card-body"> *@
-    @*                         <h5 class="card-title">@institution.Name</h5> *@
-    @*                         <p class="card-text">@institution.Bic</p> *@
-    @*                     </div> *@
-    @*                 </div> *@
-    @*             </div> *@
-    @*         } *@
-    @*     </div> *@
-    @* </div> *@
+    <MudGrid Spacing="4">
+        @for (int i = 0; i < 8; ++i)
+        {
+            <MudItem xs="12" md="6" lg="3">
+                <MudSkeleton />
+                <MudSkeleton />
+                <MudSkeleton SkeletonType="SkeletonType.Rectangle" Width="200px" Height="200px" />
+                <MudSkeleton SkeletonType="SkeletonType.Circle" Width="50px" Height="50px" />
+            </MudItem>
+        }
+
+    </MudGrid>
+}
+else if (_institutions is not null)
+{
+    <MudGrid Spacing="4">
+        @for (int i = 0; i < _institutions.Count; ++i)
+        {
+            int row = i;
+            Institution institution = _institutions[i];
+            <MudItem xs="12" md="6" lg="3">
+                <MudCard Outlined="true" Class="pa-4">
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.h6">@institution.Name</MudText>
+                        <MudText Typo="Typo.body1">@institution.Bic</MudText>
+                    </CardHeaderContent>
+                    <MudCardMedia Image="@institution.Logo" Height="200"/>
+                    
+                    <MudCardActions>
+                        <MudButton OnClick="@(() => SetSelected(row))"
+                                   Variant="Variant.Text"
+                                   Color="Color.Primary">
+                            Select
+                        </MudButton>
+
+                        @if (GetSelected() == row)
+                        {
+                            <MudChip Color="Color.Primary">Selected</MudChip>
+                        }
+                    </MudCardActions>
+                </MudCard>
+            </MudItem>
+        }
+
+    </MudGrid>
 }

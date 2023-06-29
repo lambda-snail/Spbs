@@ -30,6 +30,7 @@ public partial class InstitutionSelectorComponent : SelectableListComponent<Inst
     private List<Institution>? _allInstitutionsBackup = null; // When filtering, store the original institutions list here
     private List<Institution>? _institutions = null;
     protected override List<Institution>? GetList() => _institutions;
+    private bool _isDataLoaded = false;
     
 #pragma warning disable CS8618
     [Inject] public IMapper Mapper { get; set; }
@@ -76,6 +77,7 @@ public partial class InstitutionSelectorComponent : SelectableListComponent<Inst
     protected override async Task OnInitializedAsync()
     {
         await GetListOfInstitutions();
+        _isDataLoaded = true;
     }
 
     private async Task GetListOfInstitutions()
