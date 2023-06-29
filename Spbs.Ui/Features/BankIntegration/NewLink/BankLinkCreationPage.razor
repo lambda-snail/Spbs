@@ -10,8 +10,12 @@
                        OnClick="OnContinueButtonClicked"
                        Color="Color.Primary"
                        Variant="Variant.Outlined">
-            Next
         </MudIconButton>
+        
+        @if (_ChildToolBarElement is not null)
+        {
+            @_ChildToolBarElement
+        }
     </MudToolBar>
 </MudPaper>
 

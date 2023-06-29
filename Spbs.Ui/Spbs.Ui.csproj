@@ -12,6 +12,9 @@
       <PlatformTarget>x64</PlatformTarget>
       <DebugSymbols>false</DebugSymbols>
     </PropertyGroup>
+    <PropertyGroup>
+        <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+    </PropertyGroup>
     <ItemGroup>
 
         <PackageReference Include="AutoMapper" Version="12.0.1" />

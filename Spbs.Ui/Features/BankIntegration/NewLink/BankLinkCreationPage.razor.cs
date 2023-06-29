@@ -34,17 +34,31 @@ internal class SelectionViewModel
 
 public partial class BankLinkCreationPage
 {
+#pragma warning disable CS8618
     [Inject] private INotificationService _notificationService { get; set; }
     [Inject] private NavigationManager _navigationManager { get; set; }
-    
+
+    private RenderFragment? _ChildToolBarElement = null;
+
     private InstitutionSelectorComponent _institutionSelector;
     private EulaCreationComponent _eulaCreator;
+
     private NewLinkComponent _newLink;
+#pragma warning restore CS8618
     
     private SelectionViewModel _selectionData = new() { State = SelectionState.SelectInstitution };
     
     protected override void OnInitialized()
     {
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if(_selectionData.State == SelectionState.SelectInstitution)
+        {
+            _ChildToolBarElement = _institutionSelector.GetToolbarComponents();
+            StateHasChanged();
+        }
     }
 
     public async Task OnContinueButtonClicked()
