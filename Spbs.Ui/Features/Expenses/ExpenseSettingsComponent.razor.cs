@@ -28,6 +28,11 @@ public partial class ExpenseSettingsComponent : UserSettingsComponentBase
 
     protected override void OnInitialized()
     {
+        if (UserObject.ExpenseCategories is null)
+        {
+            UserObject.ExpenseCategories = new();
+        }
+        
         if (UserObject.ExpenseCategories is { Count: >0 })
         {
             _expenseCategories =
