@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Azure.Cosmos.Serialization.HybridRow.Layouts;
 using MudBlazor;
 using Spbs.Generators.UserExtensions;
 using Spbs.Ui.Components.UserSettings;
@@ -17,7 +18,7 @@ namespace Spbs.Ui.Features.Users;
 [AuthenticationTaskExtension]
 public partial class UserSettingsPage : ComponentBase
 {
-    [Parameter] public string? Area { get; set; }
+    [Parameter] public string? Index { get; set; }
 
 #pragma warning disable CS8618
     [Inject] private IUserRepository _userRepository { get; set; }
@@ -47,6 +48,11 @@ public partial class UserSettingsPage : ComponentBase
 
         _dynamicComponentParameters.Add("UserObject", _user);
         _dynamicComponentParameters.Add("UserSettingsChangedCallback", UserProfileSettings_UserSettingsChanged);
+        
+        if (int.TryParse(Index, out int menuIndex) && menuIndex >= 0 && menuIndex < _settingsPageList.Count)
+        {
+            _selectedSettingsIndex = menuIndex;
+        }
 
         _readyToRender = true;
         StateHasChanged();
