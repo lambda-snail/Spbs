@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-using Spbs.Ui.Data.Cosmos;
+using Spbs.Data.Cosmos;
 
 namespace Spbs.Ui.Features.BankIntegration.Models;
 

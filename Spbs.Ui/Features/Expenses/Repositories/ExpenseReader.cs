@@ -7,7 +7,7 @@ using Microsoft.Azure.Cosmos.Linq;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Spbs.Shared.Data;
-using Spbs.Ui.Data.Cosmos;
+using Spbs.Data.Cosmos;
 using Spbs.Ui.Features.BankIntegration;
 
 namespace Spbs.Ui.Features.Expenses.Repositories;

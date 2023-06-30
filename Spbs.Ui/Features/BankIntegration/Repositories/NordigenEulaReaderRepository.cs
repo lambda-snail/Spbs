@@ -4,7 +4,7 @@ using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Spbs.Shared.Data;
-using Spbs.Ui.Data.Cosmos;
+using Spbs.Data.Cosmos;
 using Spbs.Ui.Features.BankIntegration.Models;
 
 namespace Spbs.Ui.Features.BankIntegration;

@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyModel;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Spbs.Shared.Data;
-using Spbs.Ui.Data.Cosmos;
+using Spbs.Data.Cosmos;
 using Spbs.Ui.Features.BankIntegration.Models;
 using User = Spbs.Ui.Features.BankIntegration.Models.User;
 

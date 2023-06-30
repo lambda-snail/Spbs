@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using Spbs.Ui.Data.Cosmos;
+using Spbs.Data.Cosmos;
 using Spbs.Ui.Features.Expenses;
 
 namespace Spbs.Ui.Features.Visualization.Models;

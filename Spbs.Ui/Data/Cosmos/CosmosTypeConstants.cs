@@ -1,4 +1,4 @@
-﻿namespace Spbs.Ui.Data.Cosmos;
+﻿namespace Spbs.Data.Cosmos;
 
 /// <summary>
 /// Single source of truth for the constants used to identify types in the cosmos documents.
