@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using BlazorBootstrap;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using Spbs.Generators.UserExtensions;
@@ -14,10 +15,10 @@ public partial class ExpensesGraph : ComponentBase
 {
 #pragma warning disable CS8618
     [Inject] private IExpenseBatchReader _expenseReader { get; set; }
-    //[Inject] IJSRuntime _jSRuntime { get; set; }
+
+    //private MudChart _chart1;
+    private BarChart _chart1;
     
-    //private GraphComponent<ExpenseVisualizationModel> _graph1;
-    private MudChart _chart1;
 #pragma warning restore CS8618
 
     private List<ExpenseVisualizationModel> _expenses = new();
@@ -88,54 +89,57 @@ public partial class ExpensesGraph : ComponentBase
     {
         SumByCategory();
         
-        _series = new List<ChartSeries>()
-        {
-            new ChartSeries() { Name = "Expenses", Data = _filteredValues.ToArray() },
-            //new ChartSeries() { Name = "Recurring Expenses", Data =  }
-        };
-        
-        // var data = new ChartData
+        // _series = new List<ChartSeries>()
         // {
-        //     Labels = _filteredLabels,
-        //     Datasets = new List<IChartDataset>()
-        //     {
-        //         new BarChartDataset()
-        //         {
-        //             Label = "Expenses",
-        //             Data = _filteredValues,
-        //             BackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
-        //             CategoryPercentage = 0.8,
-        //             BarPercentage = 1,
-        //         }
-        //         // , new BarChartDataset()
-        //         // {
-        //         //     Label = "Recurring Expenses",
-        //         //     Data = new List<double>{ 1, 0, 7, 11, 5, 2, 13, 8, 9, 10, 7, 13, 7, 5, 9, 5, 10, 5, 11, 2 },
-        //         //     BackgroundColor = new List<string> { "rgb(255, 166, 0)" },
-        //         //     CategoryPercentage = 0.8,
-        //         //     BarPercentage = 1,
-        //         // }
-        //     }
+        //     new ChartSeries() { Name = "Expenses", Data = _filteredValues.ToArray() },
+        //     //new ChartSeries() { Name = "Recurring Expenses", Data =  }
         // };
+        
+        var data = new ChartData
+        {
+            Labels = _filteredLabels,
+            Datasets = new List<IChartDataset>()
+            {
+                new BarChartDataset()
+                {
+                    Label = "Expenses",
+                    Data = _filteredValues,
+                    BackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
+                    CategoryPercentage = 0.8,
+                    BarPercentage = 1,
+                }
+                // , new BarChartDataset()
+                // {
+                //     Label = "Recurring Expenses",
+                //     Data = new List<double>{ 1, 0, 7, 11, 5, 2, 13, 8, 9, 10, 7, 13, 7, 5, 9, 5, 10, 5, 11, 2 },
+                //     BackgroundColor = new List<string> { "rgb(255, 166, 0)" },
+                //     CategoryPercentage = 0.8,
+                //     BarPercentage = 1,
+                // }
+            }
+        };
 
-        // var options = new BarChartOptions();
-        //
-        // options.Interaction.Mode = InteractionMode.Index;
-        //
-        // options.Plugins.Title.Text = _filter.ToDate is null ? 
-        //     "Expenses from " + _filter.FromDate.ToShortDateString() : 
-        //     "Expenses Between " + _filter.FromDate.ToShortDateString() + " and " + _filter.ToDate.Value.ToShortDateString();
-        // options.Plugins.Title.Display = true;
-        // options.Plugins.Title.Font.Size = 16;
-        //
-        // options.Responsive = true;
-        //
-        // options.Scales.X.Title.Text = "Category";
-        // options.Scales.X.Title.Display = false;
-        //
-        // options.Scales.Y.Title.Text = "Total Cost";
-        // options.Scales.Y.Title.Display = true;
-        //
-        // await _chart1.UpdateAsync(data, options);
+        var options = new BarChartOptions();
+        
+        options.Interaction.Mode = InteractionMode.Index;
+        
+        options.Plugins.Title.Text = _filter.ToDate is null ? 
+            "Expenses from " + _filter.FromDate.ToShortDateString() : 
+            "Expenses Between " + _filter.FromDate.ToShortDateString() + " and " + _filter.ToDate.Value.ToShortDateString();
+        options.Plugins.Title.Display = true;
+        options.Plugins.Title.Color = "White";
+        options.Plugins.Title.Font.Size = 16;
+        
+        options.Responsive = true;
+        
+        options.Scales.X.Title.Text = "Category";
+        options.Scales.X.Title.Color = "White";
+        options.Scales.X.Title.Display = false;
+        
+        options.Scales.Y.Title.Text = "Total Cost";
+        options.Scales.Y.Title.Color = "White";
+        options.Scales.Y.Title.Display = true;
+        
+        await _chart1.UpdateAsync(data, options);
     }
 }
