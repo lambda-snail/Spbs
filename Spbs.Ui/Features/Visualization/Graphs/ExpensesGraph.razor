@@ -6,10 +6,10 @@
 
             <div class="row">
                 <div class="col">
-                    <DateInput TValue="DateTime" @bind-Value="@_filter.FromDate" Placeholder="Enter From Date"/>
+                    @* <DateInput TValue="DateTime" @bind-Value="@_filter.FromDate" Placeholder="Enter From Date"/> *@
                 </div>
                 <div class="col">
-                    <DateInput TValue="DateTime?" @bind-Value="@_filter.ToDate" Placeholder="Enter To Date"/>
+                    @* <DateInput TValue="DateTime?" @bind-Value="@_filter.ToDate" Placeholder="Enter To Date"/> *@
                 </div>
                 <div class="col-2 d-inline-flex flex-row-reverse">
                     <Button
@@ -22,7 +22,7 @@
             </div>
 
             <div class="row">
-                <BarChart @ref="_chart1" Class="mb-4" />
+                @* <BarChart @ref="_chart1" Class="mb-4" /> *@
                 @* <MudChart @ref="_chart1" ChartType="ChartType.Bar" ChartSeries="@_series" XAxisLabels="@_filteredLabels.ToArray()"/> *@
             </div>
         </div>
