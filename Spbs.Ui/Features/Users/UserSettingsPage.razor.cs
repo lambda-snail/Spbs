@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using MudBlazor;
 using Spbs.Generators.UserExtensions;
 using Spbs.Ui.Components.UserSettings;
 using Spbs.Ui.ComponentServices;
@@ -20,14 +21,14 @@ public partial class UserSettingsPage : ComponentBase
 
 #pragma warning disable CS8618
     [Inject] private IUserRepository _userRepository { get; set; }
-    [Inject] private INotificationService _notificationService { get; set; }
+    [Inject] private ISnackbar _snackbar { get; set; }
 
     private DynamicComponent _dynamicComponent;
 #pragma warning restore CS8618
-
-    private static readonly Type _defaultSettingsPage = typeof(UserProfileComponent);
-    private Dictionary<string, SettingsMenuEntryData> _settingsPageMap = new();
-
+    
+    private List<SettingsMenuEntryData> _settingsPageList = new();
+    private int _selectedSettingsIndex = 0; 
+        
     private bool _readyToRender = false;
     private readonly Dictionary<string, object> _dynamicComponentParameters = new();
 
@@ -59,31 +60,22 @@ public partial class UserSettingsPage : ComponentBase
 
     private void InitSettingsComponentMap()
     {
-        _settingsPageMap = new()
+        _settingsPageList = new()
         {
+            new()
             {
-                "profile",
-                new()
-                {
-                    ComponentType = typeof(UserProfileComponent),
-                    MenuName = UserSettingsComponentBase.GetMenuName<UserProfileComponent>()
-                }
+                ComponentType = typeof(UserProfileComponent),
+                MenuName = UserSettingsComponentBase.GetMenuName<UserProfileComponent>()
             },
+            new()
             {
-                "locale",
-                new()
-                {
-                    ComponentType = typeof(UserLocaleSettingsComponent),
-                    MenuName = UserSettingsComponentBase.GetMenuName<UserLocaleSettingsComponent>()
-                }
+                ComponentType = typeof(UserLocaleSettingsComponent),
+                MenuName = UserSettingsComponentBase.GetMenuName<UserLocaleSettingsComponent>()
             },
+            new()
             {
-                "expenses", 
-                new()
-                {
-                 ComponentType = typeof(ExpenseSettingsComponent),
-                 MenuName = UserSettingsComponentBase.GetMenuName<ExpenseSettingsComponent>()
-                }
+                ComponentType = typeof(ExpenseSettingsComponent),
+                MenuName = UserSettingsComponentBase.GetMenuName<ExpenseSettingsComponent>()
             }
         };
     }
@@ -93,8 +85,7 @@ public partial class UserSettingsPage : ComponentBase
         if (_user is not null)
         {
             await _userRepository.UpsertUser(_user);
-            _notificationService.ShowToast("Save successful", "Your settings have been saved!",
-                NotificationLevel.Success);
+            _snackbar.Add("Your settings have been saved!", Severity.Success);
         }
     }
 }
