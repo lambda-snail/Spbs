@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using ApexCharts;
 using Microsoft.AspNetCore.Components;
+using MudBlazor;
 using Spbs.Generators.UserExtensions;
 using Spbs.Ui.Features.Visualization.DataAccess;
 using Spbs.Ui.Features.Visualization.Models;
+using Color = ApexCharts.Color;
 
 namespace Spbs.Ui.Features.Visualization.Graphs;
 
@@ -13,6 +15,7 @@ namespace Spbs.Ui.Features.Visualization.Graphs;
 public partial class ExpensesGraph : ComponentBase
 {
 #pragma warning disable CS8618
+    [Inject] private ISnackbar _snackbar { get; set; }
     [Inject] private IExpenseBatchReader _expenseReader { get; set; }
     private ApexChart<ExpenseVisualizationModel> _chart;
     private ApexChartOptions<ExpenseVisualizationModel> _chartOptions;
@@ -20,6 +23,8 @@ public partial class ExpensesGraph : ComponentBase
 
     private List<ExpenseVisualizationModel> _expenses = new();
     private const string _noCategoryLabel = "Unassigned";
+    
+    private DateTime? _expensesMonth = DateTime.Now;
 
     protected override async Task OnInitializedAsync()
     {
@@ -29,9 +34,30 @@ public partial class ExpensesGraph : ComponentBase
         {
             DataLabels = new()
             {
+                Enabled = true,
                 Style = new()
                 {
                     Colors = new() { "#FFFFFF" }
+                }
+            },
+            PlotOptions = new()
+            {
+                Bar = new()
+                {
+                    BorderRadius = 4,
+                    Horizontal = true,
+                    DataLabels = new()
+                    {
+                        Position = "top",
+                        Total = new()
+                        {
+                            Enabled = true,
+                            Style = new()
+                            {
+                                Color = "#FFFFFF"
+                            }
+                        }
+                    }
                 }
             },
             Legend = new()
@@ -44,9 +70,39 @@ public partial class ExpensesGraph : ComponentBase
                 {
                     Color = "#FFFFFF"
                 }
+            },
+            Xaxis = new()
+            {
+                Labels = new()
+                {
+                    Style = new()
+                    {
+                        Colors = new Color("#FFFFFF")
+                    }
+                }
+            },
+            Yaxis = new()
+            {
+                new()
+                {
+                    Labels = new()
+                    {
+                        Style = new()
+                        {
+                            Colors = new Color("#FFFFFF")
+                        }
+                    }
+                }
+            },
+            Chart = new()
+            {
+                Toolbar = new()
+                {
+                    Show = false
+                }
             }
         };
-        
+
         StateHasChanged();
         await _chart.RenderAsync();
     }
@@ -69,31 +125,15 @@ public partial class ExpensesGraph : ComponentBase
         }
     }
 
-    // private void SumByCategory()
-    // {
-    //     Dictionary<string, double> graphData = new(_expenses.Count);
-    //
-    //     foreach (var item in _expenses)
-    //     {
-    //         double value = item.Total;
-    //         string label = string.IsNullOrWhiteSpace(item.Category) ? _noCategoryLabel : item.Category;
-    //
-    //         if(graphData.ContainsKey(label))
-    //         {
-    //             graphData[label] += value;
-    //         }
-    //         else
-    //         {
-    //             graphData[label] = value;
-    //         }
-    //     }
-    //
-    //     _filteredLabels = new(graphData.Keys.Count);
-    //     _filteredValues = new(graphData.Keys.Count);
-    //     foreach (var data in graphData)
-    //     {
-    //         _filteredLabels.Add(data.Key);
-    //         _filteredValues.Add(data.Value);
-    //     }
-    // }
+    private async Task OnRefreshGraphClicked()
+    {
+        if (_expensesMonth is null)
+        {
+            _snackbar.Add("Please enter a valid month to show expenses", Severity.Warning);
+            return;
+        }
+
+        await LoadDataForMonth(_expensesMonth.Value.Year, _expensesMonth.Value.Month);
+        await _chart.RenderAsync();
+    }
 }
