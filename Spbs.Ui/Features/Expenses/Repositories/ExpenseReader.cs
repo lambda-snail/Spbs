@@ -7,7 +7,7 @@ using Microsoft.Azure.Cosmos.Linq;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Spbs.Shared.Data;
-using Spbs.Ui.Data.Cosmos;
+using Spbs.Data.Cosmos;
 using Spbs.Ui.Features.BankIntegration;
 
 namespace Spbs.Ui.Features.Expenses.Repositories;
@@ -58,17 +58,18 @@ public class ExpenseReader : CosmosRepositoryBase<Expense>, IExpenseReaderReposi
         return GetAll(queryDefinition);
     }
     
-    public Task<List<Expense>> GetSingleExpensesByUserFromMonth(Guid userId, DateTime date, int take, int skip)
+    public Task<List<Expense>> GetMonthlyExpensesForUser(Guid userId, DateTime date)
     {
-        _logger.LogInformation("(Expense Reader) Request to get expenses for {UserId} from date {Date}", userId, date);
+        _logger.LogInformation("(Expense Reader) Request to get expenses for {UserId} for  {Year}-{Month}", userId, date.Year, date.Month);
+
+        DateTime start = new DateTime(date.Year, date.Month, 1);
+        DateTime end = new DateTime(date.Year, date.Month, DateTime.DaysInMonth(date.Year, date.Month));
         
         var queryDefinition = _container.GetItemLinqQueryable<CosmosDocument<Expense>>()
             .Where(doc => doc.Data.UserId == userId)
             .Where(doc => doc.Type == _cosmosType)
-            .Where(doc => doc.Data.Date >= date)
+            .Where(doc => doc.Data.Date >= start && doc.Data.Date <= end)
             .OrderBy(doc => doc.Data.Date)
-            .Skip(skip)
-            .Take(take)
             .ToQueryDefinition();
 
         return GetAll(queryDefinition);

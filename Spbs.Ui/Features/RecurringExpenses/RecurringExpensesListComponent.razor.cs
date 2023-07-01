@@ -1,31 +1,34 @@
 #nullable enable
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using MudBlazor;
 using Spbs.Generators.UserExtensions;
 using Spbs.Ui.Components;
 
 namespace Spbs.Ui.Features.RecurringExpenses;
 
-public class RecurringExpenseListFilter
-{
-    public RecurrenceType? RecurrenceType { get; set; }
-}
-
 [AuthenticationTaskExtension()]
 public partial class RecurringExpensesListComponent : SelectableListComponent<RecurringExpense>
 {
+#pragma warning disable CS8618
     [Parameter] public Action<RecurringExpense> OnSelect { get; set; }
     
-    [Inject] public IRecurringExpenseReaderRepository RecurringExpenseReaderRepository { get; set; }
-
-    private RecurringExpenseListFilter? _filter;
-    private List<RecurringExpense>? _recurringExpenses;
+    [Inject] private IRecurringExpenseReaderRepository _recurringExpenseReaderRepository { get; set; }
+    [Inject] private ISnackbar _snackbar { get; set; }
+    
+    private MudDataGrid<RecurringExpense> _grid;
+    EditRecurringExpenseComponent _editRecurringExpensesDialog;
+#pragma warning restore CS8618
+    
+    private List<RecurringExpense> _recurringExpenses = new();
+    private int _numSelectedExpenses = 0;
+    
     protected override List<RecurringExpense>? GetList() => _recurringExpenses;
     
-    EditRecurringExpenseComponent _editRecurringExpensesDialog;
-    
+    private RecurrenceType? _filterRecurrence = null;
     private Dictionary<RecurrenceType, string> _billingTypeUIString = new ()
     {
         {RecurrenceType.Bill, "Bills" },
@@ -40,17 +43,6 @@ public partial class RecurringExpensesListComponent : SelectableListComponent<Re
         await UserId();
     }
 
-    public Task SetFilter(RecurringExpenseListFilter? filter)
-    {
-        _filter = filter;
-        return FetchRecurringExpenses();
-    }
-
-    public Task ClearFilter()
-    {
-        return SetFilter(null);
-    }
-
     private async Task FetchRecurringExpenses()
     {
         await UserId();
@@ -59,59 +51,81 @@ public partial class RecurringExpensesListComponent : SelectableListComponent<Re
             return; 
         }
 
-        List<RecurringExpense>? recurringExpenses = null;
-        if (_filter is { RecurrenceType: not null })
-        {
-            recurringExpenses = await RecurringExpenseReaderRepository.GetRecurringExpensesByUserId(_userId.Value, _filter.RecurrenceType.Value);
-        }
-        else
-        {
-            recurringExpenses = await RecurringExpenseReaderRepository.GetRecurringExpensesByUserId(_userId.Value);
-        }
-        
-        _recurringExpenses = recurringExpenses;
+        _recurringExpenses = await _recurringExpenseReaderRepository.GetRecurringExpensesByUserId(_userId.Value);
         StateHasChanged();
     }
 
-    private string GetRowClass(int i)
+    private async Task ExpenseAddedOrUpdated(RecurringExpense expense)
     {
-        return GetSelected() == i ? "bg-secondary text-white" : string.Empty;
+        if (!_recurringExpenses.Contains(expense))
+        {
+            _recurringExpenses.Add(expense);
+        }
+
+        await _grid.ReloadServerData();
+        StateHasChanged();
     }
 
-    private string GetBillingTypeUIText()
+    private void SelectedItemsChanged(HashSet<RecurringExpense> selection)
     {
-        if (_filter?.RecurrenceType != null)
+        _numSelectedExpenses = selection.Count;
+    }
+
+    private void AddRecurringExpense()
+    {
+        RecurringExpense e = new();
+        _editRecurringExpensesDialog.SetModalContent(e);
+        _editRecurringExpensesDialog.ShowModal();
+    }
+
+    private void EditSelectedExpense()
+    {
+        var selection = _grid.Selection;
+        if (selection is not { Count: 1 })
         {
-            return _billingTypeUIString[_filter.RecurrenceType.Value];
+            _snackbar.Add("Please select one item to edit", Severity.Error);
         }
-     
-        return "Recurring Expenses";
+
+        RecurringExpense e = selection.First(); 
+        
+        _editRecurringExpensesDialog.SetModalContent(e);
+        _editRecurringExpensesDialog.ShowModal();
+    }
+
+    private async Task DeleteExpenses()
+    {
+        var selection = _grid.Selection;
+        if (selection is { Count: 0 })
+        {
+            _snackbar.Add("Please select at least one item to delete", Severity.Error);
+        }
+
+        foreach (var expense in _recurringExpenses)
+        {
+            _recurringExpenses.Remove(expense);
+            // delete from repo
+        }
+        
+        await _grid.ReloadServerData();
     }
     
-    private void ToggleExpenseDialog()
+    private string DeleteButtonTooltip()
     {
-        RecurringExpense? e = null;
-        int? selectedRow = GetSelected();
-        if (selectedRow is not null && selectedRow >= 0 && selectedRow < _recurringExpenses?.Count)
+        if (_grid.Selection is { Count: 0 })
         {
-            e = _recurringExpenses?[selectedRow.Value];
+            return "Delete expense (none selected)";
         }
-        
-        _editRecurringExpensesDialog?.SetModalContent(e);
-        _editRecurringExpensesDialog?.ShowModal();
+
+        return "Delete expense";
     }
 
-    private void SetFocusRecurrenceType(RecurrenceType? type)
+    private string EditButtonTooltip()
     {
-        SetFilter(new()
+        return _grid.Selection switch
         {
-            RecurrenceType = type
-        });
-    }
-
-    private async Task ItemAddedOrUpdated()
-    {
-        await FetchRecurringExpenses();
-        StateHasChanged();
+            { Count: 0 } => "Edit expense (none selected)",
+            { Count: >1 } => "Edit expense (too many selected)",
+            _ => "Edit expense"
+        };
     }
 }

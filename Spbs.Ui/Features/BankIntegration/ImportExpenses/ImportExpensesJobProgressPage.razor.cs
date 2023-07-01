@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Spbs.Generators.UserExtensions;
@@ -10,14 +9,15 @@ namespace Spbs.Ui.Features.BankIntegration.ImportExpenses;
 [AuthenticationTaskExtension]
 public partial class ImportExpensesJobProgressPage : ComponentBase
 {
-    private bool _noJob = true;
     private bool _isImportJobComplete = false;
     private bool _isImportingExpenses = false;
     private int _numExpensesToImport = 0;
     private int _numExpensesImported = 0;
 
+#pragma warning disable CS8618
     [Inject] private ImportExpensesStateManager _importState { get; set; }
     [Inject] private IExpenseWriterRepository _expenseRepository { get; set; }
+#pragma warning restore CS8618
     
     protected override void OnInitialized()
         => _importState.NumExpensesImportedChanged += this.SingleExpenseImportComplete;
@@ -59,27 +59,5 @@ public partial class ImportExpensesJobProgressPage : ComponentBase
     {
         _numExpensesImported += 1;
         StateHasChanged();
-    }
-
-    private async Task<bool> AssignUserId(List<Expense> expenses)
-    {
-        Guid? userId = await UserId();
-        if (userId is null)
-        {
-            return false;
-        }
-
-        foreach (var expense in expenses)
-        {
-            expense.UserId = userId.Value;
-        }
-
-        return true;
-    }
-
-    private int GetImportProgressLabelPercentage()
-    {
-        float percentage = _numExpensesImported / (float)_numExpensesToImport;
-        return (int)(100f * percentage);
     }
 }

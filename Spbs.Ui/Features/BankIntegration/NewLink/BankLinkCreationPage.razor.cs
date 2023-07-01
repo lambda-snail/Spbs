@@ -19,16 +19,32 @@ internal class SelectionViewModel
     public SelectionState State { get; set; }
     public Institution Institution { get; set; }
     public NordigenEula Eula { get; set; }
+
+    public string GetInformativeTitle()
+    {
+        return State switch
+        {
+            SelectionState.SelectInstitution => "Select an institution",
+            SelectionState.CreateEula => $"Create and accept a license agreement for {Institution.Name}",
+            SelectionState.CreateLink => "Review the Details",
+            _ => "Oops, something went wrong :("
+        };
+    }
 }
 
 public partial class BankLinkCreationPage
 {
+#pragma warning disable CS8618
     [Inject] private INotificationService _notificationService { get; set; }
     [Inject] private NavigationManager _navigationManager { get; set; }
-    
+
+    private RenderFragment? _ChildToolBarElement = null;
+
     private InstitutionSelectorComponent _institutionSelector;
     private EulaCreationComponent _eulaCreator;
+
     private NewLinkComponent _newLink;
+#pragma warning restore CS8618
     
     private SelectionViewModel _selectionData = new() { State = SelectionState.SelectInstitution };
     
@@ -36,8 +52,19 @@ public partial class BankLinkCreationPage
     {
     }
 
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if(_selectionData.State == SelectionState.SelectInstitution)
+        {
+            _ChildToolBarElement = _institutionSelector.GetToolbarComponents();
+            StateHasChanged();
+        }
+    }
+
     public async Task OnContinueButtonClicked()
     {
+        _ChildToolBarElement = null;
+        
         switch (_selectionData.State)
         {
             case SelectionState.SelectInstitution:

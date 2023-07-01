@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using Newtonsoft.Json;
-using Spbs.Ui.Data.Cosmos;
+using Spbs.Data.Cosmos;
 
 namespace Spbs.Ui.Features.Users;
 

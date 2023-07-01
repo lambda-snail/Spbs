@@ -1,17 +1,16 @@
 using System;
-using System.Collections.Generic;
-using BlazorBootstrap;
 using FluentValidation;
 using Integrations.Nordigen;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Microsoft.Identity.Web;
-using Microsoft.Identity.Web.UI;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Identity.Web;
+using Microsoft.Identity.Web.UI;
+using MudBlazor.Services;
 using Newtonsoft.Json;
 using Serilog;
 using Shared.Utilities;
@@ -25,7 +24,9 @@ using Spbs.Ui.Features.BankIntegration.Models.Validation;
 using Spbs.Ui.Features.BankIntegration.Services;
 using Spbs.Ui.Features.Expenses;
 using Spbs.Ui.Features.Expenses.Repositories;
+using Spbs.Ui.Features.Expenses.Validation;
 using Spbs.Ui.Features.RecurringExpenses;
+using Spbs.Ui.Features.RecurringExpenses.Validation;
 using Spbs.Ui.Features.Users;
 using Spbs.Ui.Features.Users.Repositories;
 using Spbs.Ui.Features.Visualization.DataAccess;
@@ -68,7 +69,7 @@ namespace Spbs.Ui
             RegisterConfigurations(services);
 
             services.AddRazorPages();
-            services.AddBlazorBootstrap();
+            services.AddMudServices();
             
             var blazorBuilder = services.AddServerSideBlazor()
                 .AddMicrosoftIdentityConsentHandler();
@@ -97,6 +98,8 @@ namespace Spbs.Ui
             services.AddSingleton<IValidator<NordigenEula>, NordigenEulaFluentValidation>();
             services.AddSingleton<IValidator<TransactionsRequestParameters>, TransactionsParametersRequestFluentValidation>();
             services.AddSingleton<IValidator<GraphDataFilter>, GraphDataFilterFluentValidation>();
+            services.AddSingleton<IValidator<EditExpenseViewModel>, EditExpenseViewModelFluentValidation>();
+            services.AddSingleton<IValidator<EditRecurringExpenseViewModel>, EditRecurringExpenseViewModelFluentValidation>();
         }
 
         private void RegisterConfigurations(IServiceCollection services)

@@ -14,5 +14,5 @@ public interface IExpenseReaderRepository
     /// Get expenses for the given user from the specified month.
     /// </summary>
     Task<List<Expense>> GetAllExpensesByUserFromMonth(Guid userId, DateTime date);
-    Task<List<Expense>> GetSingleExpensesByUserFromMonth(Guid userId, DateTime date, int take = 25, int skip = 0);
+    Task<List<Expense>> GetMonthlyExpensesForUser(Guid userId, DateTime date);
 }

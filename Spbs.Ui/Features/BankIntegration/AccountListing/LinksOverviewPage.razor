@@ -1,58 +1,81 @@
 @page "/accounts/links"
 @using Spbs.Ui.Features.BankIntegration.Models
 
-<div class="container">
-    <div>
-        <div class="row flex-column justify-content-start">
-            <span class="col">
-                <h3>Current Active Bank Links</h3>
-            </span>
-            <span class="col">
-                <Button Type="ButtonType.Link"
-                        To="external/banks"
-                        Size="Size.Small"
-                        Color="ButtonColor.Primary">
-                    Add Link
-                </Button>
+<MudText Typo="Typo.h3" GutterBottom="true" Class="mt-4">Current Active Bank Links</MudText>
 
-                <Button @onclick="async () => await DeleteSelectedLinks()"
-                        Size="Size.Small"
-                        Color="ButtonColor.Secondary">
-                    Delete Link
-                </Button>
-            </span>
-        </div>
+<MudDivider Class="mb-4"/>
 
-        <div class="row py-2">
-            <Grid TItem="NordigenLink"
-                  class="table table-hover table-bordered table-striped"
-                  Data="_userLinks"
-                  Responsive="true"
-                  AllowSelection="true"
-                  SelectedItemsChanged="OnSelectedItemsChanged">
-                <GridColumn TItem="NordigenLink" HeaderText="Institution" PropertyName="InstitutionId">
-                    <NavLink class="nav-link" href="@_redirectService?.GetUrlForAccountListing(context.Id)">
-                        @if (_institutions is not null && _institutions.ContainsKey(context.InstitutionId))
-                        {
-                            @_institutions[context.InstitutionId].Name
-                        }
-                        else
-                        {
-                            @context.InstitutionId
-                        }
-                    </NavLink>
-                </GridColumn>
+<MudPaper Elevation="25" Class="mt-4 mb-2">
+    <MudToolBar>
+        <MudTooltip Delay="600" Text="Link a new account">
+            <MudIconButton Icon="@Icons.Material.Filled.Add"
+                           Href="external/banks"
+                           Color="Color.Secondary"/>
+        </MudTooltip>
 
-                <GridColumn TItem="NordigenLink" HeaderText="Accounts" PropertyName="Accounts">
-                    @context.Accounts.Count
-                </GridColumn>
+        <MudTooltip Delay="600" Text="@DeleteButtonTooltip()">
+            <MudIconButton Disabled="@(_numSelectedLinks == 0)" OnClick="DeleteSelectedLinks"
+                           Icon="@Icons.Material.Filled.Delete"
+                           Color="Color.Secondary"/>
+        </MudTooltip>
+    </MudToolBar>
+</MudPaper>
 
-                <GridColumn TItem="NordigenLink"
-                            HeaderText="Created On"
-                            PropertyName="Created">
-                    @context.Created.ToString()
-                </GridColumn>
-            </Grid>
-        </div>
-    </div>
-</div>
+<MudDataGrid T="NordigenLink"
+             @ref="_grid"
+             Items="@_userLinks"
+             MultiSelection="true"
+             SortMode="SortMode.Multiple"
+             Filterable="false"
+             Hideable="true"
+             SelectedItemsChanged="@SelectedItemsChanged"
+             Dense="true">
+
+
+    <Columns>
+        @if (_isDataLoaded)
+        {
+            <SelectColumn T="NordigenLink"/>
+            
+            <TemplateColumn T="NordigenLink" Title="Name">
+                <CellTemplate>
+                    <MudButton Variant="Variant.Text" Color="Color.Primary">
+                        <NavLink class="nav-link" href="@_redirectService.GetUrlForAccountListing(context.Item.Id)">
+                            @if (_institutions is not null && _institutions.TryGetValue(context.Item.InstitutionId, out var institution))
+                            {
+                                @institution.Name
+                            }
+                            else
+                            {
+                                @context.Item.InstitutionId
+                            }
+                        </NavLink>
+                    </MudButton>
+                </CellTemplate>
+            </TemplateColumn>
+
+            <TemplateColumn T="NordigenLink" Title="Accounts">
+                <CellTemplate>
+                    @context.Item.Accounts.Count.ToString()
+                </CellTemplate>
+            </TemplateColumn>
+
+            <PropertyColumn Property="x => x.Created" Title="Created On"/>
+        }
+        else
+        {
+            <MudGrid Spacing="2">
+                @for (int i = 0; i < _numSkeletonsWhenLoading; ++i)
+                {
+                    <MudItem xs="12">
+                        <MudSkeleton/>
+                        <MudSkeleton/>
+                    </MudItem>
+                }
+            </MudGrid>
+        }
+    </Columns>
+    <PagerContent>
+        <MudDataGridPager T="NordigenLink"/>
+    </PagerContent>
+</MudDataGrid>

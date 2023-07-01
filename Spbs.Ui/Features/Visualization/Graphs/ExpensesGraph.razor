@@ -1,32 +1,92 @@
 ﻿@page "/data/visualize"
+@using Spbs.Ui.Features.Visualization.Models
+@using ApexCharts
 
-<div id="dashboard" class="container">
-    <div class="row">
-        <div class="col">
+<MudPaper Class="pa-2">
+    <MudText Typo="Typo.h6" Class="ms-9">Expenses</MudText>
 
-            <div class="row">
-                <div class="col">
-                    <DateInput TValue="DateTime" @bind-Value="@_filter.FromDate" Placeholder="Enter From Date"/>
-                </div>
-                <div class="col">
-                    <DateInput TValue="DateTime?" @bind-Value="@_filter.ToDate" Placeholder="Enter To Date"/>
-                </div>
-                <div class="col-2 d-inline-flex flex-row-reverse">
-                    <Button
-                        @onclick="@RefreshData"
-                        Size="Size.Small"
-                        Color="ButtonColor.Primary">
-                            <Icon Name="IconName.ArrowClockwise"/>
-                    </Button>
-                </div>
-            </div>
+    <MudGrid Spacing="2">
+        <MudItem xs="9">
+            <ApexChart TItem="ExpenseVisualizationModel"
+                       @ref="_chart"
+                       Options="_chartOptions"
+                       Width="768"
+                       Title="">
+                <ChildContent>
+                    <ApexPointSeries TItem="ExpenseVisualizationModel"
+                                     Items="_expenses"
+                                     Name="Expenses"
+                                     XValue="@(e => e.Category ?? _noCategoryLabel)"
+                                     YAggregate="@(l => l.Sum(e => (decimal)e.Total))"
+                                     SeriesType="@_chartType"
+                                     OrderBy="@(e => e.X)"
+                                     Color="#3633FF"/>
+                </ChildContent>
 
-            <div class="row">
-                <BarChart @ref="_chart1" Class="mb-4" />
-            </div>
-        </div>
-        <div class="col">
+                <ApexPointTooltip>
+                    <MudPaper Elevation="25" Class="pa-2">
+                        @context.DataPoint.Items.Sum(x => x.Total) @context.DataPoint.Items.First().Currency
+                    </MudPaper>
+                </ApexPointTooltip>
 
-        </div>
-    </div>
-</div>
+            </ApexChart>
+        </MudItem>
+        <MudItem xs="3">
+            <MudStack>
+                <MudPaper Class="pa-2">
+                    <MudDatePicker HelperText="Choose a date to filter expenses" @bind-Date="@_expensesMonth" OpenTo="OpenTo.Year" FixDay="1" DateFormat="yyyy-MM"/>
+                    <MudIconButton OnClick="OnRefreshGraphClicked" Icon="@Icons.Material.Filled.Refresh"></MudIconButton>
+                </MudPaper>
+
+                <MudSelect T="SeriesType"
+                           Value="@_chartType"
+                           ValueChanged="OnChartTypeValueChanged"
+                           HelperText="Choose chart type"
+                           AnchorOrigin="Origin.BottomCenter">
+                    <MudSelectItem Value="SeriesType.Bar">Bar</MudSelectItem>
+                    <MudSelectItem Value="SeriesType.Donut">Donut</MudSelectItem>
+                </MudSelect>
+            </MudStack>
+        </MudItem>
+    </MudGrid>
+
+
+</MudPaper>
+
+
+@* *@
+@* *@
+@* *@
+@* *@
+@* *@
+@* <div id="dashboard" class="container"> *@
+@*     <div class="row"> *@
+@*         <div class="col"> *@
+@* *@
+@*             <div class="row"> *@
+@*                 <div class="col"> *@
+@*                     $1$ <DateInput TValue="DateTime" @bind-Value="@_filter.FromDate" Placeholder="Enter From Date"/> #1# *@
+@*                 </div> *@
+@*                 <div class="col"> *@
+@*                     $1$ <DateInput TValue="DateTime?" @bind-Value="@_filter.ToDate" Placeholder="Enter To Date"/> #1# *@
+@*                 </div> *@
+@*                 <div class="col-2 d-inline-flex flex-row-reverse"> *@
+@*                     <Button *@
+@*                         @onclick="@RefreshData" *@
+@*                         Size="BlazorBootstrap.Size.Small" *@
+@*                         Color="ButtonColor.Primary"> *@
+@*                             <Icon Name="IconName.ArrowClockwise"/> *@
+@*                     </Button> *@
+@*                 </div> *@
+@*             </div> *@
+@* *@
+@*             <div class="row"> *@
+@*                 $1$ <BarChart @ref="_chart1" Class="mb-4" /> #1# *@
+@*                 $1$ <MudChart @ref="_chart1" ChartType="ChartType.Bar" ChartSeries="@_series" XAxisLabels="@_filteredLabels.ToArray()"/> #1# *@
+@*             </div> *@
+@*         </div> *@
+@*         <div class="col"> *@
+@* *@
+@*         </div> *@
+@*     </div> *@
+@* </div> *@

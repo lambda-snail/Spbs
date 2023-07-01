@@ -1,9 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
+using MudBlazor;
 using Spbs.Generators.UserExtensions;
 
 namespace Spbs.Ui.Features.Expenses;
@@ -14,14 +16,18 @@ public partial class ExpenseDetails : ComponentBase
     [Parameter] public string ExpenseId { get; set; }
     private Expense? _expense = null;
     
+    private int _numSelectedExpenseItems = 0;
+    
 #pragma warning disable CS8618
     [Inject] private IExpenseReaderRepository _expenseReaderRepository { get; set; }
     [Inject] private IExpenseWriterRepository _expenseWriterRepository { get; set; }
     [Inject] private IJSRuntime _jsRuntime { get; set; }
     [Inject] private IMapper _mapper { get; set; }
     
+    [Inject] ISnackbar _snackbar { get; set; }
+    
     private EditExpenseComponent _editExpenseComponent;
-    private EditExpenseItemComponent _editExpenseItemComponent;
+    private MudDataGrid<ExpenseItem> _grid;
 #pragma warning restore CS8618
     
     protected override void OnInitialized()
@@ -37,21 +43,15 @@ public partial class ExpenseDetails : ComponentBase
         StateHasChanged();
     }
 
-    private async Task SaveExpense()
+    private async Task SaveExpense(string successMessage = "")
     {
-        if (_expense is null)
+        if (_expense is not null)
         {
-            return;
+            await _expenseWriterRepository.UpdateExpenseAsync(_expense);            
         }
 
-        await _expenseWriterRepository.UpdateExpenseAsync(_expense!);
+        _snackbar.Add(string.IsNullOrWhiteSpace(successMessage) ? "Changes saved successfully!" : successMessage, Severity.Success);
         StateHasChanged();
-    }
-
-    private void ToggleEditMode()
-    {
-        _editExpenseComponent?.SetModalContent(_expense);
-        _editExpenseComponent?.ShowModal();
     }
 
     private async Task AddTagList()
@@ -73,25 +73,79 @@ public partial class ExpenseDetails : ComponentBase
         FetchExpense();
     }
     
-    private async Task ExpenseItemUpdated(ExpenseItem? item)
+    private void ToggleEditMode()
     {
-        if (item is null)
-        {
-            return;
-        }
+        _editExpenseComponent?.SetModalContent(_expense);
+        _editExpenseComponent?.ShowModal();
+    }
 
-        ExpenseItem? existingItem = _expense!.Items.FirstOrDefault(i => i.Id == item.Id);
-        if (existingItem is null)
-        {
-            _expense.Items.Add(item);
-        }
+    private async Task AddExpenseItem()
+    {
+        var newItem = new ExpenseItem { Id = Guid.NewGuid() };
         
-        await SaveExpense();
+        _expense!.Items.Add(newItem);
+        await _grid.ReloadServerData();
+        await _grid.SetEditingItemAsync(newItem);
+    }
+
+    private Task OnExpenseItemChanged()
+    {
+        return SaveExpense();
     }
     
-    private void EditOrCreateExpenseItem(ExpenseItem item)
+    private async Task EditSelectedItem()
     {
-        _editExpenseItemComponent?.SetModalContent(item);
-        _editExpenseItemComponent?.ShowModal();
+        var selectedItems = _grid.SelectedItems;
+        if (selectedItems is { Count: not 1 })
+        {
+            _snackbar.Add("Too many items selected", Severity.Warning);
+        }
+
+        await  _grid.SetEditingItemAsync(selectedItems.First());
+    }
+    
+    private void OnSelectedItemsChanged(HashSet<ExpenseItem> selection)
+    {
+        _numSelectedExpenseItems = selection.Count;
+    }
+
+    private async Task DeleteExpenseItems()
+    {
+        var selectedItems = _grid.SelectedItems;
+        if (selectedItems is { Count: 0 })
+        {
+            _snackbar.Add("No items selected", Severity.Warning);
+        }
+
+        foreach (var item in selectedItems)
+        {
+            _expense!.Items.Remove(item);
+        }
+
+        int numDeleted = selectedItems.Count;
+        selectedItems.Clear();
+        _numSelectedExpenseItems = 0;
+
+        await SaveExpense("Deleted " + numDeleted + (numDeleted > 1 ? "items" : "item"));
+    }
+    
+    private string DeleteButtonTooltip()
+    {
+        if (_numSelectedExpenseItems == 0 )
+        {
+            return "Delete item (none selected)";
+        }
+
+        return "Delete item";
+    }
+
+    private string EditButtonTooltip()
+    {
+        return _numSelectedExpenseItems switch
+        {
+            0 => "Edit item (none selected)",
+            >1 => "Edit item (too many selected)",
+            _ => "Edit item"
+        };
     }
 }

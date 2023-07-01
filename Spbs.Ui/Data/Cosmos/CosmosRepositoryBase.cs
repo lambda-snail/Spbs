@@ -11,9 +11,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Shared.Utilities;
 using Spbs.Shared.Data;
-using Spbs.Ui.Data.Cosmos;
 
-namespace Spbs.Ui.Features.BankIntegration;
+namespace Spbs.Data.Cosmos;
 
 public interface ICosmosReader<T>
 {

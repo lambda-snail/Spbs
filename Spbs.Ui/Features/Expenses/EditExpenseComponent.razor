@@ -1,109 +1,99 @@
-@if (_doShowContent)
-{
-    <div class="modal fade show d-block" id="new-post-modal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="titleLabel">Expense Editor</h5>
-                    <button type="button" class="close" @onclick="@CloseDialog" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
+@using global::Shared.Utilities
+<MudOverlay Visible="@_doShowContent" DarkBackground="true" Class="d-flex align-content-end">
 
-                <div class="modal-body">
+    <MudGrid style="height:100vh; width:100vw;">
+        <MudItem Class="d-flex align-center justify-center mud-width-full" xs="12">
 
-                    <EditForm Model="@_editExpenseViewModel"
-                              OnValidSubmit="@HandleValidSubmit"
-                              OnInvalidSubmit="@HandleInvalidSubmit">
+            <MudCard Class="pa-8" Elevation="3" Style="width: 50%; overflow:  auto">
+                <MudCardContent>
+                    <MudText Typo="Typo.h6">Edit Expense</MudText>
+                    <MudDivider Class="mb-4"/>
 
-                        <DataAnnotationsValidator/>
-                        <ValidationSummary/>
+                    <MudForm @ref="@_form"
+                             Model="@_editExpenseViewModel" ValidationDelay="0">
 
-                        <div class="form-group col-md-10">
-                            <label for="expense-name">Name</label>
-                            <InputText id="expense-name"
-                                       class="form-control"
-                                       @bind-Value="@_editExpenseViewModel.Name">
-                            </InputText>
-                            <small id="expense-name-small" class="form-text text-muted">Choose a nifty title for your post!</small>
-                            <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => _editExpenseViewModel.Name)"/>
-                        </div>
+                        <MudGrid Spacing="1">
+                            <MudItem xs="6">
+                                <MudTextField @bind-Value="@_editExpenseViewModel.Name"
+                                              Validation="@(async (string s) => await _expenseValidator.ValidateValueAsync(_editExpenseViewModel, e => e.Name))"
+                                              Label="Name"
+                                              Variant="Variant.Text"
+                                              Margin="Margin.Dense"
+                                              HelperText="Choose a nifty title for your post!"/>
+                            </MudItem>
+                            <MudItem xs="6">
+                                <MudCardActions>
+                                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="@(async () => await HandleValidSubmit())">Save</MudButton>
+                                    <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="@CloseDialog">Close</MudButton>
+                                </MudCardActions>
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudTextField @bind-Value="@_editExpenseViewModel.Description"
+                                              Validation="@(async (string s) => await _expenseValidator.ValidateValueAsync(_editExpenseViewModel, e => e.Description))"
+                                              Label="Description"
+                                              Variant="Variant.Outlined"
+                                              Lines="4"
+                                              Margin="Margin.Dense"
+                                              HelperText="Add a description for the expense (optional)"/>
+                            </MudItem>
 
-                        <div class="form-group col-md-10">
-                            <label for="expense-description">Description</label>
-                            <InputTextArea id="expense-description"
-                                           class="form-control"
-                                           @bind-Value="@_editExpenseViewModel.Description">
-                            </InputTextArea>
-                            <small id="expense-description-small" class="form-text text-muted">Add a description for the expense.</small>
-                            <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => _editExpenseViewModel.Description)"/>
-                        </div>
+                            <MudItem xs="6">
+                                <MudDatePicker Label="Date and Time"
+                                               Validation="@(async (DateTime? d) => await _expenseValidator.ValidateValueAsync(_editExpenseViewModel, e => e.Date))"
+                                               Editable="true"
+                                               @bind-Date="@_editExpenseViewModel.Date"
+                                               DateFormat="yyyy-MM-dd"
+                                               Margin="Margin.Dense"
+                                               HelperText="When was the expense incurred?"/>
+                            </MudItem>
+                            <MudItem xs="6">
+                                <MudTextField @bind-Value="@_editExpenseViewModel.Venue"
+                                              Validation="@(async (string s) => await _expenseValidator.ValidateValueAsync(_editExpenseViewModel, e => e.Venue))"
+                                              Label="Venue"
+                                              Variant="Variant.Text"
+                                              Margin="Margin.Dense"
+                                              HelperText="Where was the expense incurred?"/>
+                            </MudItem>
 
-                        <div class="form-group col-md-10">
-                            <label for="expense-date">Date and Time</label>
-                            <InputDate id="expense-date"
-                                       class="form-control"
-                                       @bind-Value="@_editExpenseViewModel.Date">
-                            </InputDate>
-                            <small id="post-date-small" class="form-text text-muted">Add a description for the expense.</small>
-                            <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => _editExpenseViewModel.Date)"/>
-                        </div>
+                            <MudItem xs="12">
+                                <MudSelect T="string" Label="Category" Variant="Variant.Text" @bind-Value="@_editExpenseViewModel.Category" Margin="Margin.Dense" HelperText="How would you classify this expense?">
+                                    <MudSelectItem Value="@string.Empty"></MudSelectItem>
+                                    @foreach (var category in _expenseCategories)
+                                    {
+                                        <MudSelectItem Value="@category">@category</MudSelectItem>
+                                    }
+                                </MudSelect>
+                                <MudDivider Class="mb-4"/>
+                            </MudItem>
 
-                        <div class="form-group col-md-10">
-                            <label for="expense-category">Category</label>
-                            <InputSelect id="expense-category"
-                                         class="form-control"
-                                         @bind-Value="@_editExpenseViewModel.Category">
-                                <option value=""></option>
-                                @foreach (var category in _expenseCategories)
-                                {
-                                    <option value="@category">@category</option>
-                                }
-                            </InputSelect>
-                            <small id="expense-category-small" class="form-text text-muted">How would you classify this expense?</small>
-                        </div>
-
-                        <div class="form-group col-md-10">
-                            <label for="expense-venue">Venue</label>
-                            <InputText id="expense-venue"
-                                       class="form-control"
-                                       @bind-Value="@_editExpenseViewModel.Venue">
-                            </InputText>
-                            <small id="expense-venue-small" class="form-text text-muted">Where was the expense incurred?</small>
-                            <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => _editExpenseViewModel.Venue)"/>
-                        </div>
-
-                        <div class="form-group col-md-10">
-                            <label for="expense-currency">Currency</label>
-                            <InputText id="expense-currency"
-                                       class="form-control"
-                                       @bind-Value="@_editExpenseViewModel.Currency">
-                            </InputText>
-                            <small id="expense-currency-small" class="form-text text-muted">The currency that the purchase was made in.</small>
-                            <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => _editExpenseViewModel.Currency)"/>
-                        </div>
-
-                        <div class="form-group col-md-10">
-                            <label for="expense-total">Total</label>
-                            <InputNumber id="expense-total"
-                                         TValue="double?"
-                                         class="form-control"
-                                         @bind-Value="@_editExpenseViewModel.Total">
-                            </InputNumber>
-                            <small id="expense-currency-small" class="form-text text-muted">The total amount in the specified currenct.</small>
-                            <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => _editExpenseViewModel.Total)"/>
-                        </div>
-
-                        <button type="submit" class="btn btn-primary edit-btn">Submit</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal" @onclick="@CloseDialog">Close</button>
-                    </EditForm>
-                </div>
+                            <MudItem xs="6">
+                                <MudTextField @bind-Value="@_editExpenseViewModel.Currency"
+                                              Validation="@(async (string s) => await _expenseValidator.ValidateValueAsync(_editExpenseViewModel, e => e.Currency))"
+                                              Label="Currency"
+                                              Variant="Variant.Text"
+                                              Margin="Margin.Dense"
+                                              HelperText="The currency that the purchase was made in"/>
+                            </MudItem>
+                            <MudItem xs="6">
+                                <MudNumericField @bind-Value="@_editExpenseViewModel.Total"
+                                                 Validation="@(async (double d) => await _expenseValidator.ValidateValueAsync(_editExpenseViewModel, e => e.Total))"
+                                                 Immediate="true"
+                                                 Label="Total"
+                                                 Variant="Variant.Text"
+                                                 Margin="Margin.Dense"
+                                                 HelperText="The total amount in the specified currency"
+                                                 Min="0.0"/>
+                            </MudItem>
 
 
-                <div class="modal-footer">
+                        </MudGrid>
+                    </MudForm>
 
-                </div>
-            </div>
-        </div>
-    </div>
-}
+
+                </MudCardContent>
+            </MudCard>
+
+        </MudItem>
+    </MudGrid>
+
+</MudOverlay>

@@ -13,6 +13,11 @@ public partial class UserLocaleSettingsComponent : UserSettingsComponentBase
 
     protected override void OnInitialized()
     {
+        if (UserObject.LocaleInformation is null)
+        {
+            UserObject.LocaleInformation = new();
+        }
+        
         _localeInformationVm = _mapper.Map<LocaleInformationViewModel>(UserObject.LocaleInformation);
     }
 

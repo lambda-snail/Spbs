@@ -1,43 +1,64 @@
 @page "/expenses"
 
-<div>
-    <div class="row flex-column justify-content-start">
-        <span class="col"><h3>Expenses Overview</h3></span> 
-        <span class="col">
-            <Button @onclick="ToggleExpenseDialog"
-                    Size="Size.Small"
-                    Color="ButtonColor.Primary">
-                New Expense
-            </Button>
-        </span>
-    </div>
+<MudGrid>
+    <MudItem xs="12">
+        <MudElement HtmlTag="h1">
+            Expenses Overview
+        </MudElement>
+    </MudItem>
+    <MudItem xs="12">
+        <MudPaper Elevation="25" Class="my-1">
+            <MudToolBar>
+                <MudIconButton Icon="@Icons.Material.Outlined.Add" OnClick="() => ToggleExpenseDialog(null)"/>
+                <MudIconButton Icon="@Icons.Material.Outlined.Edit" Disabled="@(_numSelectedExpenses != 1)" OnClick="EditSelectedItem"/>
+                <MudIconButton Icon="@Icons.Material.Outlined.Remove" Color="Color.Inherit" Disabled="@(_numSelectedExpenses == 0)" OnClick="DeleteExpenses"/>
+                <MudSpacer/>
 
-    <div class="row py-2">
-        <Grid TItem="Expense"
-              @ref="_expensesGrid"
-              class="table table-hover table-bordered table-striped"
-              DataProvider="FetchExpenses"
-              AllowPaging="true"
-              PageSize="10"
-              AllowFiltering="true"
-              Responsive="true">
-            <GridColumn TItem="Expense" HeaderText="Name" PropertyName="Name">
-                <button type="button" class="btn btn-link">
-                    <NavLink href="@GetExpenseDetailsUrl(context)">@context.Name</NavLink>
-                </button>
-            </GridColumn>
+                <MudDatePicker
+                    Label="Filter Expenses for Month"
+                    @bind-Date="_dateFilterYearMonth"
+                    OpenTo="OpenTo.Year"
+                    FixDay="1"
+                    DateFormat="yyyy-MM"
+                    PickerMonthChanged="ReloadData"/>
 
-            <GridColumn TItem="Expense"
-                        HeaderText="Date" 
-                        PropertyName="Date" 
-                        FilterOperator="FilterOperator.GreaterThanOrEquals" FilterValue="@(DateTime.Now.AddMonths(-1).ToString())">
-                @context.Date.ToString()
-            </GridColumn>
-            <GridColumn TItem="Expense" HeaderText="Total" PropertyName="Total">@context.Total.ToString() @context.Currency</GridColumn>
-            <GridColumn TItem="Expense" HeaderText="Category" PropertyName="Category">@context.Category</GridColumn>
-            <GridColumn TItem="Expense" HeaderText="Venue" PropertyName="Venue">@context.Venue</GridColumn>
-        </Grid>
-    </div>
-    
-    <EditExpenseComponent @ref="_editExpenseComponent" GetUserId="() => _userId" OnUpdateCallback="ExpenseItemAdded"></EditExpenseComponent>
-</div>
+                <MudSpacer/>
+                <MudIconButton Icon="@Icons.Material.Outlined.Settings" Color="Color.Inherit"/>
+            </MudToolBar>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="12">
+        <MudDataGrid T="Expense"
+                     @ref="@_grid"
+                     Items="@_cachedExpenses"
+                     EditMode="DataGridEditMode.Form"
+                     EditTrigger="DataGridEditTrigger.OnRowClick"
+                     Filterable="true"
+                     SortMode="@SortMode.Multiple"
+                     MultiSelection="true"
+                     SelectedItemsChanged="@SelectedItemsChanged"
+                     Groupable="false">
+            <Columns>
+                <SelectColumn T="Expense"/>
+                <TemplateColumn T="Expense" Title="Name">
+                    <CellTemplate>
+                        <MudButton Variant="Variant.Text" Color="Color.Primary">
+                            <NavLink href="@GetExpenseDetailsUrl(context.Item)">@context.Item.Name</NavLink>
+                        </MudButton>
+                    </CellTemplate>
+                </TemplateColumn>
+
+                <PropertyColumn Property="x => x.Date"/>
+                <PropertyColumn Property="x => x.Total"/>
+                <PropertyColumn Property="x => x.Category"/>
+                <PropertyColumn Property="x => x.Venue"/>
+
+            </Columns>
+            <PagerContent>
+                <MudDataGridPager T="Expense"/>
+            </PagerContent>
+        </MudDataGrid>
+    </MudItem>
+</MudGrid>
+
+<EditExpenseComponent @ref="_editExpenseComponent" GetUserId="() => _userId" OnUpdateCallback="ExpenseItemAdded"></EditExpenseComponent>

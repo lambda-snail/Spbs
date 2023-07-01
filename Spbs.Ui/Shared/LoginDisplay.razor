@@ -1,63 +1,38 @@
-﻿@using BlazorBootstrap;
-
+﻿@using DividerType = MudBlazor.DividerType
 <AuthorizeView>
     <Authorized>
+        <MudLink OnClick="@(() => _isOpen = !_isOpen)">
+            <MudAvatar Color="Color.Primary">NB</MudAvatar>
+
+            <MudPopover Open="_isOpen"
+                        OverflowBehavior="OverflowBehavior.FlipAlways"
+                        AnchorOrigin="Origin.BottomLeft"
+                        TransformOrigin="Origin.TopRight" Paper="true">
+
+                <MudList Clickable="true" Dense="true" DisableGutters="false">
+                    <MudListItem Text="Profile" Icon="@Icons.Material.Filled.Person" Href="/me/settings/0"/>
+                    <MudListItem Text="Settings" Icon="@Icons.Material.Filled.Settings" Href="/me/settings"/>
+                    <MudListItem Text="Locale" Icon="@Icons.Material.Filled.Language" Href="/me/settings/1"/>
+
+                    <MudDivider DividerType="DividerType.Inset"/>
+
+                    <MudListItem Text="Features" Icon="@Icons.Material.Filled.Functions" Href="/me/settings/features"/>
+
+                    <MudDivider DividerType="DividerType.Inset"/>
+
+                    <MudListItem Text="Sign Out" Icon="@Icons.Material.Filled.Logout" Href="MicrosoftIdentity/Account/SignOut"/>
+                </MudList>
+            </MudPopover>
+        </MudLink>
         @*@context.User!.Identity!.Name!*@
-        <div>
-            <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <Icon Name="IconName.PersonGear"></Icon>
-                </button>
-                <ul class="dropdown-menu">
-                    <li>
-                        <a class="dropdown-item" href="/me/settings/profile">
-                            <span>
-                                <Icon Name="IconName.PersonLinesFill"/>
-                            </span>
-                            <span class="col">Profile</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" href="/me/settings/settings">
-                            <span>
-                                <Icon Name="IconName.Sliders2Vertical"/>
-                            </span>
-                            <span class="col">User Settings</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" href="/me/settings/locale">
-                            <span>
-                                <Icon Name="IconName.GlobeEuropeAfrica"/>
-                            </span>
-                            <span>Time and Locale</span>
-                        </a>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-                    <li>
-                        <a class="dropdown-item" href="/me/settings/features">
-                            <span>
-                                <Icon Name="IconName.Toggles"/>
-                            </span>
-                            <span class="col">Experimental Features</span>
-                        </a>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-                    <li>
-                        <a class="dropdown-item" href="MicrosoftIdentity/Account/SignOut">
-                            <span/>
-                            <span>Log out</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
     </Authorized>
     <NotAuthorized>
-        <a href="MicrosoftIdentity/Account/SignIn">Log in</a>
+        <MudLink Href="MicrosoftIdentity/Account/SignIn">Log In</MudLink>
     </NotAuthorized>
 </AuthorizeView>
+
+@code {
+
+    private bool _isOpen = false;
+
+}

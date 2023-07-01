@@ -19,7 +19,7 @@ namespace Integrations.Nordigen.Models
         /// The processing status of this account.
         /// </summary>
         /// <value>The processing status of this account.</value>
-        [DataMember(Name = "status", EmitDefaultValue = false)]
+        [JsonProperty("status")]
         public AccountV2StatusEnum? Status { get; set; }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace Integrations.Nordigen.Models
         /// The ID of this Account, used to refer to this account in other API calls.
         /// </summary>
         /// <value>The ID of this Account, used to refer to this account in other API calls.</value>
-        [DataMember(Name = "id", EmitDefaultValue = false)]
+        [JsonProperty("id")]
         public Guid Id { get; private set; }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace Integrations.Nordigen.Models
         /// The date &amp; time at which the account object was created.
         /// </summary>
         /// <value>The date &amp; time at which the account object was created.</value>
-        [DataMember(Name = "created", EmitDefaultValue = false)]
+        [JsonProperty("created")]
         public DateTime Created { get; private set; }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace Integrations.Nordigen.Models
         /// The date &amp; time at which the account object was last accessed.
         /// </summary>
         /// <value>The date &amp; time at which the account object was last accessed.</value>
-        [DataMember(Name = "last_accessed", EmitDefaultValue = true)]
+        [JsonProperty("last_accessed")]
         public DateTime? LastAccessed { get; private set; }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace Integrations.Nordigen.Models
         /// The Account IBAN
         /// </summary>
         /// <value>The Account IBAN</value>
-        [DataMember(Name = "iban", EmitDefaultValue = false)]
+        [JsonProperty("iban")]
         public string Iban { get; private set; }
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace Integrations.Nordigen.Models
         /// The ASPSP associated with this account.
         /// </summary>
         /// <value>The ASPSP associated with this account.</value>
-        [DataMember(Name = "institution_id", EmitDefaultValue = false)]
+        [JsonProperty("institution_id")]
         public string InstitutionId { get; private set; }
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace Integrations.Nordigen.Models
         /// The name of the account owner.
         /// </summary>
         /// <value>The name of the account owner.</value>
-        [DataMember(Name = "owner_name", EmitDefaultValue = false)]
+        [JsonProperty("owner_name")]
         public string OwnerName { get; private set; }
 
         /// <summary>

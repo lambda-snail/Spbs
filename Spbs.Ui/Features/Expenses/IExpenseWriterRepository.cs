@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using Spbs.Ui.Data;
 
 namespace Spbs.Ui.Features.Expenses;
 

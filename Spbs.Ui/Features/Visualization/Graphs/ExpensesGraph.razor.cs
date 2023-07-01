@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using BlazorBootstrap;
+using ApexCharts;
 using Microsoft.AspNetCore.Components;
+using MudBlazor;
 using Spbs.Generators.UserExtensions;
 using Spbs.Ui.Features.Visualization.DataAccess;
 using Spbs.Ui.Features.Visualization.Models;
+using Color = ApexCharts.Color;
 
 namespace Spbs.Ui.Features.Visualization.Graphs;
 
@@ -13,122 +15,153 @@ namespace Spbs.Ui.Features.Visualization.Graphs;
 public partial class ExpensesGraph : ComponentBase
 {
 #pragma warning disable CS8618
+    [Inject] private ISnackbar _snackbar { get; set; }
     [Inject] private IExpenseBatchReader _expenseReader { get; set; }
-    //[Inject] IJSRuntime _jSRuntime { get; set; }
-    
-    //private GraphComponent<ExpenseVisualizationModel> _graph1;
-    private BarChart _chart1;
+    private ApexChart<ExpenseVisualizationModel> _chart;
+    private ApexChartOptions<ExpenseVisualizationModel> _chartOptions;
 #pragma warning restore CS8618
 
     private List<ExpenseVisualizationModel> _expenses = new();
-
-    private readonly GraphDataFilter _filter = new() { FromDate = DateTime.Now };
-    private List<string> _filteredLabels = new();
-    private List<double> _filteredValues = new();
     private const string _noCategoryLabel = "Unassigned";
+    
+    private DateTime? _expensesMonth = DateTime.Now;
+    private SeriesType _chartType = SeriesType.Donut;
 
+    private string _textColor = "#FFFFFF";
+    
     protected override async Task OnInitializedAsync()
     {
-        await LoadDataForMonth(2023, 6);
-    }
+        await LoadDataForMonth(_expensesMonth!.Value.Year, _expensesMonth!.Value.Month);
 
-    protected override Task OnAfterRenderAsync(bool firstRender)
-    {
-        return RenderExpenseChart();
+        _chartOptions = new()
+        {
+            DataLabels = new()
+            {
+                Enabled = true,
+                Style = new()
+                {
+                    Colors = new() { _textColor }
+                }
+            },
+            PlotOptions = new()
+            {
+                Bar = new()
+                {
+                    BorderRadius = 4,
+                    Horizontal = true,
+                    DataLabels = new()
+                    {
+                        Position = "top",
+                        Total = new()
+                        {
+                            Enabled = true,
+                            Style = new()
+                            {
+                                Color = _textColor
+                            }
+                        }
+                    }
+                },
+                Pie = new()
+                {
+                    Donut = new()
+                    {
+                        Labels = new()
+                        {
+                            Name = new()
+                            {
+                                Color = _textColor
+                            }
+                        }
+                    }
+                }
+            },
+            Legend = new()
+            {
+                Show = true,
+                Labels = new()
+                {
+                    Colors = new Color(_textColor)
+                }
+            },
+            Title = new()
+            {
+                Style = new()
+                {
+                    Color = _textColor
+                }
+            },
+            Xaxis = new()
+            {
+                Labels = new()
+                {
+                    Style = new()
+                    {
+                        Colors = new Color(_textColor)
+                    }
+                }
+            },
+            Yaxis = new()
+            {
+                new()
+                {
+                    Labels = new()
+                    {
+                        Style = new()
+                        {
+                            Colors = new Color(_textColor)
+                        }
+                    }
+                }
+            },
+            Chart = new()
+            {
+                Toolbar = new()
+                {
+                    Show = false
+                }
+            }
+        };
+
+        StateHasChanged();
+        await _chart.RenderAsync();
     }
 
     private async Task LoadDataForMonth(int year, int month)
     {
         Guid? userId = await UserId();
         _expenses = await _expenseReader.GetAllExpensesByUserForMonth(userId!.Value, new DateOnly(year, month, 01));
+        EnsureNoEmptyCategory();
+        StateHasChanged();
     }
 
-    private async Task LoadDataForDates(DateTime fromDate, DateTime? toDate)
+    private void EnsureNoEmptyCategory()
     {
-        Guid? userId = await UserId();
-        _expenses = await _expenseReader.GetAllExpensesByUserBetweenDates(userId!.Value, fromDate, toDate);
-    }
-
-    private async Task RefreshData()
-    {
-        await LoadDataForDates(_filter.FromDate, _filter.ToDate);
-        await RenderExpenseChart();
-    }
-
-    private void SumByCategory()
-    {
-        Dictionary<string, double> graphData = new(_expenses.Count);
-
-        foreach (var item in _expenses)
+        foreach (var expense in _expenses)
         {
-            double value = item.Total;
-            string label = string.IsNullOrWhiteSpace(item.Category) ? _noCategoryLabel : item.Category;
-
-            if(graphData.ContainsKey(label))
+            if (string.IsNullOrWhiteSpace(expense.Category))
             {
-                graphData[label] += value;
-            }
-            else
-            {
-                graphData[label] = value;
+                expense.Category = _noCategoryLabel;
             }
         }
-
-        _filteredLabels = new(graphData.Keys.Count);
-        _filteredValues = new(graphData.Keys.Count);
-        foreach (var data in graphData)
-        {
-            _filteredLabels.Add(data.Key);
-            _filteredValues.Add(data.Value);
-        }
     }
-    
-    private async Task RenderExpenseChart()
+
+    private async Task OnRefreshGraphClicked()
     {
-        SumByCategory();
-        
-        var data = new ChartData
+        if (_expensesMonth is null)
         {
-            Labels = _filteredLabels,
-            Datasets = new List<IChartDataset>()
-            {
-                new BarChartDataset()
-                {
-                    Label = "Expenses",
-                    Data = _filteredValues,
-                    BackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
-                    CategoryPercentage = 0.8,
-                    BarPercentage = 1,
-                }
-                // , new BarChartDataset()
-                // {
-                //     Label = "Recurring Expenses",
-                //     Data = new List<double>{ 1, 0, 7, 11, 5, 2, 13, 8, 9, 10, 7, 13, 7, 5, 9, 5, 10, 5, 11, 2 },
-                //     BackgroundColor = new List<string> { "rgb(255, 166, 0)" },
-                //     CategoryPercentage = 0.8,
-                //     BarPercentage = 1,
-                // }
-            }
-        };
+            _snackbar.Add("Please enter a valid month to show expenses", Severity.Warning);
+            return;
+        }
 
-        var options = new BarChartOptions();
+        await LoadDataForMonth(_expensesMonth.Value.Year, _expensesMonth.Value.Month);
+        await _chart.RenderAsync();
+    }
 
-        options.Interaction.Mode = InteractionMode.Index;
-
-        options.Plugins.Title.Text = _filter.ToDate is null ? 
-            "Expenses from " + _filter.FromDate.ToShortDateString() : 
-            "Expenses Between " + _filter.FromDate.ToShortDateString() + " and " + _filter.ToDate.Value.ToShortDateString();
-        options.Plugins.Title.Display = true;
-        options.Plugins.Title.Font.Size = 16;
-
-        options.Responsive = true;
-
-        options.Scales.X.Title.Text = "Category";
-        options.Scales.X.Title.Display = false;
-
-        options.Scales.Y.Title.Text = "Total Cost";
-        options.Scales.Y.Title.Display = true;
-
-        await _chart1.UpdateAsync(data, options);
+    private Task OnChartTypeValueChanged(SeriesType newType)
+    {
+        _chartType = newType;
+        StateHasChanged(); // Else the chart will not update correctly
+        return _chart.RenderAsync();
     }
 }

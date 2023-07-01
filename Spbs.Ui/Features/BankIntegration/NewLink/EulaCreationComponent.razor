@@ -1,50 +1,51 @@
 ﻿@using Blazored.FluentValidation
+@using global::Shared.Utilities
 
-<div class="container">
-    <EditForm Model="@_eula"
-              OnValidSubmit="@HandleValidSubmit"
-              OnInvalidSubmit="@HandleInvalidSubmit">
+<MudForm @ref="@_form"
+         Model="@_eula"
+         ValidationDelay="0">
 
-        <!--DataAnnotationsValidator/-->
-        <FluentValidationValidator/>
-        <ValidationSummary/>
+    <MudGrid Spacing="1">
+        <MudItem xs="12">
+            <MudNumericField @bind-Value="@_eula.MaxHistoricalDays"
+                             Validation="@(async (int i) => await _eulaValidator.ValidateValueAsync(_eula, e => e.MaxHistoricalDays))"
+                             Label="Max Historical Days"
+                             Variant="Variant.Text"
+                             Margin="Margin.Dense"
+                             HelperText="Choose a nifty title for your post!"/>
+        </MudItem>
 
-        <div class="form-group col-md-10">
-            <label for="historical-days">Max Historical Days</label>
-            <InputNumber id="historical-days"
-                         class="form-control"
-                         TValue="Int32"
-                         @bind-Value="@_eula.MaxHistoricalDays">
-            </InputNumber>
-            <small id="historical-days-small" class="form-text text-muted">The mamixum number of days back in time for fetching transactions.</small>
-            <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => _eula.MaxHistoricalDays)"/>
-        </div>
+        <MudItem xs="12">
+            <MudNumericField @bind-Value="@_eula.AccessValidForDays"
+                             Validation="@(async (int i) => await _eulaValidator.ValidateValueAsync(_eula, e => e.AccessValidForDays))"
+                             Label="Access Valid For (Days)"
+                             Variant="Variant.Text"
+                             Margin="Margin.Dense"
+                             HelperText="For how many days are we allowed to access your data?"/>
+        </MudItem>
 
-        <div class="form-group col-md-10">
-            <label for="access-days">Access Valid For (Days)</label>
-            <InputNumber id="access-days"
-                         class="form-control"
-                         TValue="Int32"
-                         @bind-Value="@_eula.AccessValidForDays">
-            </InputNumber>
-            <small id="access-days-small" class="form-text text-muted">For how many days are we allowed to access your data?</small>
-            <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => _eula.AccessValidForDays)"/>
-        </div>
+        <MudItem xs="12">
+            <MudSelect T="string"
+                       @bind-Value="@_scopesFormBindDummy"
+                       Validation="@(async (string s) => await _eulaValidator.ValidateValueAsync(_eula, e => e.AccessScope))"
+                       MultiSelection="true"
+                       SelectedValuesChanged="OnScopeSelectionChanged"
+                       Label="Permissions"
+                       Variant="Variant.Text"
+                       Margin="Margin.Dense"
+                       HelperText="Limit what data we are allowed to access">
+                <MudSelectItem Value="@("balances")">Balances</MudSelectItem>
+                <MudSelectItem Value="@("details")">Details</MudSelectItem>
+                <MudSelectItem Value="@("transactions")">Transactions</MudSelectItem>
+            </MudSelect>
+            <MudDivider Class="mb-4"/>
+        </MudItem>
 
-        <div class="form-group col-md-10">
-            <label for="access-scope">Permissions</label>
-            <InputSelect id="access-scope"
-                         class="form-control"
-                         @bind-Value="@_eula.AccessScope">
-                <option value="balances">Balances</option>
-                <option value="details">Details</option>
-                <option value="transactions">Transactions</option>
-            </InputSelect>
-            <small id="access-scope-small" class="form-text text-muted">Limit what data we are allowed to access.</small>
-            <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => _eula.AccessScope)"/>
-        </div>
-
-        <button type="submit" class="btn btn-primary edit-btn">Accept</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">On Second Thought</button>
-    </EditForm>
-</div>
+        <MudItem xs="6">
+            <MudButton Variant="Variant.Filled" 
+                       Color="Color.Primary" 
+                       Class="ml-auto" 
+                       OnClick="HandleValidSubmit">Save</MudButton>
+        </MudItem>
+    </MudGrid>
+</MudForm>

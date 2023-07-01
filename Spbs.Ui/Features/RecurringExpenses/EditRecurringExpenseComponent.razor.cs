@@ -1,9 +1,9 @@
 using System;
-using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using AutoMapper;
+using FluentValidation;
 using Microsoft.AspNetCore.Components;
-using Spbs.Ui.Features.Expenses;
+using MudBlazor;
 
 namespace Spbs.Ui.Features.RecurringExpenses;
 
@@ -13,13 +13,17 @@ public partial class EditRecurringExpenseComponent
 
     private EditRecurringExpenseViewModel _editRecurringExpenseViewModel = new() { BillingDay = DateTime.Now.Day };
     private RecurringExpense? _expense;
-
-
-    [Inject] public IMapper Mapper { get; set; }
-    [Inject] public IRecurringExpenseWriterRepository RecurringExpenseWriterRepository { get; set; } 
     
-    [Parameter, Required] public Func<Guid?> GetUserId { get; set; }
-    [Parameter] public Func<Task> OnUpdateCallback { get; set; }
+#pragma warning disable CS8618
+    [Inject] private IMapper _mapper { get; set; }
+    [Inject] private IRecurringExpenseWriterRepository _recurringExpenseWriterRepository { get; set; }
+    [Inject] private IValidator<EditRecurringExpenseViewModel> _expenseValidator { get; set; }
+    
+    [Parameter] public Func<Guid?> GetUserId { get; set; }
+    [Parameter] public Func<RecurringExpense, Task> OnUpdateCallback { get; set; }
+    
+    private MudForm _form;
+#pragma warning restore CS8618
     
     public void ShowModal()
     {
@@ -41,7 +45,7 @@ public partial class EditRecurringExpenseComponent
         if (expense is not null)
         {
             _expense = expense;
-            _editRecurringExpenseViewModel = Mapper.Map<EditRecurringExpenseViewModel>(expense);
+            _editRecurringExpenseViewModel = _mapper.Map<EditRecurringExpenseViewModel>(expense);
         }
     }
 
@@ -50,26 +54,26 @@ public partial class EditRecurringExpenseComponent
         RecurringExpense expense;
         if (_expense is null)
         {
-            expense = Mapper.Map<RecurringExpense>(_editRecurringExpenseViewModel);
+            expense = _mapper.Map<RecurringExpense>(_editRecurringExpenseViewModel);
         }
         else
         {
-            expense = Mapper.Map(_editRecurringExpenseViewModel, _expense);
+            expense = _mapper.Map(_editRecurringExpenseViewModel, _expense);
         }
         
         EnsureUseIdIsSet(expense);
         if (_editRecurringExpenseViewModel.Id is null)
         {
-            await RecurringExpenseWriterRepository.InsertExpenseAsync(expense);
+            await _recurringExpenseWriterRepository.InsertExpenseAsync(expense);
         }
         else
         {
-            await RecurringExpenseWriterRepository.UpdateExpenseAsync(expense);
+            await _recurringExpenseWriterRepository.UpdateExpenseAsync(expense);
         }
         
         CloseDialog();
         ResetModel();
-        await OnUpdateCallback();
+        await OnUpdateCallback(expense);
         StateHasChanged();
     }
 

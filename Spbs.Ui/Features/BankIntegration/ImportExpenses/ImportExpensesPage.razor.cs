@@ -1,10 +1,8 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Components;
-using Spbs.Generators.UserExtensions;
+using MudBlazor;
 using Spbs.Ui.Features.BankIntegration.Services;
 using Spbs.Ui.Features.Expenses;
 
@@ -12,31 +10,20 @@ namespace Spbs.Ui.Features.BankIntegration.ImportExpenses;
 
 public partial class ImportExpensesPage : ComponentBase
 {
-    private class LoadAccountsParameters
-    {
-        public bool IncludeAll { get; set; } = false;
-    }
-
-    private struct ViewModelExpenseSuggestionPair
-    {
-        public ImportExpensesViewModel ViewModel { get; set; }
-        public Expense ImportedExpense { get; set; }
-    }
-    
 #pragma warning disable CS8618
     [Inject] private ImportExpensesStateManager _importState { get; set; }
     [Inject] private IRedirectLinkService _redirectService { get; set; }
     [Inject] private NavigationManager _navigationManager { get; set; }
     [Inject] private IMapper _mapper { get; set; }
+    
+    private MudDataGrid<ImportExpensesViewModel> _grid;
 #pragma warning restore CS8618
-
-    private List<ViewModelExpenseSuggestionPair> _viewModelsWithGeneratedExpenses = new();
+    
     private List<ImportExpensesViewModel> _filteredExpenseModels = new(); 
     
-    private LoadAccountsParameters _loadAccountsParameters = new();
+    private HashSet<ImportExpensesViewModel> _selectedTransactions = new();
+    private bool _includeAllSwitchValue = true;
     
-    private Expense? _expenseToEdit;
-
     protected override void OnInitialized()
     {
         if (_importState._expensesToConfigure is { Count: >0 })
@@ -46,54 +33,33 @@ public partial class ImportExpensesPage : ComponentBase
             {
                 importExpensesViewModel.TransactionAmount.Amount *= -1d;
             }
-            
-            ReloadExpenseMappings();
         }
     }
 
-    private void ReloadExpenseMappings()
+    private void ToggleInclude(IEnumerable<ImportExpensesViewModel> itemsToToggle)
     {
-        _viewModelsWithGeneratedExpenses.Clear();
-        foreach (var importExpensesViewModel in _filteredExpenseModels)
+        foreach (var importExpensesViewModel in itemsToToggle)
         {
-            _viewModelsWithGeneratedExpenses.Add(new()
-            {
-                ViewModel = importExpensesViewModel,
-                ImportedExpense = _mapper.Map<Expense>(importExpensesViewModel) 
-            });
-        }
-    }
-
-    private void ToggleIncludeAll()
-    {
-        _loadAccountsParameters.IncludeAll = !_loadAccountsParameters.IncludeAll;
-        foreach (var importExpensesViewModel in _filteredExpenseModels)
-        {
-            importExpensesViewModel.IncludeInImport = _loadAccountsParameters.IncludeAll;
+            importExpensesViewModel.IncludeInImport = _includeAllSwitchValue;
         }
         
         StateHasChanged();
     }
 
-    private void HandleInvalidSubmit_EditExpense()
-    {
-        
-    }
-
-    private void HandleValidSubmit_EditExpense()
-    {
-        _expenseToEdit = null;
-    }
-
     private void ImportExpenses()
     {
-        var expenses = _viewModelsWithGeneratedExpenses
-            .Where(vm => vm.ViewModel.IncludeInImport)
-            .Select(vm => vm.ImportedExpense)
-            .ToList();
-
+        var expenses = _mapper.Map<List<Expense>>(_filteredExpenseModels.Where(t => t.IncludeInImport).ToList());
         _importState._expensesToImport = expenses;
-        
         _navigationManager.NavigateTo(_redirectService.GetUrlForImportExpenses(isInProgressPage: true));
+    }
+
+    private void OnSelectionChanged(HashSet<ImportExpensesViewModel> selection)
+    {
+        _selectedTransactions = selection;
+    }
+
+    private void OnTransactionEdited(ImportExpensesViewModel obj)
+    {
+        
     }
 }

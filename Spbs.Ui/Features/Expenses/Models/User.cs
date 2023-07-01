@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Spbs.Ui.Data.Cosmos;
+using Spbs.Data.Cosmos;
 
 namespace Spbs.Ui.Features.Expenses.Models;
 

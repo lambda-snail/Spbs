@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using Spbs.Ui.Data.Cosmos;
+using Spbs.Data.Cosmos;
 using Spbs.Ui.Features.Expenses;
 
 namespace Spbs.Ui.Features.Visualization.Models;
@@ -32,27 +32,9 @@ public class ExpenseVisualizationModel : ICosmosData
     
     [JsonProperty("tags")]
     public string? Tags { get; set; }
-
-    public double? _total;
     
     [JsonProperty("total")]
-    public double Total {
-        get
-        {
-            if (_total is not null)
-            {
-                return _total.Value;
-            }
-
-            double total = 0.0;
-            for (int i = 0; i < Items.Count; ++i)
-            {
-                total += Items[i].GetCostOfItem();
-            }
-            return total;
-        }
-        set => _total = value;
-    }
+    public decimal Total { get; set; }
     
     [JsonProperty("currency")]
     public string Currency { get; set; }

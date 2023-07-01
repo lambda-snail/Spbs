@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Spbs.Shared.Data;
-using Spbs.Ui.Data.Cosmos;
+using Spbs.Data.Cosmos;
 
 namespace Spbs.Ui.Features.BankIntegration.Models;
 
@@ -37,7 +37,7 @@ public class NordigenEula : ICosmosData
     /// Array containing one or several values of [&#39;balances&#39;, &#39;details&#39;, &#39;transactions&#39;]
     /// </summary>
     [JsonProperty("accessScope")]
-    public string[] AccessScope { get; set; } = new string[3]; 
+    public string[] AccessScope { get; set; } = Array.Empty<string>(); 
 
     /// <summary>
     /// The date &amp; time at which the end user accepted the agreement.

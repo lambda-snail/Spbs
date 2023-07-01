@@ -1,19 +1,16 @@
-@if (_upcomingExpenses.Count == 0)
-{
-    <p>No upcoming payments due this month!</p>
-}
-else
-{
-    RecurringExpense expense = _upcomingExpenses.First();
-    
-    <h4>Next upcoming payment</h4>
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">@expense.Name</h5>
-            <h6 class="card-subtitle mb-2 text-muted">To be billed on the @(expense.BillingDay):th.</h6>
-            <NavLink class="card-link" href="@expense.GetDetailsUrl()">
-                Details
-            </NavLink>
-        </div>
-    </div>
-}
+<MudList Clickable="true" Dense="false" DisableGutters="false">
+    @{
+        if (_upcomingExpenses.Count == 0)
+        {
+            <MudListItem Text="No upcoming payments due this month!" />
+        }
+        else
+        {
+            var today = DateTime.Now;
+            foreach (var expense in _upcomingExpenses)
+            {
+                <MudListItem Href="@expense.GetDetailsUrl()" Text="@(expense.Name + " in " + (expense.BillingDay - today.Day) + " days")"/>
+            }
+        }
+    }
+</MudList>
