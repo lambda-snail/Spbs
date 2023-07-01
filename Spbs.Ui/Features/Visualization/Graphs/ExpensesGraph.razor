@@ -4,14 +4,18 @@
 
 <MudPaper Class="pa-2">
     <MudText Typo="Typo.h6" Class="ms-6">Expenses</MudText>
-    <MudGrid Class="ms-4">
-        <MudItem xs="3">
-            <MudDatePicker HelperText="Choose a date to filter expenses" @bind-Date="@_expensesMonth" OpenTo="OpenTo.Year" FixDay="1" DateFormat="yyyy-MM"/>
-        </MudItem>
-        <MudItem xs="2" Class="align-self-center">
-            <MudIconButton OnClick="OnRefreshGraphClicked" Icon="@Icons.Material.Filled.Refresh"></MudIconButton>
-        </MudItem>
-    </MudGrid>
+    
+    <MudToolBar Class="ms-4">
+        <MudDatePicker HelperText="Choose a date to filter expenses" @bind-Date="@_expensesMonth" OpenTo="OpenTo.Year" FixDay="1" DateFormat="yyyy-MM"/>
+        <MudIconButton OnClick="OnRefreshGraphClicked" Icon="@Icons.Material.Filled.Refresh"></MudIconButton>
+        
+        <MudSpacer />
+        
+        <MudSelect @bind-Value="@_chartType" T="SeriesType" HelperText="Choose chart type" AnchorOrigin="Origin.BottomCenter">
+            <MudSelectItem Value="SeriesType.Bar">Bar</MudSelectItem>
+            <MudSelectItem Value="SeriesType.Donut">Donut</MudSelectItem>
+        </MudSelect>
+    </MudToolBar>
 
     <ApexChart TItem="ExpenseVisualizationModel"
                @ref="_chart"
@@ -23,7 +27,7 @@
                              Name="Expenses"
                              XValue="@(e => e.Category ?? _noCategoryLabel)"
                              YAggregate="@(l => l.Sum(e => (decimal)e.Total))"
-                             SeriesType="SeriesType.Bar"
+                             SeriesType="@_chartType"
                              OrderBy="@(e => e.X)"
                              Color="#3633FF"/>
         </ChildContent>

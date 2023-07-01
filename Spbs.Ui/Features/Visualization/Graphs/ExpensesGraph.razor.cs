@@ -25,6 +25,7 @@ public partial class ExpensesGraph : ComponentBase
     private const string _noCategoryLabel = "Unassigned";
     
     private DateTime? _expensesMonth = DateTime.Now;
+    private SeriesType _chartType = SeriesType.Donut;
 
     protected override async Task OnInitializedAsync()
     {
@@ -58,11 +59,28 @@ public partial class ExpensesGraph : ComponentBase
                             }
                         }
                     }
+                },
+                Pie = new()
+                {
+                    Donut = new()
+                    {
+                        Labels = new()
+                        {
+                            Name = new()
+                            {
+                                Color = "#FFFFFF"
+                            }
+                        }
+                    }
                 }
             },
             Legend = new()
             {
-                Show = true
+                Show = true,
+                Labels = new()
+                {
+                    Colors = new Color("#FFFFFF")
+                }
             },
             Title = new()
             {
