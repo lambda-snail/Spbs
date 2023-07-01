@@ -4,46 +4,53 @@
 
 <MudPaper Class="pa-2">
     <MudText Typo="Typo.h6" Class="ms-9">Expenses</MudText>
-    
-    <MudToolBar Class="ms-4 mb-4">
-        <MudDatePicker HelperText="Choose a date to filter expenses" @bind-Date="@_expensesMonth" OpenTo="OpenTo.Year" FixDay="1" DateFormat="yyyy-MM"/>
-        <MudIconButton OnClick="OnRefreshGraphClicked" Icon="@Icons.Material.Filled.Refresh"></MudIconButton>
-        
-        <MudSpacer />
-        
-        <MudSelect T="SeriesType" 
-                   Value="@_chartType"
-                   ValueChanged="OnChartTypeValueChanged"
-                   HelperText="Choose chart type" 
-                   AnchorOrigin="Origin.BottomCenter">
-            <MudSelectItem Value="SeriesType.Bar">Bar</MudSelectItem>
-            <MudSelectItem Value="SeriesType.Donut">Donut</MudSelectItem>
-        </MudSelect>
-    </MudToolBar>
 
-    <ApexChart TItem="ExpenseVisualizationModel"
-               @ref="_chart"
-               Options="_chartOptions"
-               Width="512"
-               Title="">
-        <ChildContent>
-            <ApexPointSeries TItem="ExpenseVisualizationModel"
-                             Items="_expenses"
-                             Name="Expenses"
-                             XValue="@(e => e.Category ?? _noCategoryLabel)"
-                             YAggregate="@(l => l.Sum(e => (decimal)e.Total))"
-                             SeriesType="@_chartType"
-                             OrderBy="@(e => e.X)"
-                             Color="#3633FF"/>
-        </ChildContent>
+    <MudGrid Spacing="2">
+        <MudItem xs="9">
+            <ApexChart TItem="ExpenseVisualizationModel"
+                       @ref="_chart"
+                       Options="_chartOptions"
+                       Width="768"
+                       Title="">
+                <ChildContent>
+                    <ApexPointSeries TItem="ExpenseVisualizationModel"
+                                     Items="_expenses"
+                                     Name="Expenses"
+                                     XValue="@(e => e.Category ?? _noCategoryLabel)"
+                                     YAggregate="@(l => l.Sum(e => (decimal)e.Total))"
+                                     SeriesType="@_chartType"
+                                     OrderBy="@(e => e.X)"
+                                     Color="#3633FF"/>
+                </ChildContent>
 
-        <ApexPointTooltip>
-            <MudPaper Elevation="25" Class="pa-2">
-                @context.DataPoint.Items.Sum(x => x.Total) @context.DataPoint.Items.First().Currency
-            </MudPaper>
-        </ApexPointTooltip>
+                <ApexPointTooltip>
+                    <MudPaper Elevation="25" Class="pa-2">
+                        @context.DataPoint.Items.Sum(x => x.Total) @context.DataPoint.Items.First().Currency
+                    </MudPaper>
+                </ApexPointTooltip>
 
-    </ApexChart>
+            </ApexChart>
+        </MudItem>
+        <MudItem xs="3">
+            <MudStack>
+                <MudPaper Class="pa-2">
+                    <MudDatePicker HelperText="Choose a date to filter expenses" @bind-Date="@_expensesMonth" OpenTo="OpenTo.Year" FixDay="1" DateFormat="yyyy-MM"/>
+                    <MudIconButton OnClick="OnRefreshGraphClicked" Icon="@Icons.Material.Filled.Refresh"></MudIconButton>
+                </MudPaper>
+
+                <MudSelect T="SeriesType"
+                           Value="@_chartType"
+                           ValueChanged="OnChartTypeValueChanged"
+                           HelperText="Choose chart type"
+                           AnchorOrigin="Origin.BottomCenter">
+                    <MudSelectItem Value="SeriesType.Bar">Bar</MudSelectItem>
+                    <MudSelectItem Value="SeriesType.Donut">Donut</MudSelectItem>
+                </MudSelect>
+            </MudStack>
+        </MudItem>
+    </MudGrid>
+
+
 </MudPaper>
 
 
