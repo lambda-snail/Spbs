@@ -11,7 +11,11 @@
         
         <MudSpacer />
         
-        <MudSelect @bind-Value="@_chartType" T="SeriesType" HelperText="Choose chart type" AnchorOrigin="Origin.BottomCenter">
+        <MudSelect T="SeriesType" 
+                   Value="@_chartType"
+                   ValueChanged="OnChartTypeValueChanged"
+                   HelperText="Choose chart type" 
+                   AnchorOrigin="Origin.BottomCenter">
             <MudSelectItem Value="SeriesType.Bar">Bar</MudSelectItem>
             <MudSelectItem Value="SeriesType.Donut">Donut</MudSelectItem>
         </MudSelect>

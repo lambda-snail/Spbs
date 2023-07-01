@@ -27,9 +27,11 @@ public partial class ExpensesGraph : ComponentBase
     private DateTime? _expensesMonth = DateTime.Now;
     private SeriesType _chartType = SeriesType.Donut;
 
+    private string _textColor = "#FFFFFF";
+    
     protected override async Task OnInitializedAsync()
     {
-        await LoadDataForMonth(2023, 6);
+        await LoadDataForMonth(_expensesMonth!.Value.Year, _expensesMonth!.Value.Month);
 
         _chartOptions = new()
         {
@@ -38,7 +40,7 @@ public partial class ExpensesGraph : ComponentBase
                 Enabled = true,
                 Style = new()
                 {
-                    Colors = new() { "#FFFFFF" }
+                    Colors = new() { _textColor }
                 }
             },
             PlotOptions = new()
@@ -55,7 +57,7 @@ public partial class ExpensesGraph : ComponentBase
                             Enabled = true,
                             Style = new()
                             {
-                                Color = "#FFFFFF"
+                                Color = _textColor
                             }
                         }
                     }
@@ -68,7 +70,7 @@ public partial class ExpensesGraph : ComponentBase
                         {
                             Name = new()
                             {
-                                Color = "#FFFFFF"
+                                Color = _textColor
                             }
                         }
                     }
@@ -79,14 +81,14 @@ public partial class ExpensesGraph : ComponentBase
                 Show = true,
                 Labels = new()
                 {
-                    Colors = new Color("#FFFFFF")
+                    Colors = new Color(_textColor)
                 }
             },
             Title = new()
             {
                 Style = new()
                 {
-                    Color = "#FFFFFF"
+                    Color = _textColor
                 }
             },
             Xaxis = new()
@@ -95,7 +97,7 @@ public partial class ExpensesGraph : ComponentBase
                 {
                     Style = new()
                     {
-                        Colors = new Color("#FFFFFF")
+                        Colors = new Color(_textColor)
                     }
                 }
             },
@@ -107,7 +109,7 @@ public partial class ExpensesGraph : ComponentBase
                     {
                         Style = new()
                         {
-                            Colors = new Color("#FFFFFF")
+                            Colors = new Color(_textColor)
                         }
                     }
                 }
@@ -130,6 +132,7 @@ public partial class ExpensesGraph : ComponentBase
         Guid? userId = await UserId();
         _expenses = await _expenseReader.GetAllExpensesByUserForMonth(userId!.Value, new DateOnly(year, month, 01));
         EnsureNoEmptyCategory();
+        StateHasChanged();
     }
 
     private void EnsureNoEmptyCategory()
@@ -153,5 +156,12 @@ public partial class ExpensesGraph : ComponentBase
 
         await LoadDataForMonth(_expensesMonth.Value.Year, _expensesMonth.Value.Month);
         await _chart.RenderAsync();
+    }
+
+    private Task OnChartTypeValueChanged(SeriesType newType)
+    {
+        _chartType = newType;
+        StateHasChanged(); // Else the chart will not update correctly
+        return _chart.RenderAsync();
     }
 }
