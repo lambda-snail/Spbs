@@ -3,9 +3,9 @@
 @using ApexCharts
 
 <MudPaper Class="pa-2">
-    <MudText Typo="Typo.h6" Class="ms-6">Expenses</MudText>
+    <MudText Typo="Typo.h6" Class="ms-9">Expenses</MudText>
     
-    <MudToolBar Class="ms-4">
+    <MudToolBar Class="ms-4 mb-4">
         <MudDatePicker HelperText="Choose a date to filter expenses" @bind-Date="@_expensesMonth" OpenTo="OpenTo.Year" FixDay="1" DateFormat="yyyy-MM"/>
         <MudIconButton OnClick="OnRefreshGraphClicked" Icon="@Icons.Material.Filled.Refresh"></MudIconButton>
         
@@ -24,6 +24,7 @@
     <ApexChart TItem="ExpenseVisualizationModel"
                @ref="_chart"
                Options="_chartOptions"
+               Width="512"
                Title="">
         <ChildContent>
             <ApexPointSeries TItem="ExpenseVisualizationModel"
