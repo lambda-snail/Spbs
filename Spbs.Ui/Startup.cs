@@ -113,7 +113,7 @@ namespace Spbs.Ui
                 .ValidateOnStart();
 
             services.AddOptions<MessagingOptions>()
-                .BindConfiguration("Messaging:RecurringExpensesQueue")
+                .BindConfiguration("Spbs:Messaging")
                 .ValidateFluently()
                 .ValidateOnStart();
         }
