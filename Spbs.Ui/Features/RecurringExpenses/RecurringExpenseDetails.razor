@@ -1,4 +1,5 @@
 @page "/recurring-expenses/{ExpenseId}"
+@using Spbs.Ui.Features.Expenses.Models
 
 <h3>Details of Recurring Expense</h3>
 
@@ -109,6 +110,19 @@ else
                               Variant="Variant.Text"
                               Margin="Margin.Dense">
                 </MudTextField>
+            </MudItem>
+
+            <MudItem xs="6">
+                <MudTextField T="string"
+                              ReadOnly="true"
+                              Text="@_expense.Category"
+                              Label="Category"
+                              Adornment="Adornment.Start"
+                              AdornmentIcon="@ExpenseCategoryUtils.GetMudIcon(_expense.Category)"
+                              Variant="Variant.Text"
+                              Margin="Margin.Dense">
+                </MudTextField>
+
             </MudItem>
         </MudGrid>
     </MudPaper>
