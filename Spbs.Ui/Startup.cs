@@ -1,4 +1,5 @@
 using System;
+using Azure.Core;
 using Azure.Messaging.ServiceBus;
 using FluentValidation;
 using Integrations.Nordigen;
@@ -40,13 +41,16 @@ namespace Spbs.Ui
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, TokenCredential azureCredential)
         {
             Configuration = configuration;
+            _azureCredential = azureCredential;
         }
 
         public IConfiguration Configuration { get; }
-        
+
+        private TokenCredential _azureCredential { get; }
+
         public void ConfigureServices(IServiceCollection services)
         {
             var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
@@ -163,7 +167,8 @@ namespace Spbs.Ui
             services.AddSingleton<ServiceBusClient>(provider =>
             {
                 return new ServiceBusClient(
-                    serviceBusConnectionString, 
+                    serviceBusConnectionString,
+                    _azureCredential,
                     new ServiceBusClientOptions
                 { 
                     TransportType = ServiceBusTransportType.AmqpWebSockets
