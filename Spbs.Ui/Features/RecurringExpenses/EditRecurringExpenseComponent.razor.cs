@@ -1,9 +1,12 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using FluentValidation;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
+using Spbs.Ui.Features.Expenses.Models;
 
 namespace Spbs.Ui.Features.RecurringExpenses;
 
@@ -13,6 +16,8 @@ public partial class EditRecurringExpenseComponent
 
     private EditRecurringExpenseViewModel _editRecurringExpenseViewModel = new() { BillingDay = DateTime.Now.Day };
     private RecurringExpense? _expense;
+    
+    private IReadOnlyList<Category> _expenseCategories = ExpenseCategoryUtils.GetAllCategories();
     
 #pragma warning disable CS8618
     [Inject] private IMapper _mapper { get; set; }

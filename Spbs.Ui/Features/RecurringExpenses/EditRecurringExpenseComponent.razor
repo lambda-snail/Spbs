@@ -98,6 +98,22 @@
                                                  Min="0.0"/>
                             </MudItem>
 
+                            <MudItem xs="12">
+                                <MudSelect T="string" Label="Category" Variant="Variant.Text" @bind-Value="@_editRecurringExpenseViewModel.Category" Margin="Margin.Dense" HelperText="How would you classify this expense?">
+                                    <MudSelectItem Value="@string.Empty"></MudSelectItem>
+                                    @foreach (var category in _expenseCategories)
+                                    {
+                                        <MudSelectItem Value="@category.Name">
+                                            <MudStack Row="true">
+                                                <MudIcon Icon="@category.MudIcon"/>
+                                                @category.Name
+                                            </MudStack>
+                                        </MudSelectItem>
+                                    }
+                                </MudSelect>
+                                <MudDivider Class="mb-4"/>
+                            </MudItem>
+
 
                         </MudGrid>
                     </MudForm>

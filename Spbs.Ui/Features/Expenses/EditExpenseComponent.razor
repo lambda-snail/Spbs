@@ -60,7 +60,12 @@
                                     <MudSelectItem Value="@string.Empty"></MudSelectItem>
                                     @foreach (var category in _expenseCategories)
                                     {
-                                        <MudSelectItem Value="@category">@category</MudSelectItem>
+                                        <MudSelectItem Value="@category.Name">
+                                            <MudStack Row="true" >
+                                                <MudIcon Icon="@category.MudIcon"/>
+                                                @category.Name
+                                            </MudStack>
+                                        </MudSelectItem>
                                     }
                                 </MudSelect>
                                 <MudDivider Class="mb-4"/>

@@ -7,6 +7,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using Spbs.Generators.UserExtensions;
+using Spbs.Ui.Features.Expenses.Models;
 using Spbs.Ui.Features.Users;
 using Spbs.Ui.Features.Users.Repositories;
 using Severity = MudBlazor.Severity;
@@ -21,12 +22,12 @@ public partial class EditExpenseComponent : ComponentBase
     private Expense? _expense;
     private EditExpenseViewModel _editExpenseViewModel = new() { Date = DateTime.Now };
 
-    private List<string> _expenseCategories = new();
+    private IReadOnlyList<Category> _expenseCategories = ExpenseCategoryUtils.GetAllCategories();
 
 #pragma warning disable CS8618
     [Inject] private IMapper _mapper { get; set; }
     [Inject] private IExpenseWriterRepository _expenseWriterRepository { get; set; } 
-    [Inject] private IUserRepository _userRepository { get; set; }
+    //[Inject] private IUserRepository _userRepository { get; set; }
     [Inject] private IValidator<EditExpenseViewModel> _expenseValidator { get; set; }
     [Inject] private ISnackbar _snackbar { get; set; }
 
@@ -44,14 +45,14 @@ public partial class EditExpenseComponent : ComponentBase
 
     protected override async Task OnInitializedAsync()
     {
-        Guid? userId = await UserId();
-        User? user = await _userRepository.GetById(_userId!.Value);
-        if (user is null)
-        {
-            return;
-        }
-
-        _expenseCategories = user.ExpenseCategories;
+        // Guid? userId = await UserId();
+        // User? user = await _userRepository.GetById(_userId!.Value);
+        // if (user is null)
+        // {
+        //     return;
+        // }
+        // TODO: Reappropriate for tags instead?
+        // _expenseCategories = user.ExpenseCategories;
     }
 
     private void CloseDialog()
