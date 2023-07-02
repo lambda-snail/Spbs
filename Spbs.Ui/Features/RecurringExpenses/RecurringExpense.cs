@@ -45,6 +45,8 @@ public class RecurringExpense : ICosmosData
     public string? Description { get; set; }
     [JsonProperty("billingDay")]
     public int BillingDay { get; set; }
+    [JsonProperty("category")]
+    public string Category { get; set; }
     [JsonProperty("billingPrincipal")]
     public string BillingPrincipal { get; set; }
     [JsonProperty("total")]
