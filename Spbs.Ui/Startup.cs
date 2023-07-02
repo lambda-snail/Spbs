@@ -1,4 +1,5 @@
 using System;
+using Azure.Messaging.ServiceBus;
 using FluentValidation;
 using Integrations.Nordigen;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
@@ -156,6 +157,18 @@ namespace Spbs.Ui
             services.AddSingleton<CosmosClient>(
                 new CosmosClient(connectionString: cosmosDbConnectionString)
             );
+            
+            var serviceBusConnectionString =
+                Configuration.GetSection("Spbs:ConnectionStrings").GetValue<string>("ServiceBus");
+            services.AddSingleton<ServiceBusClient>(provider =>
+            {
+                return new ServiceBusClient(
+                    serviceBusConnectionString, 
+                    new ServiceBusClientOptions
+                { 
+                    TransportType = ServiceBusTransportType.AmqpWebSockets
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
