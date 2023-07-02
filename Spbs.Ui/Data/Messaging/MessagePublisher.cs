@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 namespace Spbs.Ui.Data.Messaging;
 
-public abstract class MessagePublisher<T> : IAsyncDisposable
+public class MessagePublisher<T> : IAsyncDisposable
 {
     private readonly ServiceBusSender _serviceBusSender;
 
