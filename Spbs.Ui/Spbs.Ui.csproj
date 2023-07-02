@@ -41,6 +41,7 @@
         <PackageReference Include="SerilogTimings" Version="3.0.1" />
     </ItemGroup>
     <ItemGroup>
+      <Folder Include="Features\RecurringExpenses\Messaging\" />
       <Folder Include="wwwroot\js\bootstrap" />
     </ItemGroup>
     <ItemGroup>

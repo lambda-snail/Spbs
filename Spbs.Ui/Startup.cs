@@ -17,6 +17,7 @@ using Shared.Utilities;
 using Shared.Utilities.OptionsExtensions;
 using Spbs.Shared.Data;
 using Spbs.Ui.ComponentServices;
+using Spbs.Ui.Data.Messaging;
 using Spbs.Ui.Features.BankIntegration;
 using Spbs.Ui.Features.BankIntegration.ImportExpenses;
 using Spbs.Ui.Features.BankIntegration.Models;
@@ -100,12 +101,18 @@ namespace Spbs.Ui
             services.AddSingleton<IValidator<GraphDataFilter>, GraphDataFilterFluentValidation>();
             services.AddSingleton<IValidator<EditExpenseViewModel>, EditExpenseViewModelFluentValidation>();
             services.AddSingleton<IValidator<EditRecurringExpenseViewModel>, EditRecurringExpenseViewModelFluentValidation>();
+            services.AddSingleton<IValidator<MessagingOptions>, MessagingOptionsFluentValidation>();
         }
 
         private void RegisterConfigurations(IServiceCollection services)
         {
             services.AddOptions<DataConfigurationOptions>()
                 .BindConfiguration("Spbs:Data")
+                .ValidateFluently()
+                .ValidateOnStart();
+
+            services.AddOptions<MessagingOptions>()
+                .BindConfiguration("Messaging:RecurringExpensesQueue")
                 .ValidateFluently()
                 .ValidateOnStart();
         }
