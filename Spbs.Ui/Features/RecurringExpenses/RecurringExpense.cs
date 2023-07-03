@@ -24,6 +24,12 @@ public class RecurringExpenseHistoryItem
 {
     [JsonProperty("id")]
     public Guid Id { get; set; }
+
+    /// <summary>
+    /// The related expense created for this history item
+    /// </summary>
+    [JsonProperty("expenseId")]
+    public Guid ExpenseId { get; set; }
     [JsonProperty("total")]
     public double Total { get; set; }
     [JsonProperty("date")]
