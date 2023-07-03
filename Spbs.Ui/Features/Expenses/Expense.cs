@@ -16,6 +16,12 @@ public class Expense : ICosmosData
 
     [JsonProperty("recurring")]
     public bool Recurring { get; set; } = false;
+    
+    /// <summary>
+    /// Holds the related recurring expense when created for a recurring expense.
+    /// </summary>
+    [JsonProperty]
+    public Guid RecurringExpenseId { get; set; }
 
     [JsonProperty("userId")]
     public Guid UserId { get; set; }
