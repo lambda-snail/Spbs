@@ -182,8 +182,10 @@ namespace Spbs.Ui
         private void RegisterMessagingServices(IServiceCollection services)
         {
             services.AddHostedService<CreateExpenseCommandConsumer>();
+            services.AddHostedService<ExpenseCreatedForRecurringEventConsumer>();
 
             services.AddSingleton<ExpenseCreatedForRecurringEventPublisher>();
+            services.AddSingleton<RecurringExpenses_CreateExpenseCommandPublisher>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

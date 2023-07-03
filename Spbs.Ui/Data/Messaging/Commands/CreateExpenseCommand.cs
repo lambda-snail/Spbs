@@ -1,6 +1,6 @@
 using System;
 
-namespace Spbs.Ui.Data.Messaging.Messages;
+namespace Spbs.Ui.Data.Messaging.Commands;
 
 public class CreateExpenseCommand
 {

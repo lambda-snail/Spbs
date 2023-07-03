@@ -8,8 +8,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Shared.Utilities;
 using Spbs.Ui.Data.Messaging;
+using Spbs.Ui.Data.Messaging.Commands;
 using Spbs.Ui.Data.Messaging.Events;
-using Spbs.Ui.Data.Messaging.Messages;
 using Spbs.Ui.Features.Expenses;
 
 namespace Spbs.Ui.Features.RecurringExpenses.Messaging;
@@ -24,17 +24,12 @@ public class CreateExpenseCommandConsumer : BackgroundService, IAsyncDisposable
     //private readonly ServiceBusProcessor _processor;
     private readonly ServiceBusReceiver _receiver;
 
-    /// <summary>
-    /// ctor for mocking
-    /// </summary>
-#pragma warning disable CS8618
-    protected CreateExpenseCommandConsumer()
-    {
-    }
-#pragma warning restore CS8618
-
-    public CreateExpenseCommandConsumer(ServiceBusClient client, IExpenseWriterRepository expenseWriter,
-        ExpenseCreatedForRecurringEventPublisher publisher, IMapper mapper, IOptions<MessagingOptions> options,
+    public CreateExpenseCommandConsumer(
+        ServiceBusClient client, 
+        IExpenseWriterRepository expenseWriter,
+        ExpenseCreatedForRecurringEventPublisher publisher, 
+        IMapper mapper, 
+        IOptions<MessagingOptions> options,
         ILogger<CreateExpenseCommandConsumer> logger)
     {
         _expenseWriter = expenseWriter;
@@ -67,11 +62,12 @@ public class CreateExpenseCommandConsumer : BackgroundService, IAsyncDisposable
             return false;
         }
         
-        Console.WriteLine("Received message with id " + receivedMessage.MessageId);
+        _logger.LogTrace("{LoggingEntity}: Received message from queue {MessageId}", nameof(CreateExpenseCommandConsumer), receivedMessage.MessageId);
 
         if (!receivedMessage.Body.TryParseAsOBject<CreateExpenseCommand>(out var createExpenseCommand) ||
             createExpenseCommand?.Expense is null)
         {
+            _logger.LogTrace("{LoggingEntity}: Unable to parse {MessageId} or command body empty - abandoning message", nameof(CreateExpenseCommandConsumer), receivedMessage.MessageId);
             await _receiver.AbandonMessageAsync(receivedMessage, cancellationToken: stoppingToken);
             return false;
         }
@@ -96,6 +92,7 @@ public class CreateExpenseCommandConsumer : BackgroundService, IAsyncDisposable
             {
                 ExpenseId = expense.Id,
                 RecurringExpenseId = expense.RecurringExpenseId,
+                UserId = expense.UserId,
                 Date = expense.Date,
                 Total = expense.Total
             });

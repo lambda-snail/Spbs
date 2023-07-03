@@ -8,7 +8,7 @@ namespace Spbs.Ui.Data.Messaging;
 
 public class MessagePublisher<T> : IAsyncDisposable
 {
-    private readonly ServiceBusSender _serviceBusSender;
+    protected readonly ServiceBusSender _serviceBusSender;
 
     /// <summary>
     /// ctor for mocking
@@ -33,7 +33,7 @@ public class MessagePublisher<T> : IAsyncDisposable
         return _serviceBusSender.ScheduleMessageAsync(message, deliveryTime.ToUniversalTime());
     }
 
-    private ServiceBusMessage CreateMessage(T payload) => new ServiceBusMessage( Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(payload)) );
+    protected virtual ServiceBusMessage CreateMessage(T payload) => new ServiceBusMessage( Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(payload)) );
     
     public ValueTask DisposeAsync()
     {

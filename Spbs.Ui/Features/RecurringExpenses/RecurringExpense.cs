@@ -52,7 +52,7 @@ public class RecurringExpense : ICosmosData
     [JsonProperty("billingDay")]
     public int BillingDay { get; set; }
     [JsonProperty("category")]
-    public string Category { get; set; }
+    public string? Category { get; set; }
     [JsonProperty("billingPrincipal")]
     public string BillingPrincipal { get; set; }
     [JsonProperty("total")]
@@ -78,5 +78,16 @@ public class RecurringExpense : ICosmosData
     public string GetDetailsUrl()
     {
         return $"recurring-expenses/{Id}";
+    }
+
+    /// <summary>
+    /// Simple method that does not actually take into account holidays or week ends.
+    /// <example>If BillingDay is 30 but is evaluated on february during a leap year, the actual billing day is 29.</example>
+    /// </summary>
+    public int GetActualBillingDay(int year, int month)
+    {
+        if (BillingDay <= 28) return BillingDay;
+        var daysInMonth = DateTime.DaysInMonth(year, month);
+        return BillingDay <= daysInMonth ? BillingDay : daysInMonth;
     }
 }

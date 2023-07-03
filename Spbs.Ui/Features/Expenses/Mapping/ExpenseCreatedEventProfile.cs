@@ -1,6 +1,5 @@
 using AutoMapper;
-using Spbs.Ui.Data.Messaging.Events;
-using Spbs.Ui.Data.Messaging.Messages;
+using Spbs.Ui.Data.Messaging.Commands;
 
 namespace Spbs.Ui.Features.Expenses.Mapping;
 
