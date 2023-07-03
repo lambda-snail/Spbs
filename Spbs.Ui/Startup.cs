@@ -29,6 +29,7 @@ using Spbs.Ui.Features.Expenses;
 using Spbs.Ui.Features.Expenses.Repositories;
 using Spbs.Ui.Features.Expenses.Validation;
 using Spbs.Ui.Features.RecurringExpenses;
+using Spbs.Ui.Features.RecurringExpenses.Messaging;
 using Spbs.Ui.Features.RecurringExpenses.Validation;
 using Spbs.Ui.Features.Users;
 using Spbs.Ui.Features.Users.Repositories;
@@ -74,6 +75,8 @@ namespace Spbs.Ui
             RegisterValidators(services);
             RegisterConfigurations(services);
 
+            RegisterMessagingServices(services);
+            
             services.AddRazorPages();
             services.AddMudServices();
             
@@ -174,6 +177,13 @@ namespace Spbs.Ui
                     TransportType = ServiceBusTransportType.AmqpWebSockets
                 });
             });
+        }
+
+        private void RegisterMessagingServices(IServiceCollection services)
+        {
+            services.AddHostedService<CreateExpenseCommandConsumer>();
+
+            services.AddSingleton<ExpenseCreatedForRecurringEventPublisher>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

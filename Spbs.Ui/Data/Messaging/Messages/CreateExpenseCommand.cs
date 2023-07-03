@@ -4,16 +4,11 @@ namespace Spbs.Ui.Data.Messaging.Messages;
 
 public class CreateExpenseCommand
 {
-    /// <summary>
-    /// Which queue to post the resulting ExpenseCreatedEvent
-    /// </summary>
-    public string ReplyQueueName { get; set; }
     public CreateExpenseCommandPayload Expense { get; set; }
 }
 
 public class CreateExpenseCommandPayload
 {
-    public Guid Id { get; set; }
     public Guid UserId { get; set; }
     
     public string Name { get; set; }

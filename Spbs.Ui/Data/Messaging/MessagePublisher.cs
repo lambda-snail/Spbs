@@ -21,13 +21,13 @@ public class MessagePublisher<T> : IAsyncDisposable
         _serviceBusSender = client.CreateSender(queueName);
     }
     
-    public Task PublishMessage(T payload)
+    public virtual Task PublishMessage(T payload)
     {
         var message = CreateMessage(payload);
         return _serviceBusSender.SendMessageAsync(message);
     }
 
-    public Task ShceduleMessage(T payload, DateTime deliveryTime)
+    public virtual Task ShceduleMessage(T payload, DateTime deliveryTime)
     {
         var message = CreateMessage(payload);
         return _serviceBusSender.ScheduleMessageAsync(message, deliveryTime.ToUniversalTime());
