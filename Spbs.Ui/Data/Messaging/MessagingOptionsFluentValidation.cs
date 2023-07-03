@@ -7,5 +7,6 @@ public class MessagingOptionsFluentValidation : AbstractValidator<MessagingOptio
     public MessagingOptionsFluentValidation()
     {
         RuleFor(o => o.RecurringExpensesQueue).NotEmpty();
+        RuleFor(o => o.ExpensesQueue).NotEmpty();
     }
 }
