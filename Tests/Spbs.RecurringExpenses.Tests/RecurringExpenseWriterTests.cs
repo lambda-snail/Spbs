@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Spbs.Data.Cosmos;
 using Spbs.Shared.Data;
+using Spbs.Ui.Data.Messaging.Commands;
 using Spbs.Ui.Features.RecurringExpenses;
 using Spbs.Ui.Features.RecurringExpenses.Mapping;
 using Spbs.Ui.Features.RecurringExpenses.Messaging;
@@ -73,30 +74,15 @@ public class RecurringExpenseWriterTests
         );
     }
     
-    [Fact]
+    [Fact(DisplayName = "Happy case when upserting recurring expenses")]
     public async Task UpsertExpenseAsync_ExpenseWithId_ShouldCallUpsertItemAsync()
     {
         // Arrange
         var e = _fixture.Create<RecurringExpense>();
         
-        var itemResponseMock = new Mock<ItemResponse<CosmosDocument<RecurringExpense>>>();
-        itemResponseMock
-            .Setup(r => r.StatusCode)
-            .Returns(HttpStatusCode.OK);
+        var itemResponseMock = CreateItemResponseMock(e, HttpStatusCode.OK);
+        SetupContainerMock(itemResponseMock);
         
-        itemResponseMock
-            .Setup(r => r.Resource)
-            .Returns(new CosmosDocument<RecurringExpense>()
-            {
-                Id = e.Id,
-                Data = e,
-                Type = _cosmosType
-            });
-
-        _containerMock
-            .Setup(c => c.UpsertItemAsync(It.IsAny<CosmosDocument<RecurringExpense>>(), null, null, default))
-            .Returns(Task.FromResult(itemResponseMock.Object));
-
         var expenseWriter = GetInstance();
         
         // Act
@@ -117,5 +103,97 @@ public class RecurringExpenseWriterTests
             default   
             ), 
             Times.Once);
+    }
+
+    [Fact(DisplayName = "Failed upserts return null without crashing")]
+    public async Task UpsertExpenseAsync_ExpenseWithIdFailedUpsert_ShouldReturnNull()
+    {
+        // Arrange
+        var e = _fixture.Create<RecurringExpense>();
+        
+        var itemResponseMock = CreateItemResponseMock(null, HttpStatusCode.InternalServerError);
+        SetupContainerMock(itemResponseMock);
+        
+        var expenseWriter = GetInstance();
+        
+        // Act
+        var upserted = await expenseWriter.UpsertExpenseAsync(e);
+
+        // Assert
+        Assert.Null(upserted);
+    }
+    
+    [Fact(DisplayName = "Happy case when creating recurring expenses")]
+    public async Task UpsertExpenseAsync_ExpenseWithoutId_ShouldReturnWithId()
+    {
+        // Arrange
+        var e = _fixture.Build<RecurringExpense>().Without(e => e.Id).Create();
+        
+        var itemResponseMock = CreateItemResponseMock(e, HttpStatusCode.OK);
+        SetupContainerMock(itemResponseMock);
+        
+        var expenseWriter = GetInstance();
+        
+        // Act
+        var upserted = await expenseWriter.UpsertExpenseAsync(e);
+
+        // Assert
+        Assert.NotEqual(Guid.Empty, e.Id);
+    }
+
+    [Fact(DisplayName = "Creating a recurring expense should publish a message to the queue")]
+    public async Task UpsertExpenseAsync_ExpenseWithoutId_ShouldPublishMessage()
+    {
+        // Arrange
+        var e = _fixture.Build<RecurringExpense>().Without(e => e.Id).Create();
+        
+        var itemResponseMock = CreateItemResponseMock(e, HttpStatusCode.OK);
+        SetupContainerMock(itemResponseMock);
+
+        DateTime today = new DateTime(2023, 07, 04);
+        _dateTimeMock.Setup(dt => dt.Now()).Returns(today);
+        
+        var expenseWriter = GetInstance();
+        
+        // Act
+        var upserted = await expenseWriter.UpsertExpenseAsync(e);
+
+        // Assert
+        _publisherMock.Verify(p => p.ScheduleMessage(
+        
+            It.Is<CreateExpenseCommand>(cmd => 
+                cmd.Expense.RecurringExpenseId == e.Id &&
+                cmd.Expense.UserId == e.UserId),
+            It.Is<DateTime>(dt => dt == e.GetNextBillingDate(today))
+        ));
+    }
+    
+    private void SetupContainerMock(Mock<ItemResponse<CosmosDocument<RecurringExpense>>> itemResponseMock)
+    {
+        _containerMock
+            .Setup(c => c.UpsertItemAsync(It.IsAny<CosmosDocument<RecurringExpense>>(), null, null, default))
+            .Returns(Task.FromResult(itemResponseMock.Object));
+    }
+
+    private Mock<ItemResponse<CosmosDocument<RecurringExpense>>> CreateItemResponseMock(RecurringExpense? e, HttpStatusCode status)
+    {
+        var itemResponseMock = new Mock<ItemResponse<CosmosDocument<RecurringExpense>>>();
+        itemResponseMock
+            .Setup(r => r.StatusCode)
+            .Returns(status);
+
+        if (e is not null)
+        {
+            itemResponseMock
+                .Setup(r => r.Resource)
+                .Returns(new CosmosDocument<RecurringExpense>()
+                {
+                    Id = e.Id,
+                    Data = e,
+                    Type = _cosmosType
+                });
+        }
+
+        return itemResponseMock;
     }
 }
