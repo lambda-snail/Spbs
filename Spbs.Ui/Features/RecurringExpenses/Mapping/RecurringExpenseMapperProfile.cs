@@ -7,7 +7,12 @@ public class RecurringExpenseMapperProfile : Profile
 {
     public RecurringExpenseMapperProfile()
     {
-        CreateMap<EditRecurringExpenseViewModel, RecurringExpense>();
+        CreateMap<EditRecurringExpenseViewModel, RecurringExpense>()
+            .ForMember(re => re.PaymentHistory, opt => opt.Ignore())
+            .ForMember(re => re.CreatedOn, opt => opt.Ignore())
+            .ForMember(re => re.ModifiedOn, opt => opt.Ignore());
+        
+        
         CreateMap<RecurringExpense, EditRecurringExpenseViewModel>();
 
         CreateMap<RecurringExpense, CreateExpenseCommandPayload>()
