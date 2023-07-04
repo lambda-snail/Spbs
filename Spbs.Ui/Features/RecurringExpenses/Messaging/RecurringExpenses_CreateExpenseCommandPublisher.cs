@@ -13,6 +13,11 @@ public class RecurringExpenses_CreateExpenseCommandPublisher : MessagePublisher<
     public RecurringExpenses_CreateExpenseCommandPublisher(ServiceBusClient client, IOptions<MessagingOptions> options) :
         base(client, options.Value.ExpensesQueue)
     {}
+    
+    /// <summary>
+    /// ctor for mocking
+    /// </summary>
+    protected RecurringExpenses_CreateExpenseCommandPublisher() { }
 
     protected override ServiceBusMessage CreateMessage(CreateExpenseCommand payload)
     {
