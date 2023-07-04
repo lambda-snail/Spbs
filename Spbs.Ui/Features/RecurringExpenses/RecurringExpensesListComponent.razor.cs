@@ -100,8 +100,9 @@ public partial class RecurringExpensesListComponent : SelectableListComponent<Re
             _snackbar.Add("Please select at least one item to delete", Severity.Error);
         }
 
-        foreach (var expense in _recurringExpenses)
+        foreach (var expense in selection)
         {
+            _snackbar.Add("Delete is not yet implemented :)", Severity.Success);
             _recurringExpenses.Remove(expense);
             // delete from repo
         }
