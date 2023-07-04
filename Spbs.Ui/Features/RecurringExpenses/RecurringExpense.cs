@@ -1,6 +1,8 @@
 #nullable enable
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using ApexCharts;
 using Newtonsoft.Json;
 using Spbs.Data.Cosmos;
 
@@ -89,5 +91,32 @@ public class RecurringExpense : ICosmosData
         if (BillingDay <= 28) return BillingDay;
         var daysInMonth = DateTime.DaysInMonth(year, month);
         return BillingDay <= daysInMonth ? BillingDay : daysInMonth;
+    }
+
+    /// <summary>
+    /// Return the next billing date, which will be this month if it has not yet occured, else a date
+    /// next month is returned.
+    /// </summary>
+    public DateTime GetNextBillingDate(DateTime today)
+    {
+        if (today.Day <= GetActualBillingDay(today.Year, today.Month))
+        {
+            return new DateTime(
+                today.Year, 
+                today.Month,
+                GetActualBillingDay(today.Year, today.Month));    
+        }
+        
+        var nextMonth = today.AddMonths(1);
+        return new DateTime(
+            nextMonth.Year, 
+            nextMonth.Month,
+            GetActualBillingDay(nextMonth.Year, nextMonth.Month));
+    }
+
+    public DateTime GetBillingDateNextMonth(DateTime today)
+    {
+        var nextMonth = today.AddMonths(1);
+        return GetNextBillingDate(new DateTime(nextMonth.Year, nextMonth.Month, 1));
     }
 }

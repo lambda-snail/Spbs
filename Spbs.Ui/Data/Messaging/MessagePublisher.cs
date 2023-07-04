@@ -27,7 +27,7 @@ public class MessagePublisher<T> : IAsyncDisposable
         return _serviceBusSender.SendMessageAsync(message);
     }
 
-    public virtual Task ShceduleMessage(T payload, DateTime deliveryTime)
+    public virtual Task ScheduleMessage(T payload, DateTime deliveryTime)
     {
         var message = CreateMessage(payload);
         return _serviceBusSender.ScheduleMessageAsync(message, deliveryTime.ToUniversalTime());

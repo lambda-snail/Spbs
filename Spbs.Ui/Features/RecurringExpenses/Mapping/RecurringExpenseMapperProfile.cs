@@ -12,7 +12,7 @@ public class RecurringExpenseMapperProfile : Profile
 
         CreateMap<RecurringExpense, CreateExpenseCommandPayload>()
             .ForMember(cmd => cmd.RecurringExpenseId, opt => opt.MapFrom(e => e.Id))
-            .ForMember(cmd => cmd.Recurring, opt => opt.Ignore())
+            .ForMember(cmd => cmd.Recurring, opt => opt.MapFrom(e => true))
             .ForMember(cmd => cmd.Date, opt => opt.Ignore())
             .ForMember(cmd => cmd.Venue, opt => opt.MapFrom(e => e.BillingPrincipal));
     }

@@ -67,15 +67,8 @@ public partial class EditRecurringExpenseComponent
         }
         
         EnsureUserIdIsSet(expense);
-        if (_editRecurringExpenseViewModel.Id is null)
-        {
-            await _recurringExpenseWriterRepository.InsertExpenseAsync(expense);
-        }
-        else
-        {
-            await _recurringExpenseWriterRepository.UpdateExpenseAsync(expense);
-        }
-        
+        await _recurringExpenseWriterRepository.UpsertExpenseAsync(expense);
+
         CloseDialog();
         ResetModel();
         await OnUpdateCallback(expense);

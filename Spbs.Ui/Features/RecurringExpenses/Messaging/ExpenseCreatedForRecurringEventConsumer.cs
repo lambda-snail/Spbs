@@ -92,19 +92,15 @@ public class ExpenseCreatedForRecurringEventConsumer : BackgroundService, IAsync
             Total = expenseCreatedEvent.Total
         });
 
-        await _expenseWriter.UpdateExpenseAsync(expense);
-
-        var nextMonth = expenseCreatedEvent.Date.AddMonths(1);
-        var nextPayment = new DateTime(
-            nextMonth.Year, 
-            nextMonth.Month,
-            expense.GetActualBillingDay(nextMonth.Year, nextMonth.Month));
+        await _expenseWriter.UpsertExpenseAsync(expense);
 
         var commandPayload = _mapper.Map<CreateExpenseCommandPayload>(expense);
         commandPayload.Recurring = true;
+
+        var nextPayment = expense.GetBillingDateNextMonth(expenseCreatedEvent.Date);
         commandPayload.Date = nextPayment;
         
-        await _publisher.ShceduleMessage(new CreateExpenseCommand()
+        await _publisher.ScheduleMessage(new CreateExpenseCommand()
         {
             Expense = commandPayload
         }, 

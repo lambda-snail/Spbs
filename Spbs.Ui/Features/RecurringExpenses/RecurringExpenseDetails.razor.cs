@@ -45,7 +45,7 @@ public partial class RecurringExpenseDetails
 
     private Task OnHistoryItemChanged(RecurringExpenseHistoryItem obj)
     {
-        return _expenseWriter.UpdateExpenseAsync(_expense!);
+        return _expenseWriter.UpsertExpenseAsync(_expense!);
     }
 
     private async Task AddExpenseItem()
@@ -84,7 +84,7 @@ public partial class RecurringExpenseDetails
         selectedItems.Clear();
         _numSelectedHistoryItems = 0;
         
-        await _expenseWriter.UpdateExpenseAsync(_expense!);
+        await _expenseWriter.UpsertExpenseAsync(_expense!);
         _snackbar.Add("History item(s) successfully deleted", Severity.Success);
     }
 
