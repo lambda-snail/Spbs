@@ -63,23 +63,23 @@ else
             </MudItem>
 
             <MudItem xs="6">
-                <MudNumberField T="int"
+                <MudNumericField T="int"
                                 ReadOnly="true"
-                                Text="@_expense.BillingDay"
+                                Text="@_expense.BillingDay.ToString()"
                                 Label="Billing Day"
                                 Variant="Variant.Text"
                                 Margin="Margin.Dense">
-                </MudNumberField>
+                </MudNumericField>
             </MudItem>
 
             <MudItem xs="6">
-                <MudNumberField T="double"
+                <MudNumericField T="double"
                                 ReadOnly="true"
-                                Text="@_expense.Total"
+                                Text="@_expense.Total.ToString()"
                                 Label="Total"
                                 Variant="Variant.Text"
                                 Margin="Margin.Dense">
-                </MudNumberField>
+                </MudNumericField>
             </MudItem>
 
             <MudItem xs="6">

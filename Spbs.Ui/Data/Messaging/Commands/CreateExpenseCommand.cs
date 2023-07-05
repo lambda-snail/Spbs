@@ -1,5 +1,8 @@
 using System;
 
+// We disable nullable warnings for Dto's without logic
+#pragma warning disable CS8618
+
 namespace Spbs.Ui.Data.Messaging.Commands;
 
 public class CreateExpenseCommand

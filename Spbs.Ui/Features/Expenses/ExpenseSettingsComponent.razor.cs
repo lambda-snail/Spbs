@@ -18,11 +18,13 @@ public partial class ExpenseSettingsComponent : UserSettingsComponentBase
     private HashSet<ExpenseCategoryListItem> _selectedCategories = new();
     private bool _isDirty = false;
     
+#pragma warning disable CS8618
     private class ExpenseCategoryListItem
     {
         public string CategoryName { get; set; }
         public static implicit operator ExpenseCategoryListItem(string str) => new ExpenseCategoryListItem() { CategoryName = str };
     }
+#pragma warning restore CS8618
     
     private List<ExpenseCategoryListItem> _expenseCategories = new();
 

@@ -13,12 +13,13 @@ namespace Spbs.Ui.Features.Expenses;
 [AuthenticationTaskExtension()]
 public partial class ExpenseDetails : ComponentBase
 {
-    [Parameter] public string ExpenseId { get; set; }
     private Expense? _expense = null;
     
     private int _numSelectedExpenseItems = 0;
     
 #pragma warning disable CS8618
+    [Parameter] public string ExpenseId { get; set; }
+    
     [Inject] private IExpenseReaderRepository _expenseReaderRepository { get; set; }
     [Inject] private IExpenseWriterRepository _expenseWriterRepository { get; set; }
     [Inject] private IJSRuntime _jsRuntime { get; set; }

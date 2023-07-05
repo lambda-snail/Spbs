@@ -52,10 +52,10 @@
                     </CellTemplate>
                 </TemplateColumn>
 
-                <PropertyColumn Property="x => x.Date"/>
-                <PropertyColumn Property="x => x.Total"/>
-                <PropertyColumn Property="x => x.Category"/>
-                <PropertyColumn Property="x => x.Venue"/>
+                <PropertyColumn Property="@(x => x.Date)"/>
+                <PropertyColumn Property="@(x => x.Total)"/>
+                <PropertyColumn Property="@(x => x.Category)"/>
+                <PropertyColumn Property="@(x => x.Venue)"/>
 
             </Columns>
             <PagerContent>

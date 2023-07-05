@@ -6,6 +6,8 @@ using ApexCharts;
 using Newtonsoft.Json;
 using Spbs.Data.Cosmos;
 
+#pragma warning disable CS8618
+
 namespace Spbs.Ui.Features.RecurringExpenses;
 
 public enum BillingType

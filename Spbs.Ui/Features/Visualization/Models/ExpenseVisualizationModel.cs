@@ -4,6 +4,8 @@ using Newtonsoft.Json;
 using Spbs.Data.Cosmos;
 using Spbs.Ui.Features.Expenses;
 
+#pragma warning disable CS8618
+
 namespace Spbs.Ui.Features.Visualization.Models;
 
 /// <summary>

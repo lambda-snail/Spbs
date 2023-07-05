@@ -1,5 +1,7 @@
 using System;
 
+#pragma warning disable CS8618
+
 namespace Spbs.Ui.Features.RecurringExpenses;
 
 public class EditRecurringExpenseViewModel

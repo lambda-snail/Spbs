@@ -10,11 +10,13 @@ public class MessagePublisher<T> : IAsyncDisposable
 {
     protected readonly ServiceBusSender _serviceBusSender;
 
+#pragma warning disable CS8618
     /// <summary>
     /// ctor for mocking
     /// </summary>
     protected MessagePublisher() { }
-
+#pragma warning restore CS8618
+    
     public MessagePublisher(ServiceBusClient client, string queueName)
     {
         ArgumentException.ThrowIfNullOrEmpty(queueName);

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using Spbs.Data.Cosmos;
 
+#pragma warning disable CS8618
+
 namespace Spbs.Ui.Features.Expenses;
 
 public class Expense : ICosmosData
@@ -45,25 +47,10 @@ public class Expense : ICosmosData
     public string? Tags { get; set; }
 
     public double? _total;
-    
-    [JsonProperty("total")]
-    public double Total {
-        get
-        {
-            if (_total is not null)
-            {
-                return _total.Value;
-            }
 
-            double total = 0.0;
-            for (int i = 0; i < Items.Count; ++i)
-            {
-                total += Items[i].GetCostOfItem();
-            }
-            return total;
-        }
-        set => _total = value;
-    }
+    [JsonProperty("total")] 
+    public double Total { get; set; }
+
     [JsonProperty("currency")]
     public string Currency { get; set; }
 }

@@ -54,8 +54,13 @@ public class ExpenseCategoryUtils
 
     public static IReadOnlyList<Category> GetAllCategories() => _categories;
 
-    public static string? GetMudIcon(string category)
+    public static string? GetMudIcon(string? category)
     {
+        if (category is null)
+        {
+            return Icons.Material.Filled.QuestionMark;
+        }
+        
         // Not very efficient, but simple enough since we only have a few categories
         return _categories.SingleOrDefault(c => c.Name == category)?.MudIcon;
     }

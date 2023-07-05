@@ -4,6 +4,8 @@ using System.Globalization;
 using Newtonsoft.Json;
 using Spbs.Data.Cosmos;
 
+#pragma warning disable CS8618
+
 namespace Spbs.Ui.Features.Users;
 
 public class User : ICosmosData
