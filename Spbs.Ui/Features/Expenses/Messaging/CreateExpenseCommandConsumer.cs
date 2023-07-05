@@ -90,11 +90,14 @@ public class CreateExpenseCommandConsumer : BackgroundService, IAsyncDisposable
         {
             await _publisher.PublishMessage(new()
             {
-                ExpenseId = expense.Id,
-                RecurringExpenseId = expense.RecurringExpenseId,
-                UserId = expense.UserId,
-                Date = expense.Date,
-                Total = expense.Total
+                OriginatingSource = createExpenseCommand.OriginatingSource,
+                Expense = new() {
+                    ExpenseId = expense.Id,
+                    RecurringExpenseId = expense.RecurringExpenseId,
+                    UserId = expense.UserId,
+                    Date = expense.Date,
+                    Total = expense.Total
+                }
             });
         }
 

@@ -1,4 +1,6 @@
-﻿using Azure.Messaging.ServiceBus;
+﻿using System;
+using System.Threading.Tasks;
+using Azure.Messaging.ServiceBus;
 using Microsoft.Extensions.Options;
 using Spbs.Ui.Data.Messaging;
 using Spbs.Ui.Data.Messaging.Commands;
@@ -19,6 +21,28 @@ public class RecurringExpenses_CreateExpenseCommandPublisher : MessagePublisher<
     /// </summary>
     protected RecurringExpenses_CreateExpenseCommandPublisher() { }
 
+    public override Task PublishMessage(CreateExpenseCommand payload)
+    {
+        return PublishMessage(payload, RecurringExpenseMessagingConstants.CreateSingleExpense);
+    }
+    
+    public Task PublishMessage(CreateExpenseCommand payload, string originatingSource)
+    {
+        payload.OriginatingSource = originatingSource;
+        return base.PublishMessage(payload);
+    }
+
+    public override Task ScheduleMessage(CreateExpenseCommand payload, DateTime deliveryTime)
+    {
+        return ScheduleMessage(payload, deliveryTime, RecurringExpenseMessagingConstants.ScheduleExpenseCreationCycle);
+    }
+
+    public Task ScheduleMessage(CreateExpenseCommand payload, DateTime deliveryTime, string originatingSource)
+    {
+        payload.OriginatingSource = originatingSource;
+        return base.ScheduleMessage(payload, deliveryTime);
+    }
+    
     protected override ServiceBusMessage CreateMessage(CreateExpenseCommand payload)
     {
         var message = base.CreateMessage(payload);

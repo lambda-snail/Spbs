@@ -7,6 +7,11 @@ namespace Spbs.Ui.Data.Messaging.Commands;
 
 public class CreateExpenseCommand
 {
+    public string MessageType { get; } = nameof(CreateExpenseCommand);
+    /// <summary>
+    /// A string that is meaningful to the source and should be passed back on the callback event.
+    /// </summary>
+    public string OriginatingSource { get; set; }
     public CreateExpenseCommandPayload Expense { get; set; }
 }
 

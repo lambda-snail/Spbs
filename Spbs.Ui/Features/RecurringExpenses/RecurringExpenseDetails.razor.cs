@@ -168,7 +168,12 @@ public partial class RecurringExpenseDetails
         
         var expensePayload = _mapper.Map<CreateExpenseCommandPayload>(_expense);
         expensePayload.Date = input.Value.ToUniversalTime(); 
-        await _publisher.PublishMessage(new CreateExpenseCommand() { Expense = expensePayload });
+        await _publisher.PublishMessage(
+            new CreateExpenseCommand()
+            {
+                Expense = expensePayload
+            },
+            RecurringExpenseMessagingConstants.CreateSingleExpense);
         
         await DialogService.ShowMessageBox(
             "Create Expense", 
