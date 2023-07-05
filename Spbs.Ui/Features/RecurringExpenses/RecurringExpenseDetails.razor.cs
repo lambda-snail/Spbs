@@ -3,9 +3,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
+using Shared.Utilities;
 using Spbs.Generators.UserExtensions;
+using Spbs.Ui.Components;
+using Spbs.Ui.Data.Messaging.Commands;
+using Spbs.Ui.Features.RecurringExpenses.Messaging;
 
 namespace Spbs.Ui.Features.RecurringExpenses;
 
@@ -23,6 +28,10 @@ public partial class RecurringExpenseDetails
     [Inject] private IRecurringExpenseReaderRepository _expenseReader { get; set; }
     [Inject] private IRecurringExpenseWriterRepository _expenseWriter { get; set; }
     [Inject] private ISnackbar _snackbar { get; set; }
+    [Inject] private IDialogService DialogService { get; set; }
+    
+    [Inject] private RecurringExpenses_CreateExpenseCommandPublisher _publisher { get; set; }
+    [Inject] private IMapper _mapper { get; set; }
 
     private EditRecurringExpenseComponent _expenseEditor;
     private MudDataGrid<RecurringExpenseHistoryItem> _grid;
@@ -124,5 +133,46 @@ public partial class RecurringExpenseDetails
     {
         _expenseEditor.SetModalContent(_expense);
         _expenseEditor.ShowModal();
+    }
+
+    private async Task CreateExpenseFromRecurring()
+    {
+        bool? shouldProceed = await DialogService.ShowMessageBox(
+            "Create Expense", 
+            "This will create a new expense based on the recurring expense.", 
+            yesText:"Proceed", cancelText:"Cancel");
+        
+        if (shouldProceed is null)
+        {
+            return;
+        }
+
+        var options = new DialogOptions
+        {
+            CloseButton = true,
+            DisableBackdropClick = false,
+            MaxWidth = MaxWidth.Small
+        };
+
+        var parameters = new DialogParameters();
+        parameters.Add("Title", "Choose Expense Date");
+        //parameters.Add("Prompt", "What billing date would you like to set for the new expense?");
+        
+        var dialog = await DialogService.ShowAsync<InputDateDialog>(string.Empty, parameters, options);
+        var result = await dialog.Result;
+        var input = result.Data as DateTime?;
+        if (input is null)
+        {
+            return; // User cancelled
+        }
+        
+        var expensePayload = _mapper.Map<CreateExpenseCommandPayload>(_expense);
+        expensePayload.Date = input.Value.ToUniversalTime(); 
+        await _publisher.PublishMessage(new CreateExpenseCommand() { Expense = expensePayload });
+        
+        await DialogService.ShowMessageBox(
+            "Create Expense", 
+            "A create operation has been queued and will be performed shortly", 
+            yesText:"Got it!");
     }
 }
