@@ -5,11 +5,9 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
-using Microsoft.Azure.Cosmos.Serialization.HybridRow.Layouts;
 using MudBlazor;
 using Spbs.Generators.UserExtensions;
 using Spbs.Ui.Components.UserSettings;
-using Spbs.Ui.ComponentServices;
 using Spbs.Ui.Features.Expenses;
 using Spbs.Ui.Features.Users.Repositories;
 

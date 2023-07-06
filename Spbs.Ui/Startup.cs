@@ -18,7 +18,6 @@ using Serilog;
 using Shared.Utilities;
 using Shared.Utilities.OptionsExtensions;
 using Spbs.Shared.Data;
-using Spbs.Ui.ComponentServices;
 using Spbs.Ui.Data.Messaging;
 using Spbs.Ui.Features.BankIntegration;
 using Spbs.Ui.Features.BankIntegration.ImportExpenses;
@@ -90,7 +89,6 @@ namespace Spbs.Ui
             
             services.AddAutoMapper(typeof(Startup));
             services.AddTransient<IEulaService, EulaService>();
-            services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<INordigenLinkWriterRepository, NordigenLinkWriterRepository>();
             services.AddScoped<INordigenAccountLinkService, NordigenAccountLinkService>();
             services.AddScoped<IRedirectLinkService, RedirectLinkService>();

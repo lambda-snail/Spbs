@@ -43,6 +43,7 @@
         <PackageReference Include="SerilogTimings" Version="3.0.1" />
     </ItemGroup>
     <ItemGroup>
+      <Folder Include="ComponentServices\" />
       <Folder Include="wwwroot\js\bootstrap" />
     </ItemGroup>
     <ItemGroup>

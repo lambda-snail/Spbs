@@ -1,7 +1,6 @@
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
-using Spbs.Ui.ComponentServices;
+using MudBlazor;
 using Spbs.Ui.Features.BankIntegration.Models;
 
 namespace Spbs.Ui.Features.BankIntegration.NewLink;
@@ -35,7 +34,7 @@ internal class SelectionViewModel
 public partial class BankLinkCreationPage
 {
 #pragma warning disable CS8618
-    [Inject] private INotificationService _notificationService { get; set; }
+    [Inject] private ISnackbar _snackbar { get; set; }
     [Inject] private NavigationManager _navigationManager { get; set; }
 
     private RenderFragment? _ChildToolBarElement = null;
@@ -86,7 +85,7 @@ public partial class BankLinkCreationPage
         var institution = _institutionSelector.GetSelectedInstitution();
         if (!_institutionSelector.HasSelection() || institution is null)
         {
-            _notificationService.ShowToast("No Institution Selected", "Please select an institution before proceeding.", NotificationLevel.Warning);            
+            _snackbar.Add("Please select an institution before proceeding.", Severity.Warning);            
             return;
         }
 
@@ -111,7 +110,7 @@ public partial class BankLinkCreationPage
         var redirect = await _newLink.CreateLink();
         if (redirect is null)
         {
-            _notificationService.ShowToast("Error", "Unable to link to your bank.", NotificationLevel.Error);
+            _snackbar.Add("Unable to link to your bank.", Severity.Error);
             return;
         }
         
