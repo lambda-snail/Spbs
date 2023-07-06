@@ -27,6 +27,7 @@ public class ImportExpensesViewModelMapper : Profile
             .ForMember(e => e.Name, opt => opt.MapFrom(vm => vm.RemittanceInformationUnstructured))
             .ForMember(e => e.Total, opt => opt.MapFrom(vm => vm.TransactionAmount.Amount))
             
+            .ForMember(e => e.Items, opt => opt.Ignore())
             .ForMember(e => e.Category, opt => opt.Ignore())
             .ForMember(e => e.Id, opt => opt.Ignore())
             .ForMember(e => e.Recurring, opt => opt.Ignore())
