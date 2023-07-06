@@ -25,23 +25,9 @@ public class ImportExpensesViewModelMapper : Profile
             .ForMember(e => e.Venue, opt => opt.MapFrom(vm => vm.RemittanceInformationUnstructured))
             .ForMember(e => e.Description, opt => opt.MapFrom(vm => "Expense imported with id " + vm.TransactionId))
             .ForMember(e => e.Name, opt => opt.MapFrom(vm => vm.RemittanceInformationUnstructured))
+            .ForMember(e => e.Total, opt => opt.MapFrom(vm => vm.TransactionAmount.Amount))
+            
             .ForMember(e => e.Category, opt => opt.Ignore())
-            
-            // Untill we can support expenses with a total but no expense items.
-            .ForMember(e => e.Items, opt => 
-                opt.MapFrom(vm =>
-                    new List<ExpenseItem>
-                    {
-                        new ExpenseItem
-                        {
-                            Name = vm.RemittanceInformationUnstructured,
-                            Price = vm.TransactionAmount.Amount,
-                            Quantity = 1
-                        }
-                    }))
-            .ForMember(e => e.Total, opt => opt.Ignore())
-            .ForMember(e => e._total, opt => opt.Ignore())
-            
             .ForMember(e => e.Id, opt => opt.Ignore())
             .ForMember(e => e.Recurring, opt => opt.Ignore())
             .ForMember(e => e.Tags, opt => opt.Ignore())
