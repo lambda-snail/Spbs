@@ -1,11 +1,13 @@
 using System;
 
+#pragma warning disable CS8618
+
 namespace Spbs.Ui.Features.RecurringExpenses;
 
 public class EditRecurringExpenseViewModel
 {
     public Guid? Id { get; set; }
-    public Guid? OwningUserId { get; set; }
+    public Guid? UserId { get; set; }
     
     public string Name { get; set; }
     public string? Description { get; set; }

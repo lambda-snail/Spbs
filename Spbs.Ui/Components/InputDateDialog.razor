@@ -1,0 +1,48 @@
+<MudDialog Style="backdrop-filter: blur(10px);">
+    <TitleContent>
+        <MudText Typo="Typo.h6">@Title</MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudText Typo="Typo.body1">@Prompt</MudText>
+        <MudDatePicker @bind-Date="@_input"
+                       PickerVariant="PickerVariant.Static"/>
+    </DialogContent>
+
+    <DialogActions>
+        <MudButton
+            Disabled="@(_input is null)"
+            OnClick="@OK"
+            Size="@Size.Small"
+            Color="Color.Primary">
+            OK
+        </MudButton>
+
+        <MudButton
+            OnClick="@Cancel"
+            Size="@Size.Small"
+            Color="Color.Secondary">
+            Cancel
+        </MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+
+    [Parameter]
+    public string Title { get; set; } = default!;
+
+    [Parameter]
+    public string Prompt { get; set; } = default!;
+
+    private DateTime? _input = DateTime.Now;
+
+    [CascadingParameter]
+    private MudDialogInstance _mudDialog { get; set; } = default!;
+
+    private void OK() => _mudDialog.Close(DialogResult.Ok(_input));
+
+    private void Cancel()
+    {
+        _mudDialog.Close();
+    }
+}

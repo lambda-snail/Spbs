@@ -66,16 +66,9 @@ public partial class EditRecurringExpenseComponent
             expense = _mapper.Map(_editRecurringExpenseViewModel, _expense);
         }
         
-        EnsureUseIdIsSet(expense);
-        if (_editRecurringExpenseViewModel.Id is null)
-        {
-            await _recurringExpenseWriterRepository.InsertExpenseAsync(expense);
-        }
-        else
-        {
-            await _recurringExpenseWriterRepository.UpdateExpenseAsync(expense);
-        }
-        
+        EnsureUserIdIsSet(expense);
+        await _recurringExpenseWriterRepository.UpsertExpenseAsync(expense);
+
         CloseDialog();
         ResetModel();
         await OnUpdateCallback(expense);
@@ -92,7 +85,7 @@ public partial class EditRecurringExpenseComponent
         _editRecurringExpenseViewModel = new() { BillingDay = DateTime.Now.Day };
     }   
     
-    private void EnsureUseIdIsSet(RecurringExpense expense)
+    private void EnsureUserIdIsSet(RecurringExpense expense)
     {
         if (expense.UserId == Guid.Empty)
         {

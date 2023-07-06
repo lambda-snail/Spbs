@@ -25,10 +25,10 @@ else if (_institutions is not null)
             Institution institution = _institutions[i];
             <MudItem xs="12" md="6" lg="3">
                 <MudCard Outlined="true" Class="pa-4">
-                    <CardHeaderContent>
+                    <MudCardHeader>
                         <MudText Typo="Typo.h6">@institution.Name</MudText>
                         <MudText Typo="Typo.body1">@institution.Bic</MudText>
-                    </CardHeaderContent>
+                    </MudCardHeader>
                     <MudCardMedia Image="@institution.Logo" Height="200"/>
                     
                     <MudCardActions>

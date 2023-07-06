@@ -2,6 +2,8 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 
+#pragma warning disable CS8618
+
 namespace Spbs.Ui.Features.Expenses;
 
 /// <summary>

@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using Shared.Utilities;
 using Spbs.Generators.UserExtensions;
-using Spbs.Ui.ComponentServices;
 using Spbs.Ui.Features.BankIntegration.Models;
 using Spbs.Ui.Features.BankIntegration.Services;
 using Severity = MudBlazor.Severity;

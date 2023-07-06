@@ -108,7 +108,7 @@ public class CosmosRepositoryBase<T> : ICosmosReader<T>
         return items;
     }
 
-    public async Task<T?> Upsert(T item)
+    public virtual async Task<T?> Upsert(T item)
     {
         bool isCreate = false;
         if (item.Id == Guid.Empty)

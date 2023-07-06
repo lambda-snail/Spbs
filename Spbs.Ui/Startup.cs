@@ -1,4 +1,6 @@
 using System;
+using Azure.Core;
+using Azure.Messaging.ServiceBus;
 using FluentValidation;
 using Integrations.Nordigen;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
@@ -16,7 +18,7 @@ using Serilog;
 using Shared.Utilities;
 using Shared.Utilities.OptionsExtensions;
 using Spbs.Shared.Data;
-using Spbs.Ui.ComponentServices;
+using Spbs.Ui.Data.Messaging;
 using Spbs.Ui.Features.BankIntegration;
 using Spbs.Ui.Features.BankIntegration.ImportExpenses;
 using Spbs.Ui.Features.BankIntegration.Models;
@@ -26,6 +28,7 @@ using Spbs.Ui.Features.Expenses;
 using Spbs.Ui.Features.Expenses.Repositories;
 using Spbs.Ui.Features.Expenses.Validation;
 using Spbs.Ui.Features.RecurringExpenses;
+using Spbs.Ui.Features.RecurringExpenses.Messaging;
 using Spbs.Ui.Features.RecurringExpenses.Validation;
 using Spbs.Ui.Features.Users;
 using Spbs.Ui.Features.Users.Repositories;
@@ -38,13 +41,16 @@ namespace Spbs.Ui
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, TokenCredential azureCredential)
         {
             Configuration = configuration;
+            _azureCredential = azureCredential;
         }
 
         public IConfiguration Configuration { get; }
-        
+
+        private TokenCredential _azureCredential { get; }
+
         public void ConfigureServices(IServiceCollection services)
         {
             var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
@@ -68,6 +74,8 @@ namespace Spbs.Ui
             RegisterValidators(services);
             RegisterConfigurations(services);
 
+            RegisterMessagingServices(services);
+            
             services.AddRazorPages();
             services.AddMudServices();
             
@@ -81,7 +89,6 @@ namespace Spbs.Ui
             
             services.AddAutoMapper(typeof(Startup));
             services.AddTransient<IEulaService, EulaService>();
-            services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<INordigenLinkWriterRepository, NordigenLinkWriterRepository>();
             services.AddScoped<INordigenAccountLinkService, NordigenAccountLinkService>();
             services.AddScoped<IRedirectLinkService, RedirectLinkService>();
@@ -100,12 +107,18 @@ namespace Spbs.Ui
             services.AddSingleton<IValidator<GraphDataFilter>, GraphDataFilterFluentValidation>();
             services.AddSingleton<IValidator<EditExpenseViewModel>, EditExpenseViewModelFluentValidation>();
             services.AddSingleton<IValidator<EditRecurringExpenseViewModel>, EditRecurringExpenseViewModelFluentValidation>();
+            services.AddSingleton<IValidator<MessagingOptions>, MessagingOptionsFluentValidation>();
         }
 
         private void RegisterConfigurations(IServiceCollection services)
         {
             services.AddOptions<DataConfigurationOptions>()
                 .BindConfiguration("Spbs:Data")
+                .ValidateFluently()
+                .ValidateOnStart();
+
+            services.AddOptions<MessagingOptions>()
+                .BindConfiguration("Spbs:Messaging")
                 .ValidateFluently()
                 .ValidateOnStart();
         }
@@ -149,6 +162,28 @@ namespace Spbs.Ui
             services.AddSingleton<CosmosClient>(
                 new CosmosClient(connectionString: cosmosDbConnectionString)
             );
+            
+            var serviceBusConnectionString =
+                Configuration.GetSection("Spbs:ConnectionStrings").GetValue<string>("ServiceBus");
+            services.AddSingleton<ServiceBusClient>(provider =>
+            {
+                return new ServiceBusClient(
+                    serviceBusConnectionString,
+                    _azureCredential,
+                    new ServiceBusClientOptions
+                { 
+                    TransportType = ServiceBusTransportType.AmqpWebSockets
+                });
+            });
+        }
+
+        private void RegisterMessagingServices(IServiceCollection services)
+        {
+            services.AddHostedService<CreateExpenseCommandConsumer>();
+            services.AddHostedService<ExpenseCreatedForRecurringEventConsumer>();
+
+            services.AddSingleton<ExpenseCreatedForRecurringEventPublisher>();
+            services.AddSingleton<RecurringExpenses_CreateExpenseCommandPublisher>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

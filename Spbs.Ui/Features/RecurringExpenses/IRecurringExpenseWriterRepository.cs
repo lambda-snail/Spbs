@@ -5,6 +5,5 @@ namespace Spbs.Ui.Features.RecurringExpenses;
 
 public interface IRecurringExpenseWriterRepository
 {
-    Task<RecurringExpense?> InsertExpenseAsync(RecurringExpense expense);
-    Task UpdateExpenseAsync(RecurringExpense expense);
+     Task<RecurringExpense?> UpsertExpenseAsync(RecurringExpense expense);
 }

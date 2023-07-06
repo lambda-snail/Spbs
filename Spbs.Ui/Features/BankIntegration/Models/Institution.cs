@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.CompilerServices;
+#pragma warning disable CS8618
 
 namespace Spbs.Ui.Features.BankIntegration.Models;
 

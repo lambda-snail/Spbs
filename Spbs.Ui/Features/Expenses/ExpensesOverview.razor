@@ -45,13 +45,17 @@
                         <MudButton Variant="Variant.Text" Color="Color.Primary">
                             <NavLink href="@GetExpenseDetailsUrl(context.Item)">@context.Item.Name</NavLink>
                         </MudButton>
+                        @if (context.Item.Recurring)
+                        {
+                            <MudChip Color="Color.Primary">Recurring</MudChip>
+                        }
                     </CellTemplate>
                 </TemplateColumn>
 
-                <PropertyColumn Property="x => x.Date"/>
-                <PropertyColumn Property="x => x.Total"/>
-                <PropertyColumn Property="x => x.Category"/>
-                <PropertyColumn Property="x => x.Venue"/>
+                <PropertyColumn Property="@(x => x.Date)"/>
+                <PropertyColumn Property="@(x => x.Total)"/>
+                <PropertyColumn Property="@(x => x.Category)"/>
+                <PropertyColumn Property="@(x => x.Venue)"/>
 
             </Columns>
             <PagerContent>

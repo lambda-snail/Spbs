@@ -1,13 +1,25 @@
 @page "/expenses/{ExpenseId}"
 @using Spbs.Ui.Features.Expenses.Models
+@using System.Threading
 
 @if (_expense is not null)
 {
     <MudPaper Class="pa-4 mt-4">
-        <MudText>
-            @_expense.Name
-        </MudText>
 
+        @if (_expense.Recurring)
+        {
+            <MudBadge Origin="Origin.TopRight" Content="@("Recurring")" Color="Color.Primary" Overlap="true" Dot="false" Bordered="false">
+                <MudText>
+                    @_expense.Name
+                </MudText>
+            </MudBadge>
+        }
+        else
+        {
+            <MudText>
+                @_expense.Name
+            </MudText>
+        }
 
         <MudGrid>
             <MudItem xs="12">
@@ -75,7 +87,7 @@
                     }
                 }
 
-                <MudIconButton Icon="@Icons.Material.Filled.Add" aria-label="add tag" OnClick="@AddTagList"/>
+                <MudButton Icon="@Icons.Material.Filled.Add" Size="Size.Small" OnClick="@AddTagList">Add tag</MudButton>
             </MudItem>
             <MudItem>
                 <MudButton Icon="@Icons.Material.Filled.Edit"
@@ -126,7 +138,7 @@
             <PropertyColumn Property="x => x.Name"/>
             <PropertyColumn Property="x => x.Quantity"/>
             <PropertyColumn Property="x => x.Price"/>
-            
+
             <TemplateColumn T="ExpenseItem" Title="Total">
                 <CellTemplate>
                     @context.Item.GetCostOfItem() @_expense.Currency

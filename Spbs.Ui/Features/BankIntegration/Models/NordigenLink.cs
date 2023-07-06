@@ -4,6 +4,8 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Spbs.Data.Cosmos;
 
+#pragma warning disable CS8618
+
 namespace Spbs.Ui.Features.BankIntegration.Models;
 
 /// <summary>
