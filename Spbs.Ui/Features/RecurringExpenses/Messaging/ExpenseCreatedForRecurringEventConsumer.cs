@@ -46,7 +46,7 @@ public class ExpenseCreatedForRecurringEventConsumer : BackgroundService, IAsync
             var messageProcessed = await ProcessMessage(stoppingToken);
             if (!messageProcessed)
             {
-                await Task.Delay(10000, stoppingToken);
+                await Task.Delay(1000 * 60 * 8, stoppingToken);
             }
         }
     }
