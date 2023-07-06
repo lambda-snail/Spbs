@@ -18,7 +18,7 @@ else
                 {
                     <MudTooltip Delay="600" Text="Toggle include status of selection">
                         <MudButton OnClick="() => ToggleInclude(_selectedTransactions)" Color="Color.Primary">
-                        @(_includeAllSwitchValue ? "Include Selection" : "Exclude Selection")
+                            @(_includeAllSwitchValue ? "Include Selection" : "Exclude Selection")
                         </MudButton>
                     </MudTooltip>
                 }
@@ -54,13 +54,29 @@ else
             <Columns>
                 <SelectColumn T="ImportExpensesViewModel"/>
 
-                <PropertyColumn Property="x => x.TransactionAmount.Amount"/>
-                <PropertyColumn Property="x => x.TransactionAmount.Currency"/>
+                <PropertyColumn T="ImportExpensesViewModel" TProperty="double" Title="Amount">
+                    <CellTemplate>
+                        @context.Item.TransactionAmount.Amount
+                    </CellTemplate>
+                    <EditTemplate>
+                        <MudNumericField @bind-Value="@context.Item.TransactionAmount.Amount" Label="Amount" Variant="Variant.Text" Min="0.0"/>
+                    </EditTemplate>
+                </PropertyColumn>
+
+                <PropertyColumn T="ImportExpensesViewModel" TProperty="string" Title="Currency">
+                    <CellTemplate>
+                        @context.Item.TransactionAmount.Currency
+                    </CellTemplate>
+                    <EditTemplate>
+                        <MudTextField @bind-Value="@context.Item.TransactionAmount.Currency" Label="Currency" Variant="Variant.Text" />
+                    </EditTemplate>
+                </PropertyColumn>
+
                 <PropertyColumn Property="x => x.ValueDate" Title="Date" IsEditable="false"/>
 
                 <PropertyColumn Property="x => x.RemittanceInformationUnstructured" Title="Name"/>
 
-                <TemplateColumn T="ImportExpensesViewModel" CellClass="d-flex justify-end">
+                <TemplateColumn IsEditable="false" T="ImportExpensesViewModel" CellClass="d-flex justify-end">
                     <CellTemplate>
                         <MudStack Row="true">
                             @if (context.Item.IncludeInImport)
@@ -71,7 +87,7 @@ else
                             {
                                 <MudChip Color="Color.Secondary">Exclude from Import</MudChip>
                             }
-                            
+
                             @if (context.Item.IsPending)
                             {
                                 <MudChip Color="Color.Dark">Transaction Pending</MudChip>
