@@ -46,8 +46,6 @@ public class Expense : ICosmosData
     [JsonProperty("tags")]
     public string? Tags { get; set; }
 
-    public double? _total;
-
     [JsonProperty("total")] 
     public double Total { get; set; }
 
