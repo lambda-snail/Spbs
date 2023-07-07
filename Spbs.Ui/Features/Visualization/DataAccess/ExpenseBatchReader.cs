@@ -18,14 +18,14 @@ namespace Spbs.Ui.Features.Visualization.DataAccess;
 /// <summary>
 /// Reads a large number of expenses for visualization. 
 /// </summary>
-public class ExpenseBatchReader : CosmosRepositoryBase<ExpenseVisualizationModel>, IExpenseBatchReader
+public class ExpenseBatchReader<TModel> : CosmosRepositoryBase<TModel>, IExpenseBatchReader<TModel> where TModel : class, ICosmosData
 {
     public ExpenseBatchReader(CosmosClient client, IOptions<DataConfigurationOptions> options,
-        ILogger<ExpenseBatchReader> logger) : base(client, options, CosmosTypeConstants.SpbsExpenses, logger)
+        ILogger<ExpenseBatchReader<TModel>> logger) : base(client, options, CosmosTypeConstants.SpbsExpenses, logger)
     {
     }
 
-    public Task<List<ExpenseVisualizationModel>> GetAllExpensesByUserForMonth(Guid userId, DateOnly month)
+    public Task<List<TModel>> GetAllExpensesByUserForMonth(Guid userId, DateOnly month)
     {
         var monthStart = new DateTime(month.Year, month.Month, 1);
         var monthEnd = new DateTime(month.Year, month.Month, DateTime.DaysInMonth(month.Year, month.Month));
@@ -33,7 +33,7 @@ public class ExpenseBatchReader : CosmosRepositoryBase<ExpenseVisualizationModel
         return GetAllExpensesByUserBetweenDates(userId, monthStart, monthEnd);
     }
 
-    public Task<List<ExpenseVisualizationModel>> GetAllExpensesByUserBetweenDates(Guid userId, DateTime fromDate,
+    public Task<List<TModel>> GetAllExpensesByUserBetweenDates(Guid userId, DateTime fromDate,
         DateTime? toDate)
     {
         if (toDate is not null)
