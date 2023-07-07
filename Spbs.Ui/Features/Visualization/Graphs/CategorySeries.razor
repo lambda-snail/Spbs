@@ -1,0 +1,57 @@
+@page "/xxx"
+@using Spbs.Ui.Features.Visualization.Models
+@using ApexCharts
+
+<MudPaper Class="pa-2">
+    <MudText Typo="Typo.h6" Class="ms-9">@GetChartTitle()</MudText>
+
+    <MudGrid Spacing="2">
+        <MudItem xs="9">
+            <ApexChart TItem="ExpenseSeriesVisualizationModel"
+                       @ref="_chart"
+                       Options="_chartOptions"
+                       Title="">
+                <ChildContent>
+                    <ApexPointSeries TItem="ExpenseSeriesVisualizationModel"
+                                     Items="_filteredExpenses"
+                                     Name="@GetChartTitle()"
+                                     XValue="@(e => e.Date.ToString("yyyy-MM"))"
+                                     YAggregate="@(l => l.Sum(e => (decimal)e.Total))"
+                                     SeriesType="SeriesType.Line"
+                                     OrderBy="@(e => e.X)"
+                                     ShowDataLabels="true"
+                                     Color="#3633FF"/>
+                </ChildContent>
+
+                <ApexPointTooltip>
+                    <MudPaper Elevation="25" Class="pa-2">
+                        @(context.DataPoint.Items.Sum<ExpenseSeriesVisualizationModel>(x => x.Total)) @context.DataPoint.Items.First().Currency
+                    </MudPaper>
+                </ApexPointTooltip>
+
+            </ApexChart>
+        </MudItem>
+        <MudItem xs="3">
+            <MudStack>
+                <MudPaper Class="pa-2">
+                    <MudDateRangePicker HelperText="Choose a date to filter expenses" @bind-DateRange="@_dateFilter" OpenTo="OpenTo.Year" FixDay="1" DateFormat="yyyy-MM"/>
+                    <MudIconButton OnClick="OnRefreshGraphClicked" Icon="@Icons.Material.Filled.Refresh"></MudIconButton>
+                </MudPaper>
+
+                <MudSelect T="string"
+                           Value="@_filterCategory"
+                           ValueChanged="OnSelectedCategoryValueChanged"
+                           HelperText="Choose category"
+                           AnchorOrigin="Origin.BottomCenter">
+                    <MudSelectItem Value="@string.Empty">All</MudSelectItem>    
+                    @foreach (var category in _availableCategories)
+                    {
+                        <MudSelectItem Value="@category">@category</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudStack>
+        </MudItem>
+    </MudGrid>
+
+
+</MudPaper>
