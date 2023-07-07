@@ -16,7 +16,7 @@ public partial class ExpensesGraph : ComponentBase
 {
 #pragma warning disable CS8618
     [Inject] private ISnackbar _snackbar { get; set; }
-    [Inject] private IExpenseBatchReader _expenseReader { get; set; }
+    [Inject] private IExpenseBatchReader<ExpenseVisualizationModel> _expenseReader { get; set; }
     private ApexChart<ExpenseVisualizationModel> _chart;
     private ApexChartOptions<ExpenseVisualizationModel> _chartOptions;
 #pragma warning restore CS8618
@@ -33,95 +33,7 @@ public partial class ExpensesGraph : ComponentBase
     {
         await LoadDataForMonth(_expensesMonth!.Value.Year, _expensesMonth!.Value.Month);
 
-        _chartOptions = new()
-        {
-            DataLabels = new()
-            {
-                Enabled = true,
-                Style = new()
-                {
-                    Colors = new() { _textColor }
-                }
-            },
-            PlotOptions = new()
-            {
-                Bar = new()
-                {
-                    BorderRadius = 4,
-                    Horizontal = true,
-                    DataLabels = new()
-                    {
-                        Position = "top",
-                        Total = new()
-                        {
-                            Enabled = true,
-                            Style = new()
-                            {
-                                Color = _textColor
-                            }
-                        }
-                    }
-                },
-                Pie = new()
-                {
-                    Donut = new()
-                    {
-                        Labels = new()
-                        {
-                            Name = new()
-                            {
-                                Color = _textColor
-                            }
-                        }
-                    }
-                }
-            },
-            Legend = new()
-            {
-                Show = true,
-                Labels = new()
-                {
-                    Colors = new Color(_textColor)
-                }
-            },
-            Title = new()
-            {
-                Style = new()
-                {
-                    Color = _textColor
-                }
-            },
-            Xaxis = new()
-            {
-                Labels = new()
-                {
-                    Style = new()
-                    {
-                        Colors = new Color(_textColor)
-                    }
-                }
-            },
-            Yaxis = new()
-            {
-                new()
-                {
-                    Labels = new()
-                    {
-                        Style = new()
-                        {
-                            Colors = new Color(_textColor)
-                        }
-                    }
-                }
-            },
-            Chart = new()
-            {
-                Toolbar = new()
-                {
-                    Show = false
-                }
-            }
-        };
+        _chartOptions = CommonChartOptionsFactory.CreateOptions<ExpenseVisualizationModel>();
 
         StateHasChanged();
         await _chart.RenderAsync();
