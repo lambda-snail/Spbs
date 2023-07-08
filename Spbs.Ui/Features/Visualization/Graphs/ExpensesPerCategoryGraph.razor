@@ -2,14 +2,13 @@
 @using ApexCharts
 
 <MudPaper Class="pa-2">
-    <MudText Typo="Typo.h6" Class="ms-9">Expenses</MudText>
+    <MudText Typo="Typo.h6" Class="ms-9">Expenses by Category</MudText>
 
     <MudGrid Spacing="2">
         <MudItem xs="9">
             <ApexChart TItem="ExpenseVisualizationModel"
                        @ref="_chart"
                        Options="_chartOptions"
-                       Width="768"
                        Title="">
                 <ChildContent>
                     <ApexPointSeries TItem="ExpenseVisualizationModel"

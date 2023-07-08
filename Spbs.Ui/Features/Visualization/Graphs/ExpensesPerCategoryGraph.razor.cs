@@ -12,7 +12,7 @@ using Color = ApexCharts.Color;
 namespace Spbs.Ui.Features.Visualization.Graphs;
 
 [AuthenticationTaskExtension]
-public partial class ExpensesGraph : ComponentBase
+public partial class ExpensesPerCategoryGraph : ComponentBase
 {
 #pragma warning disable CS8618
     [Inject] private ISnackbar _snackbar { get; set; }
