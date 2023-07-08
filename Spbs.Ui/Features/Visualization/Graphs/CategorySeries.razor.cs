@@ -63,7 +63,7 @@ public partial class CategorySeries : ComponentBase
 
     private string GetChartTitle()
     {
-        return (_filterCategory is null ? "All" : _filterCategory) + " expenses over time";
+        return (string.IsNullOrWhiteSpace(_filterCategory) ? "All" : _filterCategory) + " expenses over time";
     }
 
     private async Task OnRefreshGraphClicked()
