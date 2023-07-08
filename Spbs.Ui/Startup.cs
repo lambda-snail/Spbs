@@ -152,7 +152,8 @@ namespace Spbs.Ui
 
             services.AddTransient<IUserRepository, UserRepository>();
             
-            services.AddScoped<IExpenseBatchReader, ExpenseBatchReader>();
+            services.AddScoped<IExpenseBatchReader<ExpenseVisualizationModel>, ExpenseBatchReader<ExpenseVisualizationModel>>();
+            services.AddScoped<IExpenseBatchReader<ExpenseSeriesVisualizationModel>, ExpenseBatchReader<ExpenseSeriesVisualizationModel>>();
         }
 
         private void RegisterDatabaseConnections(IServiceCollection services)
